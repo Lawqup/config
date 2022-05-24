@@ -111,6 +111,8 @@ map <C-b> :FZF<CR>
 map H ^
 map L $
 
+map <C-x> :noh<cr>:call clearmatches()<cr>
+
 set backspace=indent,eol,start
 
 " C-t open new tab
@@ -134,9 +136,14 @@ nnoremap <C-K> <C-W><C-k>
 nnoremap <C-L> <C-W><C-l>
 
 " Syntax fixing with ALE
-let g:ale_linters = {'javascript': ['eslint'], 'typescriptreact': ['eslint'], 'vue': ['eslint'], 'python': ['flake8', 'pylint']}
+let g:ale_linters = {'javascript': ['eslint'], 'typescriptreact': ['eslint'], 'vue': ['eslint'], 'python': ['flake8', 'pylint'], 'rust': ['analyzer']}
 let g:ale_fixers = {'javascript': ['eslint'], 'typescriptreact': ['eslint'], 'vue': ['eslint'], 'python': ['black']}
+let g:ale_rust_rls_toolchain = 'stable'
 let g:ale_fix_on_save = 1
+
+let g:LanguageClient_serverCommands = {
+\ 'rust': ['rust-analyzer'],
+\ }
 
 " Syntax for dart
 let g:dart_style_guide = 1
