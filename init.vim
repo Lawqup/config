@@ -121,6 +121,8 @@ map <C-t> :Te<CR>
 " C-r replace visual-mode highlighted text
 vnoremap <C-r> "hy:%s/<C-r>h//g<left><left>
 
+
+
 " LaTeX hotkeys
 map <C-A-s> :! pdflatex % && pkill -HUP mupdf-gl<CR><CR>
 map <C-A-o> :! mupdf $(echo % \| sed 's/tex$/pdf/') & disown<CR><CR>
@@ -169,7 +171,7 @@ augroup filetypedetect
   autocmd FileType js         		setlocal noexpandtab  shiftwidth=2 tabstop=2
   autocmd FileType typescript 		setlocal noexpandtab  shiftwidth=2 tabstop=2
   autocmd FileType svelte     		setlocal noexpandtab  shiftwidth=2 tabstop=2
-  autocmd FileType tex        		selocal noexpandtab  shiftwidth=4 tabstop=4
+  autocmd FileType tex        		setlocal noexpandtab  shiftwidth=4 tabstop=4
   autocmd FileType haskell    		setlocal noexpandtab  shiftwidth=8 tabstop=8
   autocmd FileType sh         		setlocal noexpandtab  shiftwidth=4 tabstop=4
   autocmd FileType yaml       		setlocal noexpandtab  shiftwidth=2 tabstop=2
@@ -177,6 +179,11 @@ augroup filetypedetect
   autocmd FileType dart       		setlocal noexpandtab  shiftwidth=2 tabstop=2
   autocmd FileType html       		setlocal noexpandtab  shiftwidth=2 tabstop=2
   autocmd FileType typescriptreact	setlocal noexpandtab  shiftwidth=2 tabstop=2
+
+
+augroup autorun
+	autocmd filetype c nnoremap <C-x> :w <bar> exec '!gcc '.shellescape('%').' -o '.shellescape('%:r').' && ./'.shellescape('%:r')<CR>
+	autocmd filetype rust nnoremap <C-x> :w <bar> exec '!rustc '.shellescape('%').' && ./'.shellescape('%:r')<CR>
 
 " Prefer rust-analyzer over syntastic
 let g:syntastic_mode_map = { 'passive_filetypes': ['rust'] }

@@ -4,12 +4,11 @@ export PATH=$HOME/.cargo/bin:$HOME/bin:/usr/local/bin:$PATH
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-export FZF_DEFAULT_COMMAND="find . -path '*/\.*' -type d -prune -o -type f -print -o -type l -print 2> /dev/null | sed s/^..//"
-
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+
 ZSH_THEME="robbyrussell"
 
 # Set list of themes to pick from when loading at random
@@ -110,8 +109,20 @@ foreground-last() {
 zle -N foreground-last
 bindkey '^z' foreground-last
 
+
 alias mount='cd &&  mkdir attu && sshfs quptylaw@attu.cs.washington.edu:/homes/iws/quptylaw ~/attu && cd ~/attu'
 
 alias unmount='cd && umount attu &&  rm -r ~/attu'
 # unmount force to kill
 alias unmountf='cd && sudo umount -lf attu &&  rm -r ~/attu'
+
+
+# FZF
+
+export FZF_DEFAULT_COMMAND="fdfind . $HOME --exclude={.git,Music,Videos,snap,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo} --type f -H"
+
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+export FZF_ALT_C_COMMAND="fdfind . $HOME --exclude={.git,Music,Videos,snap,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo} --type d -H"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
