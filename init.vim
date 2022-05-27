@@ -39,6 +39,10 @@ Plug 'evanleck/vim-svelte', {'branch': 'main'}
 
 call plug#end()
 
+" Termdebug
+packadd! termdebug
+let g:termdebug_wide=1
+
 set nocompatible
 set noswapfile
 set ttyfast
@@ -111,7 +115,7 @@ map <C-b> :FZF<CR>
 map H ^
 map L $
 
-map <C-x> :noh<cr>:call clearmatches()<cr>
+map <C-c> :noh<cr>:call clearmatches()<cr>
 
 set backspace=indent,eol,start
 
@@ -121,6 +125,8 @@ map <C-t> :Te<CR>
 " C-r replace visual-mode highlighted text
 vnoremap <C-r> "hy:%s/<C-r>h//g<left><left>
 
+" Open termdebug and move source code to the right
+nnoremap <F6> :Termdebug<CR><c-w>h<c-w>L
 
 
 " LaTeX hotkeys
