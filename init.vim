@@ -101,9 +101,9 @@ autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
 autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
     \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
 
+
 " enter/C-m to toggle nerdtree and move cursor back to prev position
 map <C-m> :NERDTreeToggle<CR><C-w>l
-
 
 " <3 fzf
 let g:fzf_command_prefix = 'Fzf'
@@ -112,6 +112,7 @@ let g:fzf_layout=  { 'down': '~20%' }
 map <C-b> :FZF<CR>
 
 " Vim hotkeys
+
 map H ^
 map L $
 
