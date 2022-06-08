@@ -121,7 +121,7 @@ map <C-c> :noh<cr>:call clearmatches()<cr>
 set backspace=indent,eol,start
 
 " C-t open new tab
-map <C-t> :Te<CR>
+nnoremap <C-t> :Te<CR>
 
 " C-r replace visual-mode highlighted text
 vnoremap <C-r> "hy:%s/<C-r>h//g<left><left>
