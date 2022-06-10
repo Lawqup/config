@@ -119,11 +119,11 @@ alias unmountf='cd && sudo umount -lf attu &&  rm -r ~/attu'
 
 # FZF
 
-export FZF_DEFAULT_COMMAND="fdfind . $HOME --exclude={.git,Music,Videos,snap,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo} --type f -H"
+export FZF_DEFAULT_COMMAND="fdfind . $HOME --exclude={.git,Music,Videos,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo} --type f -H"
 
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-export FZF_ALT_C_COMMAND="fdfind . $HOME --exclude={.git,Music,Videos,snap,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo} --type d -H"
+export FZF_ALT_C_COMMAND="fdfind . $HOME --exclude={.git,Music,Videos,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo} --type d -H"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
