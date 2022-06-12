@@ -1,0 +1,34 @@
+Config { overrideRedirect = False
+       , font             = "xft:Ubuntu:weight=bold:pixelsize=11:antialias=true:hinting=true"
+       , additionalFonts = [ "xft:Mononoki:pixelsize=11:antialias=true:hinting=true"
+                           , "xft:Font Awesome 6 Free Solid:pixelsize=12"
+                           , "xft:Font Awesome 6 Brands:pixelsize=12"
+                           ]
+       , bgColor  = "#282a36"
+       , fgColor  = "#f8f8f2"
+       , position = TopSize L 100 24
+       , commands = [   -- Cpu usage in percent
+                      Run Cpu ["-t", "<fn=2>\xf108</fn>  cpu: (<total>%)","-H","50","--high","red"] 20
+                        -- Ram used number and percent
+                    , Run Memory ["-t", "<fn=2>\xf233</fn>  mem: <used>M (<usedratio>%)"] 20
+                        -- Disk space free
+                    , Run DiskU [("/", "<fn=2>\xf0c7</fn>  hdd: <free> free")] [] 60
+                        -- Echos an "up arrow" icon in front of the uptime output.
+                    , Run Alsa "default" "Master"
+                        [ "--template", "<fn=2>\xf028</fn>  <volumestatus>"
+                        , "--suffix"  , "True"
+                        , "--"
+                        , "--on", ""
+                        ]
+                    , Run Date "<fn=2>\xf017</fn>  %b %d %Y - (%I:%M %P) " "date" 50
+		    , Run Battery [ "-t", "<fn=2>\xf0e7</fn> <left>% / <timeleft>" ] 60
+			-- echos wifi icon before wifi
+		    , Run Com "echo" ["<fn=2>\xf1eb</fn>"] "wifi_icon" 3600
+		    , Run Com "/home/lawrence/configRepo/config/xmobar/get-wifi.sh" [] "wifi" 30
+		    , Run XMonadLog
+                    ]
+       , sepChar  = "%"
+       , alignSep = "}{"
+       , template = "%XMonadLog% }{ %wifi_icon%  %wifi% | %alsa:default:Master% | %battery% | %cpu% | %memory% | %disku% | %date% "
+       }
+

@@ -53,4 +53,5 @@ setxkbmap -option caps:swapescape
 
 nitrogen --restore &
 picom &
+xmobar &
 exec xmonad

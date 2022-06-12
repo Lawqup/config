@@ -103,7 +103,7 @@ autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_
 
 
 " enter/C-m to toggle nerdtree and move cursor back to prev position
-map <C-m> :NERDTreeToggle<CR><C-w>l
+map <F1> :NERDTreeToggle<CR><C-w>l
 
 " <3 fzf
 let g:fzf_command_prefix = 'Fzf'
