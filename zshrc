@@ -138,6 +138,7 @@ export SEED="f62968a8da1c17adf7a5f9b23e57a1f040e43b2e80abc1fd0423c692d63e3b99";
 
 alias vim='nvim'
 
+alias p='sudo pacman'
 
 # if in tty, startx
 if [[ "$(tty)" = "/dev/tty1" ]]; then
