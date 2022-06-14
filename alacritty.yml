@@ -30,6 +30,8 @@ window:
   # Spread additional padding evenly around the terminal content.
   dynamic_padding: false
 
+  opacity: 0.8
+
   # Window decorations
   # Setting this to false will result in window without borders and title bar.
   decorations: Full
@@ -64,7 +66,7 @@ font:
     style: Italic
 
   # Point size of the font
-  size: 10
+  size: 9
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.

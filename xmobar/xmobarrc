@@ -4,9 +4,11 @@ Config { overrideRedirect = False
                            , "xft:Font Awesome 6 Free Solid:pixelsize=12"
                            , "xft:Font Awesome 6 Brands:pixelsize=12"
                            ]
+       , lowerOnStart = True
+       , persistent = False
        , bgColor  = "#282a36"
        , fgColor  = "#f8f8f2"
-       , position = TopSize L 100 24
+       , position = Static { xpos = 60, ypos = 10, width = 1800, height = 28 }
        , commands = [   -- Cpu usage in percent
                       Run Cpu ["-t", "<fn=2>\xf108</fn>  cpu: (<total>%)","-H","50","--high","red"] 20
                         -- Ram used number and percent
@@ -29,6 +31,6 @@ Config { overrideRedirect = False
                     ]
        , sepChar  = "%"
        , alignSep = "}{"
-       , template = "%XMonadLog% }{ %wifi_icon%  %wifi% | %alsa:default:Master% | %battery% | %cpu% | %memory% | %disku% | %date% "
+       , template = "  %XMonadLog% }{ %wifi_icon%  %wifi% | %alsa:default:Master% | %battery% | %cpu% | %memory% | %disku% | %date%  "
        }
 

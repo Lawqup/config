@@ -17,6 +17,16 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Util.Loggers
 import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.NoBorders
+import XMonad.Layout.Gaps
+import XMonad.Hooks.ManageDocks
+
+import XMonad.Actions.Minimize
+import XMonad.Actions.NoBorders
+import XMonad.Layout.Minimize
+import XMonad.Layout.NoBorders (smartBorders)
+import XMonad.Layout.MultiToggle
+import XMonad.Layout.MultiToggle.Instances
+import XMonad.Layout.Grid (Grid(..))
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -51,12 +61,13 @@ myModMask       = mod4Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
+myWorkspaces    = ["main","web","social","4","5","6","7","8","9"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
 myNormalBorderColor  = "#dddddd"
 myFocusedBorderColor = "#32a88f"
+
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -81,10 +92,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     --  Reset the layouts on the current workspace to default
     , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
 
-    -- Resize viewed windows to the correct size
-    , ((modm,               xK_n     ), refresh)
-
-    -- Move focus to the next window
+   -- Move focus to the next window
     , ((modm,               xK_Tab   ), windows W.focusDown)
 
     -- Move focus to the next window
@@ -120,12 +128,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Deincrement the number of windows in the master area
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
 
-    -- Toggle the status bar gap
-    -- Use this binding with avoidStruts from Hooks.ManageDocks.
-    -- See also the statusBar function from Hooks.DynamicLog.
-    --
-    , ((modm              , xK_b     ), sendMessage ToggleStruts)
-
     -- Quit xmonad
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
 
@@ -134,6 +136,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- printscreen
     , ((0, xK_Print), spawn "flameshot gui")
+    -- Minimize + maximize via mod + n
+    , ((modm, xK_n), sequence_ [withFocused minimizeWindow, spawn "echo temp\n >> ~/.xmonad/temp"])
+    , ((modm .|. shiftMask, xK_n), sequence_ [withLastMinimized maximizeWindow, spawn "sed -i.bak 'ld' ~/.xmonad/temp"])
     ]
     ++
 
@@ -183,19 +188,22 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = tiled ||| Mirror tiled ||| Full
-  where
-     -- default tiling algorithm partitions the screen into two panes
-     tiled   =  spacingRaw True (Border 0 10 10 10) True (Border 10 10 10 10) True $ Tall nmaster delta ratio
+-- Gaps between windows
+mySpacing = spacingRaw True
+        (Border 10 10 10 10)
+        True
+        (Border 10 10 10 10)
+        True
 
-     -- The default number of windows in the master pane
-     nmaster = 1
-
-     -- Default proportion of screen occupied by master pane
-     ratio   = 1/2
-
-     -- Percent of screen to increment by when resizing panes
-     delta   = 3/100
+-- Layouts available via mod + space
+myLayout =
+        avoidStruts $
+        smartBorders $
+        mySpacing $
+        minimize $
+        mkToggle (NOBORDERS ?? FULL ?? EOT) $
+                Tall 1 (10/100) (60/100)
+                ||| Grid
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -235,7 +243,8 @@ myEventHook = mempty
 
 -- Perform an arbitrary action on each internal state change or X event.
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
---
+
+
 myLogHook = return ()
 
 ------------------------------------------------------------------------
@@ -246,9 +255,13 @@ myLogHook = return ()
 -- per-workspace layout choices.
 --
 
-myStartupHook = return()
+myStartupHook = return ()
 
 ------------------------------------------------------------------------
+-- misc helper functions
+
+------------------------------------------------------------------------
+
 -- xmobar properties
 
 myXmobarPP :: PP
@@ -287,6 +300,7 @@ main :: IO ()
 main = 	xmonad
 	. ewmhFullscreen
 	. ewmh
+	. docks
 	. xmobarProp
 	. withEasySB (statusBarProp "xmobar" (pure myXmobarPP)) defToggleStrutsKey
 	$ conf
@@ -307,7 +321,7 @@ conf = def {
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
-        layoutHook         = smartBorders (myLayout),
+        layoutHook         = myLayout,
         manageHook         = myManageHook ,
         handleEventHook    = myEventHook,
         logHook            = myLogHook,
@@ -316,10 +330,11 @@ conf = def {
        [
 	((0, 0x1008FF11), spawn "amixer -q sset Master 4%-"),
 	((0, 0x1008FF13), spawn "amixer -q sset Master 4%+"),
-	((0, 0x1008FF12), spawn "amixer set Master toggle")
+	((0, 0x1008FF12), spawn "amixer set Master toggle"),
+	((0, 0xFFC8), sendMessage $ Toggle FULL)
        ]
       `additionalKeysP`
       [
-       ("M-f"  , spawn "firefox")
+       ("M-f"        , spawn "firefox")
       ]
 
