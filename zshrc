@@ -4,6 +4,9 @@ export PATH=$HOME/.cargo/bin:$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
+
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -134,7 +137,7 @@ export NVM_DIR="$HOME/.nvm"
 
 export NVM_NODEJS_ORG_MIRROR=http://nodejs.org/dist/
 
-export SEED="f62968a8da1c17adf7a5f9b23e57a1f040e43b2e80abc1fd0423c692d63e3b99";
+NPM_PACKAGES="${HOME}/.npm-packages"
 
 alias vim='nvim'
 
@@ -147,3 +150,11 @@ fi
 
 # start at home
 cd
+
+export NPM_PACKAGES="/home/lawrence/.npm-packages"
+export NODE_PATH="$NPM_PACKAGES/lib/node_modules${NODE_PATH:+:$NODE_PATH}"
+export PATH="$NPM_PACKAGES/bin:$PATH"
+# Unset manpath so we can inherit from /etc/manpath via the `manpath`
+# command
+unset MANPATH  # delete if you already modified MANPATH elsewhere in your config
+export MANPATH="$NPM_PACKAGES/share/man:$(manpath)"

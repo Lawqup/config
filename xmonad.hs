@@ -19,6 +19,7 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Gaps
 import XMonad.Hooks.ManageDocks
+import Graphics.X11.ExtraTypes.XF86
 
 import XMonad.Actions.Minimize
 import XMonad.Actions.NoBorders
@@ -139,6 +140,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Minimize + maximize via mod + n
     , ((modm, xK_n), sequence_ [withFocused minimizeWindow, spawn "echo temp\n >> ~/.xmonad/temp"])
     , ((modm .|. shiftMask, xK_n), sequence_ [withLastMinimized maximizeWindow, spawn "sed -i.bak 'ld' ~/.xmonad/temp"])
+
+    , ((0, xF86XK_MonBrightnessUp), spawn "lux -a 10%")
+    ,((0, xF86XK_MonBrightnessDown), spawn "lux -s 10%")
+
     ]
     ++
 
