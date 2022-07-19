@@ -28,6 +28,7 @@ import XMonad.Layout.NoBorders (smartBorders)
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.Grid (Grid(..))
+import XMonad.Util.NamedScratchpad
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -231,6 +232,7 @@ myManageHook = composeAll
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore
     , isFullscreen                  --> doFullFloat]
+    <+> namedScratchpadManageHook myScratchPads
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -298,7 +300,21 @@ myXmobarPP = def
     lowWhite = xmobarColor "#bbbbbb" ""
 
 ------------------------------------------------------------------------
+-- scratchpads
 
+myScratchPads :: [NamedScratchpad]
+myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
+                ]
+  where
+    spawnTerm  = myTerminal ++ " -t scratchpad"
+    findTerm   = title =? "scratchpad"
+    manageTerm = customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.9
+                 w = 0.9
+                 t = 0.95 -h
+                 l = 0.95 -w
+------------------------------------------------------------------------
 -- Now run xmonad with all the hooks we set up.
 
 main :: IO ()
@@ -327,7 +343,7 @@ conf = def {
 
       -- hooks, layouts
         layoutHook         = myLayout,
-        manageHook         = myManageHook ,
+        manageHook         = myManageHook,
         handleEventHook    = myEventHook,
         logHook            = myLogHook,
         startupHook        = myStartupHook
@@ -340,6 +356,7 @@ conf = def {
        ]
       `additionalKeysP`
       [
-       ("M-f"        , spawn "firefox")
+       ("M-f", spawn "firefox"),
+       ("M-s", namedScratchpadAction myScratchPads "terminal")
       ]
 
