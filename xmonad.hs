@@ -304,6 +304,7 @@ myXmobarPP = def
 
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
+                , NS "calculator" spawnCalc findCalc manageCalc
                 ]
   where
     spawnTerm  = myTerminal ++ " -t scratchpad"
@@ -314,6 +315,14 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
                  w = 0.9
                  t = 0.95 -h
                  l = 0.95 -w
+    spawnCalc  = "qalculate-gtk"
+    findCalc   = className =? "Qalculate-gtk"
+    manageCalc = customFloating $ W.RationalRect l t w h
+               where
+                 h = 0.5
+                 w = 0.4
+                 t = 0.75 -h
+                 l = 0.70 -w
 ------------------------------------------------------------------------
 -- Now run xmonad with all the hooks we set up.
 
@@ -357,6 +366,7 @@ conf = def {
       `additionalKeysP`
       [
        ("M-f", spawn "firefox"),
-       ("M-s", namedScratchpadAction myScratchPads "terminal")
+       ("M-s", namedScratchpadAction myScratchPads "terminal"),
+       ("M-q", namedScratchpadAction myScratchPads "calculator")
       ]
 
