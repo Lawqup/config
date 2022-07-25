@@ -1,3 +1,6 @@
+(defvar vars/default-font-size 130)
+
+(setq backup-directory-alist `(("." . "~/.saves")))
 (setq backup-by-copying t)
 
 (setq custom-file "~/.emacs.d/custom.el")
@@ -10,16 +13,21 @@
 (set-fringe-mode 10)        ; Give some breathing room
 (menu-bar-mode -1)
 
+;; set authentication tokens file
+(setq auth-sources '("~/.authinfo"))
 
 
 (set-face-attribute 'default nil
 		    :font "JetBrains Mono"
 		    :weight 'light
-		    :height 130)
+		    :height vars/default-font-size)
 
 
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+;; Set the fixed pitch face
+(set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 140)
+
+;; Set the variable pitch face
+(set-face-attribute 'variable-pitch nil :font "DejaVu Sans" :height 180 :weight 'regular)
 
 (global-display-line-numbers-mode t)
 (menu-bar--display-line-numbers-mode-relative)
@@ -30,8 +38,6 @@
                 eshell-mode-hook
 		shell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-
 
 ;; Initialize package sources
 (require 'package)
@@ -108,6 +114,10 @@
 (use-package ivy-rich
   :init (ivy-rich-mode 1))
 
+;; dont inherit faces from mode
+(with-eval-after-load 'ivy-faces
+  (set-face-attribute 'ivy-org nil :inherit 'default))
+
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
 	 ("C-x b" . counsel-ibuffer)
@@ -116,8 +126,6 @@
 	 ("C-r" . counsel-minibuffer-history))
   :config
   (setq ivy-initial-inputs-alist nil)) ;; Don't start searches with ^
-
-(global-set-key (kbd "C-M-j") 'counsel-switch-buffer)
 
 (use-package helpful
   :custom
@@ -130,27 +138,25 @@
   ([remap describe-command] . helpful-command)
   ([remap describe-key] . helpful-key))
 
-(use-package general
-  :config
-  (general-create-definer lq/leader-keys
-    :keymaps '(normal insert visual emacs)
-    :prefix "SPC"
-    :global-prefix "C-SPC")
-
-  (lq/leader-keys
-    "t"  '(:ignore t :which-key "toggles")
-    "tt" '(counsel-load-theme :which-key "choose theme")))
-
 (use-package evil
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
+  (setq evil-want-fine-undo t) 
   :config
   (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-
+  (define-key evil-insert-state-map (kbd "C-SPC") 'evil-delete-backward-char-and-join)
+  (define-key evil-motion-state-map (kbd ":") 'evil-repeat-find-char)
+  (define-key evil-motion-state-map (kbd ";") 'evil-ex)
+  (define-key evil-motion-state-map (kbd "H") 'evil-first-non-blank-of-visual-line)
+  (define-key evil-motion-state-map (kbd "L") 'evil-end-of-visual-line)
+  ;; vim like window movement
+  (define-key global-map (kbd "C-h") 'evil-window-left)
+  (define-key global-map (kbd "C-j") 'evil-window-down)
+  (define-key global-map (kbd "C-k") 'evil-window-up)
+  (define-key global-map (kbd "C-l") 'evil-window-right)
   ;; Use visual line motions even outside of visual-line-mode buffers
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
@@ -182,3 +188,96 @@
 (use-package magit
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+(use-package general)
+
+(general-define-key
+ "<escape>" 'keyboard-escape-quit
+ "C-M-j" 'counsel-switch-buffer)
+
+;; escape magit popups with esc
+(general-define-key
+   :keymaps 'transient-base-map
+   "<escape>" 'transient-quit-one)
+
+;; NOTE: Make sure to configure a GitHub token before using this package!
+;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
+;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
+(use-package forge)
+
+;; Org Mode Configuration ------------------------------------------------------
+
+(defun lq/org-font-setup ()
+  ;; Replace list hyphen with dot
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+  ;; Set faces for heading levels
+  (dolist (face '((org-level-1 . 1.2)
+                  (org-level-2 . 1.1)
+                  (org-level-3 . 1.05)
+                  (org-level-4 . 1.0)
+                  (org-level-5 . 1.1)
+                  (org-level-6 . 1.1)
+                  (org-level-7 . 1.1)
+                  (org-level-8 . 1.1)))
+    (set-face-attribute (car face) nil :font "DejaVu Sans" :weight 'regular :height (cdr face)))
+
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+
+(with-eval-after-load 'org-indent
+  (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch)))
+
+(defun lq/org-mode-setup ()
+  (setq org-ellipsis " ▾")
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (visual-line-mode 1)
+  (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1))))
+
+(use-package org
+  :hook (org-mode . lq/org-mode-setup)
+  :config
+  (lq/org-font-setup))
+
+
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+(defun lq/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(add-hook 'org-mode-hook (lambda ()
+   "Beautify Org Checkbox Symbol"
+   (push '("[ ]" . "☐") prettify-symbols-alist)
+   (push '("[X]" . "☑" ) prettify-symbols-alist)
+   (push '("[-]" . "❍" ) prettify-symbols-alist)
+   (prettify-symbols-mode)))
+
+(use-package visual-fill-column
+  :hook (org-mode . lq/org-mode-visual-fill))
+
+(defun org-toggle-emphasis ()
+  "Toggle hiding/showing of org emphasize markers."
+  (interactive)
+  (if org-hide-emphasis-markers
+      (set-variable 'org-hide-emphasis-markers nil)
+    (set-variable 'org-hide-emphasis-markers t))
+  (org-mode-restart))
+
+(general-define-key
+ :keymaps 'org-mode-map
+ "C-c e" 'org-toggle-emphasis)

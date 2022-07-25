@@ -140,7 +140,7 @@ export NVM_NODEJS_ORG_MIRROR=http://nodejs.org/dist/
 NPM_PACKAGES="${HOME}/.npm-packages"
 
 alias vim='nvim'
-
+alias em='emacs -nw'
 alias p='sudo pacman'
 
 # if in tty, startx
