@@ -52,7 +52,21 @@
 
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
-   (package-install 'use-package))
+  (package-install 'use-package))
+
+;; Install straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
@@ -237,7 +251,6 @@
   (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch)))
 
 (defun lq/org-mode-setup ()
-  (setq org-ellipsis " ▾")
   (org-indent-mode)
   (variable-pitch-mode 1)
   (visual-line-mode 1)
@@ -246,6 +259,50 @@
 (use-package org
   :hook (org-mode . lq/org-mode-setup)
   :config
+  
+  (setq org-refile-targets
+    '(("archive.org" :maxlevel . 1)
+      ("todo.org" :maxlevel . 1)))
+
+  ;; Save Org buffers after refiling!
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+  
+  (setq org-ellipsis " ▾")
+
+  (setq org-agenda-files '("~/Documents/Org"))
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+  
+  (setq org-capture-templates
+	`(("t" "Tasks / Projects")
+	  ("tt" "Task" entry (file+olp "~/Documents/Org/todo.org" "Inbox")
+           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+
+	  ("j" "Journal Entries")
+	  ("jj" "Journal" entry
+           (file+olp+datetree "~/Documents/Org/journal.org")
+           "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+           ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+           :clock-in :clock-resume
+           :empty-lines 1)
+	  ("jm" "Meeting" entry
+           (file+olp+datetree "~/Documents/Org/journal.org")
+           "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+           :clock-in :clock-resume
+           :empty-lines 1)
+
+	  ("w" "Workflows")
+	  ("we" "Checking Email" entry (file+olp+datetree "~/Documents/Org/journal.org")
+           "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
+
+	  ("m" "Metrics Capture")
+	  ("mw" "Weight" table-line (file+headline "~/Documents/Org/stats.org" "Weight")
+	   "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+
+  (define-key global-map (kbd "C-c c")
+    (lambda () (interactive) (org-capture nil)))
+  
   (lq/org-font-setup))
 
 
@@ -281,3 +338,8 @@
 (general-define-key
  :keymaps 'org-mode-map
  "C-c e" 'org-toggle-emphasis)
+
+(use-package org-pandoc-import
+  :straight (:host github
+             :repo "tecosaur/org-pandoc-import"
+             :files ("*.el" "filters" "preprocessors")))

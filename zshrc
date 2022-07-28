@@ -158,3 +158,10 @@ export PATH="$NPM_PACKAGES/bin:$PATH"
 # command
 unset MANPATH  # delete if you already modified MANPATH elsewhere in your config
 export MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
+
+# bun completions
+[ -s "/home/lawrence/.bun/_bun" ] && source "/home/lawrence/.bun/_bun"
+
+# bun
+export BUN_INSTALL="/home/lawrence/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
