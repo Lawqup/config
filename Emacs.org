@@ -1,4 +1,5 @@
-#+title Emacs Configuration
+#+title: Emacs Configuration
+#+author: Lawrence Qupty
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 
 This org file can generate an =init.el= file that Emacs can use as a config. To generate, run ~M-x org-babel-tangle~.
