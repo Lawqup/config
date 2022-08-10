@@ -165,3 +165,16 @@ export MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
 # bun
 export BUN_INSTALL="/home/lawrence/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Tell emacs vterm what a prompt is
+vterm_printf(){
+    if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ] ); then
+        # Tell tmux to pass the escape sequences through
+        printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+    elif [ "${TERM%%-*}" = "screen" ]; then
+        # GNU screen (screen, screen-256color, screen-256color-bce)
+        printf "\eP\e]%s\007\e\\" "$1"
+    else
+        printf "\e]%s\e\\" "$1"
+    fi
+}
