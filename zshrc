@@ -87,9 +87,9 @@ export MANPATH="/usr/local/man:$MANPATH"
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-	export EDITOR='vim'
+	export EDITOR='emacsclient'
 else
-	export EDITOR='mvim'
+	export EDITOR='emacsclient'
 fi
 
 # Compilation flags
@@ -148,9 +148,6 @@ if [[ "$(tty)" = "/dev/tty1" ]]; then
 	pgrep xmonad || startx
 fi
 
-# start at home
-cd
-
 export NPM_PACKAGES="/home/lawrence/.npm-packages"
 export NODE_PATH="$NPM_PACKAGES/lib/node_modules${NODE_PATH:+:$NODE_PATH}"
 export PATH="$NPM_PACKAGES/bin:$PATH"
@@ -167,6 +164,7 @@ export BUN_INSTALL="/home/lawrence/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Tell emacs vterm what a prompt is
+# also allow directory tracking
 vterm_printf(){
     if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ] ); then
         # Tell tmux to pass the escape sequences through
@@ -178,3 +176,12 @@ vterm_printf(){
         printf "\e]%s\e\\" "$1"
     fi
 }
+
+alias x="xdg-open"
+
+# vterm directory tracking
+vterm_prompt_end() {
+    vterm_printf "51;A$(whoami)@$(hostname):$(pwd)";
+}
+setopt PROMPT_SUBST
+PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'

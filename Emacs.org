@@ -242,6 +242,17 @@ Ace-window makes window movement and management simple. Use ~M-o~ to call =ace-w
     - ~?~ - show these command bindings
 
 ** Misc Keybindings
+*** Custom emacs behavior
+
+Kill a buffer without needing to ask for confirmation, unless that buffer is modified.
+
+#+begin_src emacs-lisp
+  (setq kill-buffer-query-functions
+        (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
+
+  (general-define-key
+   "C-x k" 'kill-buffer-and-window)
+#+end_src
 
 *** General Keybindings
 
@@ -395,6 +406,15 @@ Helpful gives quick information for Counsel items.
     ([remap describe-variable] . counsel-describe-variable)
     ([remap describe-command] . helpful-command)
     ([remap describe-key] . helpful-key))
+#+end_src
+
+* Documents
+
+** pdf-tools
+
+#+begin_src emacs-lisp
+  (use-package pdf-tools)
+  (pdf-tools-install)  ; Standard activation command
 #+end_src
 
 * Org Mode
@@ -838,6 +858,14 @@ Run the =python-black= formatter on save.
     :hook (python-mode . python-black-on-save-mode))
 #+end_src
 
+Use LSP-mode in src block buffers (access when on python source block with ~C-c '~)
+
+#+begin_src emacs-lisp
+  (defun org-babel-edit-prep:python (babel-info)
+    (setq-local buffer-file-name (->> babel-info caddr (alist-get :tangle)))
+    (lsp))
+#+end_src
+
 *** Rust
 
 #+begin_src emacs-lisp
@@ -908,11 +936,13 @@ Turn on better colors:
 VTerm is just better Term
 
 #+begin_src emacs-lisp
+
   (use-package vterm
     :bind
     ("<f2>" . vterm)
     :config
     (setq vterm-max-scrollback 10000))
+  
 #+end_src
 
 * File management
