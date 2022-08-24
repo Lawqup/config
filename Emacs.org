@@ -728,6 +728,8 @@ Specify the timer end sound for org timer.
 Better completions than =completions-at-point=!
 
 #+begin_src emacs-lisp
+  (global-company-mode)
+  
   (use-package company
     :after lsp-mode
     :hook (lsp-mode . company-mode)
@@ -816,7 +818,14 @@ Yasnippet provides placing code snippets in code.
 #+end_src
 
 ** Languages
-*** TypeScript
+*** JS stuff
+**** Javascript
+
+#+begin_src emacs-lisp
+  (setq-default js-indent-level 2)
+#+end_src
+
+**** Typescript
 
 #+begin_src emacs-lisp
   (use-package typescript-mode
@@ -832,21 +841,53 @@ Make sure =ts-ls= is downloaded
   npm install -g typescript-language-server typescript
 #+end_src
 
+**** JSX
+
+#+begin_src emacs-lisp
+  (use-package rjsx-mode)
+#+end_src
+
+**** TSX
+
+#+begin_src emacs-lisp
+      (use-package web-mode
+        :mode "\\.tsx\\'"
+        :hook
+        (web-mode . lsp-deferred))
+#+end_src
+
+**** Json
+
+#+begin_src emacs-lisp
+  (use-package json-mode
+    :mode "\\.json\\'"
+    :config
+    (add-to-list 'flycheck-disabled-checkers 'json-python-json))
+#+end_src
+
+**** Prettier
+
+#+begin_src emacs-lisp
+  (use-package prettier
+    :hook
+    ((typescript-mode json-mode web-mode) . prettier-mode))
+#+end_src
+
 *** Python
 
 Download the =pyls= language server.
 
-#+begin_src sh :results silent
-    pip install --user "python-lsp-server"
+#+begin_src sh
+  pip install --user "python-lsp-server"
 #+end_src
 
 Use =python-mode= and flycheck.
 
 #+begin_src emacs-lisp
-      (use-package python-mode
-        :ensure nil
-        :hook
-        (python-mode . lsp-deferred))
+  (use-package python-mode
+    :ensure nil
+    :hook
+    (python-mode . lsp-deferred))
 #+end_src
 
 Run the =python-black= formatter on save.
@@ -858,7 +899,7 @@ Run the =python-black= formatter on save.
     :hook (python-mode . python-black-on-save-mode))
 #+end_src
 
-Use LSP-mode in src block buffers (access when on python source block with ~C-c '~)
+Use LSP-mode in src block buffers (access when on python source block with ~C-c ‘~)
 
 #+begin_src emacs-lisp
   (defun org-babel-edit-prep:python (babel-info)
@@ -897,7 +938,6 @@ Use LSP-mode in src block buffers (access when on python source block with ~C-c 
     ;; no longer be necessary.
     (when buffer-file-name
       (setq-local buffer-save-without-query t)))
-
 #+end_src
 
 * Terminal
