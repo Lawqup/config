@@ -6,17 +6,13 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Layout.Spacing
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
 import XMonad.Util.EZConfig(additionalKeys, additionalKeysP)
 import System.IO
-import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
 import XMonad.Util.Loggers
 import XMonad.Hooks.ManageHelpers
-import XMonad.Layout.NoBorders
 import XMonad.Layout.Gaps
 import XMonad.Hooks.ManageDocks
 import Graphics.X11.ExtraTypes.XF86
@@ -29,6 +25,8 @@ import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.Grid (Grid(..))
 import XMonad.Util.NamedScratchpad
+
+
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -74,7 +72,7 @@ myFocusedBorderColor = "#32a88f"
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 --
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
+myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
 
     -- launch a terminal
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
@@ -131,10 +129,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
 
     -- Quit xmonad
-    , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
-
-    -- Restart xmonad
-    , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
+    , ((modm .|. shiftMask, xK_q     ), io exitSuccess)
 
     -- printscreen
     , ((0, xK_Print), spawn "flameshot gui")
@@ -169,18 +164,18 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
 --
-myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
+myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 
     -- mod-button1, Set the window to floating mode and move by dragging
-    [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
-                                       >> windows W.shiftMaster))
+    [ ((modm, button1), \w -> focus w >> mouseMoveWindow w
+                                       >> windows W.shiftMaster)
 
     -- mod-button2, Raise the window to the top of the stack
-    , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
+    , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
 
     -- mod-button3, Set the window to floating mode and resize by dragging
-    , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
-                                       >> windows W.shiftMaster))
+    , ((modm, button3), \w -> focus w >> mouseResizeWindow w
+                                       >> windows W.shiftMaster)
     ]
 
 ------------------------------------------------------------------------
@@ -327,13 +322,13 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
 -- Now run xmonad with all the hooks we set up.
 
 main :: IO ()
-main = 	xmonad
-	. ewmhFullscreen
-	. ewmh
-	. docks
-	. xmobarProp
-	. withEasySB (statusBarProp "xmobar" (pure myXmobarPP)) defToggleStrutsKey
-	$ conf
+main =  xmonad
+        . ewmhFullscreen
+        . ewmh
+        . docks
+        . xmobarProp
+        . withEasySB (statusBarProp "xmobar" (pure myXmobarPP)) defToggleStrutsKey
+        $ conf
 
 conf = def {
       -- simple stuff
@@ -358,14 +353,16 @@ conf = def {
         startupHook        = myStartupHook
     } `additionalKeys`
        [
-	((0, 0x1008FF11), spawn "amixer -q sset Master 4%-"),
-	((0, 0x1008FF13), spawn "amixer -q sset Master 4%+"),
-	((0, 0x1008FF12), spawn "amixer set Master toggle"),
-	((0, 0xFFC8), sendMessage $ Toggle FULL)
+        ((0, 0x1008FF11), spawn "amixer -q sset Master 4%-"),
+        ((0, 0x1008FF13), spawn "amixer -q sset Master 4%+"),
+        ((0, 0x1008FF12), spawn "amixer set Master toggle"),
+        ((0, 0xFFC8), sendMessage $ Toggle FULL)
        ]
       `additionalKeysP`
       [
        ("M-f", spawn "firefox"),
+       ("M-e", spawn "emacs"),
+       ("M-r", spawn "xmonad --recompile; xmonad --restart"),
        ("M-s", namedScratchpadAction myScratchPads "terminal"),
        ("M-q", namedScratchpadAction myScratchPads "calculator")
       ]

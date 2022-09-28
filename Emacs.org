@@ -34,6 +34,15 @@ Set backup directory to not be the directory of the backed-up file, and =custom-
 (load custom-file)
 #+end_src
 
+Also, make sure environement variables carry over to emacs from the shell.
+
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell)
+  
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize))
+#+end_src
+
 ** Package management
 
 Initialize package sources.
@@ -114,19 +123,21 @@ Set default font with =vars/default-font/size=.
 
 #+begin_src emacs-lisp
 
-(set-face-attribute 'default nil
-		    :font "JetBrains Mono"
-		    :weight 'light
-		    :height vars/default-font-size)
+  (set-face-attribute 'default nil
+                      :font "JetBrains Mono"
+                      :weight 'light
+                      :height vars/default-font-size)
 
 #+end_src
 
 Set fixed (monospace) and variable width fonts.
 
 #+begin_src emacs-lisp
-(set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 140)
+  (set-face-attribute 'fixed-pitch nil
+                      :font "JetBrains Mono" :height 140)
 
-(set-face-attribute 'variable-pitch nil :font "DejaVu Sans" :height 180 :weight 'regular)
+  (set-face-attribute 'variable-pitch nil
+                      :font "DejaVu Sans" :height 180 :weight 'regular)
 #+end_src
 
 Install font with icons
@@ -212,9 +223,10 @@ General makes it easy to add keybindings. For an example, see how it is used to 
   (use-package general)
 #+end_src
 
-** Ace-window
+** Window management
+*** Ace-window
 
-Ace-window makes window movement and management simple. Use ~M-o~ to call =ace-window=. Then, use 1,2,3,4 etc to chose a window.
+Ace-window makes window movement and management simple. Use ~M-o~ to call =ace-window=.
 
 #+begin_src emacs-lisp
   (use-package ace-window
@@ -226,7 +238,7 @@ Ace-window makes window movement and management simple. Use ~M-o~ to call =ace-w
     (setq aw-ignore-on nil))
 #+end_src
 
-*** Other keybindings
+**** Keybindings
 
     - ~x~ - delete window
     - ~m~ - swap windows
@@ -240,6 +252,14 @@ Ace-window makes window movement and management simple. Use ~M-o~ to call =ace-w
     - ~b~ - split window horizontally
     - ~o~ - maximize current window
     - ~?~ - show these command bindings
+
+*** Winner
+
+Winner allows restoration of window config with ~C-c <left>~ (undo) and ~C-c <right>~ (redo)
+
+#+begin_src emacs-lisp
+  (winner-mode 1)
+#+end_src
 
 ** Misc Keybindings
 *** Custom emacs behavior
@@ -423,35 +443,36 @@ Helpful gives quick information for Counsel items.
 Set up helper function to define fonts and sizes for specific indentation levels and styles. Also replace the list hyphen =-= with a dot =•=.
 
 #+begin_src emacs-lisp
-    (defun lq/org-font-setup ()
-      ;; Replace list hyphen with dot
-      (font-lock-add-keywords 'org-mode
-                              '(("^ *\\([-]\\) "
-                                 (0 (prog1 ()
-  (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  (defun lq/org-font-setup ()
+    ;; Replace list hyphen with dot
+    (font-lock-add-keywords 'org-mode
+                            '(("^ *\\([-]\\) "
+                               (0 (prog1 ()
+                                    (compose-region
+                                     (match-beginning 1) (match-end 1) "•"))))))
 
-      ;; Set faces for heading levels
-      (dolist (face '((org-level-1 . 1.2)
-                      (org-level-2 . 1.1)
-                      (org-level-3 . 1.05)
-                      (org-level-4 . 1.0)
-                      (org-level-5 . 1.1)
-                      (org-level-6 . 1.1)
-                      (org-level-7 . 1.1)
-                      (org-level-8 . 1.1)))
-        (set-face-attribute (car face) nil
-                            :font "DejaVu Sans" :weight 'regular :height (cdr face)))
+    ;; Set faces for heading levels
+    (dolist (face '((org-level-1 . 1.2)
+                    (org-level-2 . 1.1)
+                    (org-level-3 . 1.05)
+                    (org-level-4 . 1.0)
+                    (org-level-5 . 1.1)
+                    (org-level-6 . 1.1)
+                    (org-level-7 . 1.1)
+                    (org-level-8 . 1.1)))
+      (set-face-attribute (car face) nil
+                          :font "DejaVu Sans" :weight 'regular :height (cdr face)))
 
-      ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-      (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-      (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-      (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-      (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-      (set-face-attribute 'org-special-keyword nil
-                          :inherit '(font-lock-comment-face fixed-pitch))
-      (set-face-attribute 'org-meta-line nil
-                          :inherit '(font-lock-comment-face fixed-pitch))
-      (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+    (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-special-keyword nil
+                        :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-meta-line nil
+                        :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 #+end_src
 
 ** General Config Setup
@@ -689,7 +710,7 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 Specify the timer end sound for org timer.
 
 #+begin_src emacs-lisp
-  (setq org-clock-sound "~/Downloads/ding.wav")
+  (setq org-clock-sound "~/.emacs.d/assets/ding.wav")
 #+end_src
 
 * Development
@@ -938,6 +959,25 @@ Use LSP-mode in src block buffers (access when on python source block with ~C-c 
     ;; no longer be necessary.
     (when buffer-file-name
       (setq-local buffer-save-without-query t)))
+#+end_src
+
+*** Java
+
+#+begin_src emacs-lisp
+  (use-package lsp-java
+    :config
+    (add-hook 'java-mode-hook 'lsp))
+#+end_src
+
+*** Haskell
+
+#+begin_src emacs-lisp
+      (use-package lsp-haskell
+        :config
+        (setq))
+
+      (use-package haskell-mode
+         :hook (haskell-mode . lsp-deferred))
 #+end_src
 
 * Terminal
