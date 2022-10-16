@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Exercise Author Comment
+# key: <author
+# --
+/**
+ * Author: Lawrence Qupty
+ * Email: Quptylaw@cs.washington.edu
+ */

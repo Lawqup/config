@@ -113,7 +113,8 @@ Set up relative line numbers, and set which types of files should have them.
                   vterm-mode-hook
                   eshell-mode-hook
                   treemacs-mode-hook
-                  shell-mode-hook))
+                  shell-mode-hook
+                  pdf-view-mode-hook))
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
 #+end_src
 
@@ -197,7 +198,8 @@ Use Evil for Vim keybindings (based)
     (define-key evil-motion-state-map (kbd "H")
       'evil-first-non-blank-of-visual-line)
     (define-key evil-motion-state-map (kbd "L") 'evil-end-of-visual-line)
-
+    (global-unset-key (kbd "C-r"))
+    
     ;; Use visual line motions even outside of visual-line-mode buffers
     (evil-global-set-key 'motion "j" 'evil-next-visual-line)
     (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
@@ -271,15 +273,16 @@ Kill a buffer without needing to ask for confirmation, unless that buffer is mod
         (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 
   (general-define-key
-   "C-x k" 'kill-buffer-and-window)
+   "C-x k" 'kill-buffer-and-window
+   "C-x C-k" 'message-kill-buffer)
 #+end_src
 
 *** General Keybindings
 
 #+begin_src emacs-lisp
-(general-define-key
-"<escape>" 'keyboard-escape-quit
-"C-x C-h" 'counsel-switch-buffer)
+  (general-define-key
+   "<escape>" 'keyboard-escape-quit
+   "C-x C-h" 'counsel-switch-buffer)
 #+end_src
 
 *** Evil-org-mode
@@ -430,6 +433,40 @@ Helpful gives quick information for Counsel items.
 
 * Documents
 
+** Latex
+
+Use Auctex for many emacs latex features.
+
+#+begin_src emacs-lisp
+  (defun lq/auctex-setup ()
+    (lsp)
+    (visual-line-mode 1)
+    (flyspell-mode 1)
+    (prettify-symbols-mode)
+    (setq prettify-symbols-unprettify-at-point 'right-edge)
+    (local-unset-key (kbd "C-c C-c"))
+    (local-set-key (kbd "C-c C-c")
+                   (lambda ()
+                     (interactive)
+                     (TeX-command-run-all nil))))
+  (use-package auctex
+    :defer t
+    :hook (LaTeX-mode . lq/auctex-setup))
+
+
+  (setq TeX-parse-self t); Enable parse on load.
+  (setq TeX-auto-save t); Enable parse on save.
+
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+        TeX-source-correlate-start-server t)
+
+  ;; Auto revert pdf buffer
+  (add-hook 'TeX-after-compilation-finished-functions
+            #'TeX-revert-document-buffer)
+  ;; Dont save on compile
+  (setq TeX-save-query nil)
+#+end_src
+
 ** pdf-tools
 
 #+begin_src emacs-lisp
@@ -483,8 +520,7 @@ Helper function that will run as a hook to setup basic things including some UI.
   (defun lq/org-mode-setup ()
     (org-indent-mode)
     (variable-pitch-mode 1)
-    (visual-line-mode 1)
-    (display-line-numbers-mode -1))
+    (visual-line-mode 1))
 #+end_src
 
 ** Tie Everything Together
@@ -714,130 +750,6 @@ Specify the timer end sound for org timer.
 #+end_src
 
 * Development
-** Language server config
-*** LSP mode
-
-=LSP-mode= enables the protocol that allows connecting to language servers.
-
-#+begin_src emacs-lisp
-  (defun lq/lsp-mode-setup ()
-    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-    (lsp-headerline-breadcrumb-mode))
-
-  (use-package lsp-mode
-    :commands (lsp lsp-deferred)
-    :hook (lsp-mode . lq/lsp-mode-setup)
-    :init
-    (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-    :config
-    (lsp-enable-which-key-integration t))
-#+end_src
-
-*** LSP mode extras
-
-=LSP-ui= for better LSP UI.
-
-#+begin_src emacs-lisp
-  (use-package lsp-ui
-    :hook (lsp-mode . lsp-ui-mode)
-    :custom
-    (lsp-ui-doc-position 'bottom))
-#+end_src
-
-*** Company mode
-
-Better completions than =completions-at-point=!
-
-#+begin_src emacs-lisp
-  (global-company-mode)
-  
-  (use-package company
-    :after lsp-mode
-    :hook (lsp-mode . company-mode)
-    :bind (:map company-active-map
-           ("<tab>" . company-complete-selection))
-          (:map lsp-mode-map
-           ("<tab>" . company-indent-or-complete-common))
-    :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
-
-  (use-package company-box
-    :hook (company-mode . company-box-mode))
-#+end_src
-
-** Treemacs
-
-=LSP-treemacs= for tree file view.
-
-#+begin_src emacs-lisp
-  (use-package lsp-treemacs
-      :after lsp)
-
-  (defun lq/treemacs-display-then-switch-right ()
-    "Display current project in treemacs then switch window right"
-    (interactive)
-    (treemacs-display-current-project-exclusively)
-    (windmove-right))
-
-  (general-define-key
-   "<f7>" 'treemacs
-   "<f8>" 'lq/treemacs-display-then-switch-right)
-  
-#+end_src
-
-=treemacs-projectile= for switching treemacs workspace to projects automatically
-
-#+begin_src emacs-lisp
-  (use-package treemacs-projectile
-    :ensure t
-    :after (treemacs projectile))
-#+end_src
-
-** Commenting
-
-Use "M-/" to comment highlighted lines.
-
-#+begin_src emacs-lisp
-(use-package evil-nerd-commenter
-  :bind ("M-/" . evilnc-comment-or-uncomment-lines))
-#+end_src
-
-** Delimiters
-
-Use Rainbow Delimiters to make it easier to see different layers of nesting.
-
-#+begin_src emacs-lisp
-  (use-package rainbow-delimiters
-    :hook (prog-mode . rainbow-delimiters-mode))
-#+end_src
-
-Enable =electric-pair-mode= by default. Use ~C-q [DELIM]~ to insert a single delimiter.
-
-#+begin_src emacs-lisp
-  (electric-pair-mode 1)
-#+end_src
-
-Evil-surround emulates [[https://github.com/tpope/vim-surround][surround.vim]].
-
-Surround highlighted text (in visual mode) with a delim using ~S~ if you want to surround on a line above and under, use ~g S~.
-
-#+begin_src emacs-lisp
-  (use-package evil-surround
-    :ensure t
-    :config
-    (global-evil-surround-mode 1))
-#+end_src
-
-** Yasnippet
-
-Yasnippet provides placing code snippets in code.
-
-#+begin_src emacs-lisp
-  (use-package yasnippet
-    :hook (prog-mode . yas-minor-mode))
-#+end_src
-
 ** Languages
 *** JS stuff
 **** Javascript
@@ -978,6 +890,186 @@ Use LSP-mode in src block buffers (access when on python source block with ~C-c 
 
       (use-package haskell-mode
          :hook (haskell-mode . lsp-deferred))
+#+end_src
+
+*** C/C++
+
+#+begin_src emacs-lisp
+  (use-package cc-mode
+    :hook (c-mode . lsp)
+    :hook (c++-mode . lsp))
+#+end_src
+
+** Debugging
+
+Setup DAP-mode
+
+#+begin_src emacs-lisp
+  (use-package dap-mode)
+#+end_src
+
+*** Java
+
+#+begin_src emacs-lisp
+  (dap-register-debug-template "My Runner"
+                               (list :type "java"
+                                     :request "launch"
+                                     :args ""
+                                     :vmArgs "-ea -Dmyapp.instance.name=myapp_1"
+                                     :projectName "myapp"
+                                     :mainClass "com.domain.AppRunner"
+                                     :env '(("DEV" . "1"))))
+#+end_src
+
+** Language server config
+*** LSP mode
+
+=LSP-mode= enables the protocol that allows connecting to language servers.
+
+#+begin_src emacs-lisp
+  (defun lq/lsp-mode-setup ()
+    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+    (setq lsp-completion-provider :none) ;; don't touch company backends
+    (lsp-headerline-breadcrumb-mode))
+
+  (use-package lsp-mode
+    :commands (lsp lsp-deferred)
+    :hook (lsp-mode . lq/lsp-mode-setup)
+    :init
+    (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+    :config
+    (lsp-enable-which-key-integration t))
+#+end_src
+
+*** LSP mode extras
+
+=LSP-ui= for better LSP UI.
+
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    (lsp-ui-doc-position 'bottom))
+#+end_src
+
+*** Company mode
+
+Better completions than =completions-at-point=!
+
+#+begin_src emacs-lisp
+  (global-company-mode)
+
+  (use-package company
+    :after lsp-mode
+    :hook (lsp-mode . company-mode)
+    :bind (:map company-active-map
+           ("<tab>" . company-complete-selection))
+          (:map lsp-mode-map
+           ("<tab>" . company-indent-or-complete-common))
+    :custom
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0))
+
+  (use-package company-box
+    :hook (company-mode . company-box-mode))
+#+end_src
+
+Yasnippet integration with company.
+
+#+begin_src emacs-lisp
+  (defvar company-mode/enable-yas f
+    "Enable yasnippet for all backends.")
+
+  (defun company-mode/backend-with-yas (backend)
+    (if (or (not company-mode/enable-yas)
+            (and (listp backend) (member 'company-yasnippet backend)))
+        backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
+
+  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+#+end_src
+
+** Treemacs
+
+=LSP-treemacs= for tree file view.
+
+#+begin_src emacs-lisp
+  (use-package lsp-treemacs
+      :after lsp)
+
+  (defun lq/treemacs-display-then-switch-right ()
+    "Display current project in treemacs then switch window right"
+    (interactive)
+    (treemacs-display-current-project-exclusively)
+    (windmove-right))
+
+  (general-define-key
+   "<f7>" 'treemacs
+   "<f8>" 'lq/treemacs-display-then-switch-right)
+  
+#+end_src
+
+=treemacs-projectile= for switching treemacs workspace to projects automatically
+
+#+begin_src emacs-lisp
+  (use-package treemacs-projectile
+    :ensure t
+    :after (treemacs projectile))
+#+end_src
+
+** Commenting
+
+Use "M-/" to comment highlighted lines.
+
+#+begin_src emacs-lisp
+(use-package evil-nerd-commenter
+  :bind ("M-/" . evilnc-comment-or-uncomment-lines))
+#+end_src
+
+** Delimiters and Tabs
+
+Use Rainbow Delimiters to make it easier to see different layers of nesting.
+
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+Enable =electric-pair-mode= by default. Use ~C-q [DELIM]~ to insert a single delimiter.
+
+#+begin_src emacs-lisp
+  (electric-pair-mode 1)
+#+end_src
+
+Evil-surround emulates [[https://github.com/tpope/vim-surround][surround.vim]].
+
+Surround highlighted text (in visual mode) with a delim using ~S~ if you want to surround on a line above and under, use ~g S~.
+
+#+begin_src emacs-lisp
+  (use-package evil-surround
+    :ensure t
+    :config
+    (global-evil-surround-mode 1))
+#+end_src
+
+Auto format tabs to spaces.
+
+#+begin_src emacs-lisp
+  (use-package editorconfig
+    :config
+    (editorconfig-mode 1))
+#+end_src
+
+** Yasnippet
+
+Yasnippet provides placing code snippets in code.
+
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :hook (prog-mode . yas-minor-mode)
+    :config (setq yas-snippet-dirs '("~/configRepo/config/snippets"))
+    (yas-global-mode 1))
 #+end_src
 
 * Terminal
