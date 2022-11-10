@@ -1,3 +1,4 @@
+# -*- mode: Conf;-*-
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/.cargo/bin:$HOME/bin:/usr/local/bin:$HOME/.local/bin:$HOME/Jetbrains/idea-IU-222.4167.29/bin:$PATH
 
@@ -187,3 +188,12 @@ setopt PROMPT_SUBST
 PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
 
 alias ls="exa"
+
+# automatically run ssh-add and combine processes accross shells
+emulate ksh -c ". .ssh-find-agent/ssh-find-agent.sh"
+ssh_find_agent -a
+if [ -z "$SSH_AUTH_SOCK" ]
+then
+   eval $(ssh-agent) > /dev/null
+   ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
+fi

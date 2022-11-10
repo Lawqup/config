@@ -27,11 +27,11 @@ Configure password and authentication related things, like where to store authto
 Set backup directory to not be the directory of the backed-up file, and =custom-set-variables= shouldn't write directly in =init.el=.
 
 #+begin_src emacs-lisp
-(setq backup-directory-alist `(("." . "~/.saves")))
-(setq backup-by-copying t)
+  (setq backup-directory-alist `(("." . "~/.saves")))
+  (setq backup-by-copying t)
 
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
+  (setq custom-file "~/.emacs.d/custom.el")
+  (load custom-file)
 #+end_src
 
 Also, make sure environement variables carry over to emacs from the shell.
@@ -432,7 +432,6 @@ Helpful gives quick information for Counsel items.
 #+end_src
 
 * Documents
-
 ** Latex
 
 Use Auctex for many emacs latex features.
@@ -895,9 +894,24 @@ Use LSP-mode in src block buffers (access when on python source block with ~C-c 
 *** C/C++
 
 #+begin_src emacs-lisp
-  (use-package cc-mode
-    :hook (c-mode . lsp)
-    :hook (c++-mode . lsp))
+   (use-package cc-mode
+     :hook (c-mode . lsp)
+     :hook (c++-mode . lsp))
+
+   (use-package flycheck-google-cpplint)
+
+   (eval-after-load 'flycheck
+   '(progn
+      (require 'flycheck-google-cpplint)
+      ;; Add Google C++ Style checker.
+      ;; In default, syntax checked by Clang and Cppcheck.
+      (flycheck-add-next-checker 'c/c++-gcc
+                                 '(warning . c/c++-googlelint))))
+  (custom-set-variables
+   '(flycheck-googlelint-verbose "3")
+   '(flycheck-googlelint-filter "-whitespace,+whitespace/braces")
+   '(flycheck-googlelint-root "project/src")
+   '(flycheck-googlelint-linelength "120"))
 #+end_src
 
 ** Debugging
@@ -977,7 +991,7 @@ Better completions than =completions-at-point=!
 Yasnippet integration with company.
 
 #+begin_src emacs-lisp
-  (defvar company-mode/enable-yas f
+  (defvar company-mode/enable-yas t
     "Enable yasnippet for all backends.")
 
   (defun company-mode/backend-with-yas (backend)
@@ -1056,9 +1070,10 @@ Surround highlighted text (in visual mode) with a delim using ~S~ if you want to
 Auto format tabs to spaces.
 
 #+begin_src emacs-lisp
+  (setq-default indent-tabs-mode nil)
   (use-package editorconfig
-    :config
-    (editorconfig-mode 1))
+      :config
+      (editorconfig-mode 1))
 #+end_src
 
 ** Yasnippet
