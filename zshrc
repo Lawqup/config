@@ -114,11 +114,11 @@ zle -N foreground-last
 bindkey '^z' foreground-last
 
 
-alias mount='cd &&  mkdir attu && sshfs quptylaw@attu.cs.washington.edu:/homes/iws/quptylaw ~/attu && cd ~/attu'
+alias attu='cd &&  mkdir attu && sshfs quptylaw@attu.cs.washington.edu:/homes/iws/quptylaw ~/attu && cd ~/attu'
 
-alias unmount='cd && umount attu &&  rm -r ~/attu'
+alias unattu='cd && umount attu &&  rm -r ~/attu'
 # unmount force to kill
-alias unmountf='cd && sudo umount -lf attu &&  rm -r ~/attu'
+alias unattuf='cd && sudo umount -lf attu &&  rm -r ~/attu'
 
 alias neofetch='neofetch --source ~/.config/neofetch/pictures/gigachad-ascii.txt'
 
