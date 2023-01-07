@@ -7,6 +7,7 @@
 \usepackage{lmodern}  % A modern version of LaTeX's famous default font. 
 \usepackage{microtype}
 \usepackage{fullpage}
+\usepackage{mathtools}
 
 \usepackage[x11names, rgb]{xcolor}
 \usepackage{graphicx}
@@ -80,6 +81,7 @@
     \today
   \end{center}}
 
+\DeclarePairedDelimiter\lr{(}{)}
 
 %%%%%%%%%%%%%%%%%%% Document Options %%%%%%%%%%%%%%%%%%%%%%
 \noquestionnumbers

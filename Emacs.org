@@ -883,36 +883,48 @@ Use LSP-mode in src block buffers (access when on python source block with ~C-c 
 *** Haskell
 
 #+begin_src emacs-lisp
-      (use-package lsp-haskell
-        :config
-        (setq))
+  (use-package lsp-haskell)
+  (add-hook 'haskell-mode-hook #'lsp)
+  (add-hook 'haskell-literate-mode-hook #'lsp)
 
-      (use-package haskell-mode
-         :hook (haskell-mode . lsp-deferred))
+  (use-package haskell-mode
+    :hook (haskell-mode . lsp-deferred))
 #+end_src
 
 *** C/C++
 
 #+begin_src emacs-lisp
-   (use-package cc-mode
-     :hook (c-mode . lsp)
-     :hook (c++-mode . lsp))
+  (use-package cc-mode
+    :hook (c-mode . lsp)
+    :hook (c++-mode . lsp))
 
-   (use-package flycheck-google-cpplint)
+  (use-package flycheck-google-cpplint)
 
-   (eval-after-load 'flycheck
-   '(progn
-      (require 'flycheck-google-cpplint)
-      ;; Add Google C++ Style checker.
-      ;; In default, syntax checked by Clang and Cppcheck.
-      (flycheck-add-next-checker 'c/c++-gcc
-                                 '(warning . c/c++-googlelint))))
+  (eval-after-load 'flycheck
+    '(progn
+       (require 'flycheck-google-cpplint)
+       ;; Add Google C++ Style checker.
+       ;; In default, syntax checked by Clang and Cppcheck.
+       (flycheck-add-next-checker 'c/c++-gcc
+                                  '(warning . c/c++-googlelint))))
+  (defconst my-cc-style
+    '("cc-mode"
+      (c-offsets-alist . ((innamespace . [0])))))
+
+  (c-add-style "my-cc-mode" my-cc-style)
   (custom-set-variables
    '(flycheck-googlelint-verbose "3")
    '(flycheck-googlelint-filter "-whitespace,+whitespace/braces")
    '(flycheck-googlelint-root "project/src")
    '(flycheck-googlelint-linelength "120"))
 #+end_src
+
+*** Solidity
+
+#+begin_src emacs-lisp
+  (use-package solidity-mode)
+#+end_src
+
 
 ** Debugging
 
@@ -1032,13 +1044,20 @@ Yasnippet integration with company.
     :after (treemacs projectile))
 #+end_src
 
-** Commenting
+** Misc
 
 Use "M-/" to comment highlighted lines.
 
 #+begin_src emacs-lisp
 (use-package evil-nerd-commenter
   :bind ("M-/" . evilnc-comment-or-uncomment-lines))
+#+end_src
+
+Highlight hex color codes with the actual color.
+
+#+begin_src emacs-lisp
+  (use-package rainbow-mode
+    :hook (prog-mode . rainbow-mode))
 #+end_src
 
 ** Delimiters and Tabs
