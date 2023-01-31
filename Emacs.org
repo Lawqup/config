@@ -466,6 +466,17 @@ Use Auctex for many emacs latex features.
   (setq TeX-save-query nil)
 #+end_src
 
+** Markdown
+
+#+begin_src emacs-lisp
+  (use-package impatient-mode)
+
+  (defun markdown-html (buffer)
+    (princ (with-current-buffer buffer
+      (format "<!DOCTYPE html><html><title>Impatient Markdown</title><xmp theme=\"united\" style=\"display:none;\"> %s  </xmp><script src=\"http://ndossougbe.github.io/strapdown/dist/strapdown.js\"></script></html>" (buffer-substring-no-properties (point-min) (point-max))))
+    (current-buffer)))
+#+end_src
+
 ** pdf-tools
 
 #+begin_src emacs-lisp
@@ -684,6 +695,101 @@ Allow toggling of emphasis markers with ~C-c e~.
   (general-define-key
    :keymaps 'org-mode-map
    "C-c e" '(org-toggle-emphasis :which-key))
+#+end_src
+
+** Export as pdf
+
+#+begin_src emacs-lisp
+(setq org-latex-pdf-process
+      '("latexmk -pdflatex='pdflatex -interaction nonstopmode' -pdf -bibtex -f %f"))
+
+
+
+(unless (boundp 'org-latex-classes)
+  (setq org-latex-classes nil))
+
+(add-to-list 'org-latex-classes
+             '("ethz"
+               "\\documentclass[a4paper,11pt,titlepage]{memoir}
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+\\usepackage{fixltx2e}
+\\usepackage{graphicx}
+\\usepackage{longtable}
+\\usepackage{float}
+\\usepackage{wrapfig}
+\\usepackage{rotating}
+\\usepackage[normalem]{ulem}
+\\usepackage{amsmath}
+\\usepackage{textcomp}
+\\usepackage{marvosym}
+\\usepackage{wasysym}
+\\usepackage{amssymb}
+\\usepackage{hyperref}
+\\usepackage{mathpazo}
+\\usepackage{color}
+\\usepackage{enumerate}
+\\definecolor{bg}{rgb}{0.95,0.95,0.95}
+\\tolerance=1000
+      [NO-DEFAULT-PACKAGES]
+      [PACKAGES]
+      [EXTRA]
+\\linespread{1.1}
+\\hypersetup{pdfborder=0 0 0}"
+               ("\\chapter{%s}" . "\\chapter*{%s}")
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+
+(add-to-list 'org-latex-classes
+             '("article"
+               "\\documentclass[11pt,a4paper]{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+\\usepackage{fixltx2e}
+\\usepackage{graphicx}
+\\usepackage{longtable}
+\\usepackage{float}
+\\usepackage{wrapfig}
+\\usepackage{rotating}
+\\usepackage[normalem]{ulem}
+\\usepackage{amsmath}
+\\usepackage{textcomp}
+\\usepackage{marvosym}
+\\usepackage{wasysym}
+\\usepackage{amssymb}
+\\usepackage{hyperref}
+\\usepackage{mathpazo}
+\\usepackage{color}
+\\usepackage{enumerate}
+\\definecolor{bg}{rgb}{0.95,0.95,0.95}
+\\tolerance=1000
+      [NO-DEFAULT-PACKAGES]
+      [PACKAGES]
+      [EXTRA]
+\\linespread{1.1}
+\\hypersetup{pdfborder=0 0 0}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")))
+
+
+(add-to-list 'org-latex-classes '("ebook"
+                                  "\\documentclass[11pt, oneside]{memoir}
+\\setstocksize{9in}{6in}
+\\settrimmedsize{\\stockheight}{\\stockwidth}{*}
+\\setlrmarginsandblock{2cm}{2cm}{*} % Left and right margin
+\\setulmarginsandblock{2cm}{2cm}{*} % Upper and lower margin
+\\checkandfixthelayout
+% Much more laTeX code omitted
+"
+                                  ("\\chapter{%s}" . "\\chapter*{%s}")
+                                  ("\\section{%s}" . "\\section*{%s}")
+                                  ("\\subsection{%s}" . "\\subsection*{%s}")))
 #+end_src
 
 ** Pandoc
@@ -925,7 +1031,6 @@ Use LSP-mode in src block buffers (access when on python source block with ~C-c 
   (use-package solidity-mode)
 #+end_src
 
-
 ** Debugging
 
 Setup DAP-mode
@@ -1060,6 +1165,22 @@ Highlight hex color codes with the actual color.
     :hook (prog-mode . rainbow-mode))
 #+end_src
 
+Enable spellchecking for comments
+
+#+begin_src emacs-lisp
+  (use-package flyspell
+    :hook (prog-mode . flyspell-prog-mode))
+#+end_src
+
+Foldable code blocks
+
+#+begin_src emacs-lisp
+  (use-package origami)
+  (use-package lsp-origami)
+  
+  (add-hook 'lsp-after-open-hook #'lsp-origami-try-enable)
+#+end_src
+
 ** Delimiters and Tabs
 
 Use Rainbow Delimiters to make it easier to see different layers of nesting.
@@ -1104,6 +1225,14 @@ Yasnippet provides placing code snippets in code.
     :hook (prog-mode . yas-minor-mode)
     :config (setq yas-snippet-dirs '("~/configRepo/config/snippets"))
     (yas-global-mode 1))
+#+end_src
+
+** Network
+
+Restclient to test http requests
+
+#+begin_src emacs-lisp
+  (use-package restclient)
 #+end_src
 
 * Terminal

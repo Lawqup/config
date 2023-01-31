@@ -190,10 +190,28 @@ PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
 alias ls="exa"
 
 # automatically run ssh-add and combine processes accross shells
-emulate ksh -c ". .ssh-find-agent/ssh-find-agent.sh"
+emulate ksh -c ". ~/.ssh-find-agent/ssh-find-agent.sh"
 ssh_find_agent -a
 if [ -z "$SSH_AUTH_SOCK" ]
 then
    eval $(ssh-agent) > /dev/null
    ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
 fi
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/lawrence/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/lawrence/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/lawrence/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/lawrence/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+# don't be in a conda environment by default
+conda deactivate
