@@ -24,6 +24,7 @@ import XMonad.Layout.NoBorders (smartBorders)
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.Grid (Grid(..))
+import XMonad.Hooks.SetWMName
 import XMonad.Util.NamedScratchpad
 
 
@@ -257,7 +258,7 @@ myLogHook = return ()
 -- per-workspace layout choices.
 --
 
-myStartupHook = return ()
+myStartupHook = setWMName "LG3D"
 
 ------------------------------------------------------------------------
 -- misc helper functions

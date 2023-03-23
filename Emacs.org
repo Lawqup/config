@@ -990,6 +990,8 @@ Use LSP-mode in src block buffers (access when on python source block with ~C-c 
 
 #+begin_src emacs-lisp
   (use-package lsp-haskell)
+  (setq lsp-haskell-server-path
+        "haskell-language-server-9.0.2")
   (add-hook 'haskell-mode-hook #'lsp)
   (add-hook 'haskell-literate-mode-hook #'lsp)
 
