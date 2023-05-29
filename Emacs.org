@@ -188,7 +188,8 @@ Use Evil for Vim keybindings (based)
     (setq evil-want-keybinding nil)
     (setq evil-want-C-u-scroll t)
     (setq evil-want-C-i-jump nil)
-    (setq evil-want-fine-undo t) 
+    (setq evil-want-fine-undo t)
+    (setq evil-search-module 'evil-search)
     :config
     (evil-mode 1)
     (define-key evil-insert-state-map (kbd "C-SPC")
@@ -199,7 +200,7 @@ Use Evil for Vim keybindings (based)
       'evil-first-non-blank-of-visual-line)
     (define-key evil-motion-state-map (kbd "L") 'evil-end-of-visual-line)
     (global-unset-key (kbd "C-r"))
-    
+
     ;; Use visual line motions even outside of visual-line-mode buffers
     (evil-global-set-key 'motion "j" 'evil-next-visual-line)
     (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
@@ -282,7 +283,9 @@ Kill a buffer without needing to ask for confirmation, unless that buffer is mod
 #+begin_src emacs-lisp
   (general-define-key
    "<escape>" 'keyboard-escape-quit
-   "C-x C-h" 'counsel-switch-buffer)
+   "C-x C-h" 'counsel-switch-buffer
+   "C-c n" 'flycheck-next-error
+   "C-c p" 'flycheck-previous-error)
 #+end_src
 
 *** Evil-org-mode
@@ -432,6 +435,22 @@ Helpful gives quick information for Counsel items.
 #+end_src
 
 * Documents
+** Pandoc
+
+Set default compile command to compile file using pandoc
+
+#+begin_src emacs-lisp
+  (defun lq/set-compile-pandoc ()
+    (setq-local compile-command
+          (concat "pandoc -s "
+                  (file-name-nondirectory buffer-file-name)
+                  " -o "
+                  (file-name-sans-extension (file-name-nondirectory
+                                             buffer-file-name))
+                  ".pdf -V urlcolor=NavyBlue -V geometry:'top=2cm, bottom=1.5cm, left=2cm, right=2cm' -V fontsize=12pt")))
+
+  (add-hook 'markdown-mode-hook 'lq/set-compile-pandoc)
+#+end_src
 ** Latex
 
 Use Auctex for many emacs latex features.
@@ -475,6 +494,12 @@ Use Auctex for many emacs latex features.
     (princ (with-current-buffer buffer
       (format "<!DOCTYPE html><html><title>Impatient Markdown</title><xmp theme=\"united\" style=\"display:none;\"> %s  </xmp><script src=\"http://ndossougbe.github.io/strapdown/dist/strapdown.js\"></script></html>" (buffer-substring-no-properties (point-min) (point-max))))
     (current-buffer)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (general-define-key
+   :keymaps 'markdown-mode-map
+   "C-c C-c" 'compile)
 #+end_src
 
 ** pdf-tools
@@ -857,6 +882,13 @@ Specify the timer end sound for org timer.
 * Development
 ** Languages
 *** JS stuff
+**** HTML
+
+#+begin_src emacs-lisp
+  (add-hook 'html-mode-hook
+            (lambda()
+              (local-unset-key (kbd "M-o"))))
+#+end_src
 **** Javascript
 
 #+begin_src emacs-lisp
@@ -885,6 +917,13 @@ Make sure =ts-ls= is downloaded
   (use-package rjsx-mode)
 #+end_src
 
+**** Vue
+
+#+begin_src emacs-lisp
+      (use-package vue-mode
+        :hook (vue-mode . lsp-deferred))
+#+end_src
+
 **** TSX
 
 #+begin_src emacs-lisp
@@ -908,7 +947,7 @@ Make sure =ts-ls= is downloaded
 #+begin_src emacs-lisp
   (use-package prettier
     :hook
-    ((typescript-mode json-mode web-mode) . prettier-mode))
+    ((typescript-mode json-mode web-mode vue-mode) . prettier-mode))
 #+end_src
 
 *** Python
@@ -978,6 +1017,16 @@ Use LSP-mode in src block buffers (access when on python source block with ~C-c 
       (setq-local buffer-save-without-query t)))
 #+end_src
 
+Run leptosfmt on save
+
+#+begin_src emacs-lisp
+(defun leptosfmt-file ()
+  (when (eq major-mode 'rustic-mode)
+    (shell-command-to-string (format "leptosfmt %s" buffer-file-name))))
+
+(add-hook 'after-save-hook #'leptosfmt-file)
+#+end_src
+
 *** Java
 
 #+begin_src emacs-lisp
@@ -1002,29 +1051,29 @@ Use LSP-mode in src block buffers (access when on python source block with ~C-c 
 *** C/C++
 
 #+begin_src emacs-lisp
-  (use-package cc-mode
-    :hook (c-mode . lsp)
-    :hook (c++-mode . lsp))
+  ;; (use-package cc-mode
+  ;;   :hook (c-mode . lsp)
+  ;;   :hook (c++-mode . lsp))
 
-  (use-package flycheck-google-cpplint)
+  ;; (use-package flycheck-google-cpplint)
 
-  (eval-after-load 'flycheck
-    '(progn
-       (require 'flycheck-google-cpplint)
-       ;; Add Google C++ Style checker.
-       ;; In default, syntax checked by Clang and Cppcheck.
-       (flycheck-add-next-checker 'c/c++-gcc
-                                  '(warning . c/c++-googlelint))))
-  (defconst my-cc-style
-    '("cc-mode"
-      (c-offsets-alist . ((innamespace . [0])))))
+  ;; (eval-after-load 'flycheck
+  ;;   '(progn
+  ;;      (require 'flycheck-google-cpplint)
+  ;;      ;; Add Google C++ Style checker.
+  ;;      ;; In default, syntax checked by Clang and Cppcheck.
+  ;;      (flycheck-add-next-checker 'c/c++-gcc
+  ;;                                 '(warning . c/c++-googlelint))))
+  ;; (defconst my-cc-style
+  ;;   '("cc-mode"
+  ;;     (c-offsets-alist . ((innamespace . [0])))))
 
-  (c-add-style "my-cc-mode" my-cc-style)
-  (custom-set-variables
-   '(flycheck-googlelint-verbose "3")
-   '(flycheck-googlelint-filter "-whitespace,+whitespace/braces")
-   '(flycheck-googlelint-root "project/src")
-   '(flycheck-googlelint-linelength "120"))
+  ;; (c-add-style "my-cc-mode" my-cc-style)
+  ;; (custom-set-variables
+  ;;  '(flycheck-googlelint-verbose "3")
+  ;;  '(flycheck-googlelint-filter "-whitespace,+whitespace/braces")
+  ;;  '(flycheck-googlelint-root "project/src")
+  ;;  '(flycheck-googlelint-linelength "120"))
 #+end_src
 
 *** Solidity
@@ -1165,13 +1214,6 @@ Highlight hex color codes with the actual color.
 #+begin_src emacs-lisp
   (use-package rainbow-mode
     :hook (prog-mode . rainbow-mode))
-#+end_src
-
-Enable spellchecking for comments
-
-#+begin_src emacs-lisp
-  (use-package flyspell
-    :hook (prog-mode . flyspell-prog-mode))
 #+end_src
 
 Foldable code blocks
@@ -1384,3 +1426,21 @@ Power command: ~C-x C-q~ (=dired-toggle-read-only=) - Makes all file names in th
 - ~L~ - Load an Emacs Lisp file into Emacs
 
   
+** Tramp
+
+Some settings to speed things up
+
+#+begin_src emacs-lisp
+  (setq remote-file-name-inhibit-cache nil)
+  (setq vc-ignore-dir-regexp
+        (format "%s\\|%s"
+                vc-ignore-dir-regexp
+                tramp-file-name-regexp))
+  (setq tramp-verbose 1)
+  (eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))  
+#+end_src
+
+#+begin_src emacs-lisp
+  (defadvice projectile-project-root (around ignore-remote first activate)
+    (unless (file-remote-p default-directory) ad-do-it))
+#+end_src

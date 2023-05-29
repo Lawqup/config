@@ -84,7 +84,6 @@
 \DeclarePairedDelimiter\lr{(}{)}
 
 %%%%%%%%%%%%%%%%%%% Document Options %%%%%%%%%%%%%%%%%%%%%%
-\noquestionnumbers
 \nopagenumbers
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
