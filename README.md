@@ -1,4 +1,4 @@
 # config
-Repo for all my config files
+Repo for all my config files.
 
-Half this stuff is copied so you're no worse for taking this
+Most up-to-date and fleshed-out configurations are my [Emacs](./Emacs.org) and [Xmonad](./xmonad.hs) configs.
