@@ -1018,6 +1018,11 @@ Make sure =ts-ls= is downloaded
 #+end_src
 
 #+end_src
+**** Graphql
+
+#+begin_src emacs-lisp
+  (use-package graphql-mode)
+#+end_src
 
 *** Python
 
