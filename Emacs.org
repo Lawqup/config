@@ -955,9 +955,16 @@ Make sure =ts-ls= is downloaded
                       :activation-fn (lsp-activate-on "liquid")
                       :server-id 'theme-check)))
 
+#+end_src
+
+#+begin_src emacs-lisp
+  (defvar liquid-electric-pairs '((?% . ?%)))
+
   (add-hook 'liquid-mode-hook 'lsp-deferred)
   (add-hook 'liquid-mode-hook (lambda ()
-                                (setq-local web-mode-auto-pairs '())))
+                                (setq-local web-mode-auto-pairs '())
+                                (setq-local electric-pair-pairs
+                                            (append electric-pair-pairs liquid-electric-pairs))))
 #+end_src
 
 **** Json
