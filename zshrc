@@ -1,6 +1,6 @@
 # -*- mode: Conf;-*-
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/.cargo/bin:$HOME/bin:/usr/local/bin:$HOME/.local/bin:$HOME/Jetbrains/idea-IU-222.4167.29/bin:$PATH
+export PATH=$HOME/.cargo/bin:$HOME/bin:/usr/local/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -198,20 +198,3 @@ then
    ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
 fi
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/lawrence/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/lawrence/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/lawrence/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/lawrence/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-# don't be in a conda environment by default
-conda deactivate
