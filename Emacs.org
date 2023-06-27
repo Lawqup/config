@@ -885,10 +885,13 @@ Specify the timer end sound for org timer.
 **** HTML
 
 #+begin_src emacs-lisp
-  (add-hook 'html-mode-hook
-            (lambda()
-              (local-unset-key (kbd "M-o"))))
+  (use-package web-mode
+    :hook
+    (web-mode . lsp-deferred))
+
+  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 #+end_src
+
 **** Javascript
 
 #+begin_src emacs-lisp
@@ -927,11 +930,7 @@ Make sure =ts-ls= is downloaded
 **** TSX
 
 #+begin_src emacs-lisp
-  (use-package web-mode
-    :hook
-    (web-mode . lsp-deferred))
-
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . liquid-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 #+end_src
 
 **** Liquid
@@ -982,6 +981,14 @@ Make sure =ts-ls= is downloaded
   (use-package prettier
     :hook
     ((typescript-mode json-mode web-mode vue-mode) . prettier-mode))
+#+end_src
+
+**** Tailwind
+
+#+begin_src emacs-lisp
+  (use-package lsp-tailwindcss)
+
+  (push 'vue-mode lsp-tailwindcss-major-modes)
 #+end_src
 
 *** Python
