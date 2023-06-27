@@ -980,15 +980,43 @@ Make sure =ts-ls= is downloaded
 #+begin_src emacs-lisp
   (use-package prettier
     :hook
-    ((typescript-mode json-mode web-mode vue-mode) . prettier-mode))
+    ((svelte-mode liquid-mode typescript-mode json-mode web-mode vue-mode) . prettier-mode))
 #+end_src
 
 **** Tailwind
 
 #+begin_src emacs-lisp
-  (use-package lsp-tailwindcss)
+  (use-package lsp-tailwindcss
+    :init
+    (setq lsp-tailwindcss-add-on-mode t))
 
-  (push 'vue-mode lsp-tailwindcss-major-modes)
+    (push 'vue-mode lsp-tailwindcss-major-modes)
+    (push 'svelte-mode lsp-tailwindcss-major-modes)
+    (push 'liquid-mode lsp-tailwindcss-major-modes)
+#+end_src
+
+**** Svelte
+
+#+begin_src emacs-lisp
+  (define-derived-mode svelte-mode web-mode
+    (setq mode-name "svelte mode"))
+
+  (add-to-list 'auto-mode-alist '("\\.svelte\\'" . svelte-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (with-eval-after-load 'lsp-mode
+    (add-to-list 'lsp-language-id-configuration
+                 '(svelte-mode . "svelte"))
+
+    (lsp-register-client
+     (make-lsp-client :new-connection (lsp-stdio-connection "svelte-language-server")
+                      :activation-fn (lsp-activate-on "svelte")
+                      :server-id 'svelteserver)))
+
+  (add-hook 'svelte-mode-hook 'lsp-deferred)
+#+end_src
+
 #+end_src
 
 *** Python
