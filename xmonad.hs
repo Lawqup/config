@@ -362,7 +362,7 @@ conf = def {
       `additionalKeysP`
       [
        ("M-f", spawn "firefox"),
-       ("M-e", spawn "emacs"),
+       ("M-e", spawn "emacsclient -c -n"),
        ("M-r", spawn "xmonad --recompile; xmonad --restart"),
        ("M-s", namedScratchpadAction myScratchPads "terminal"),
        ("M-q", namedScratchpadAction myScratchPads "calculator")

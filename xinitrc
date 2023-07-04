@@ -39,5 +39,6 @@ export BROWSER=/usr/bin/firefox
 setxkbmap -option caps:swapescape
 
 nitrogen --restore &
-picom --config /home/lawrence/configRepo/config/picom.conf&
+picom --config /home/lawrence/configRepo/config/picom.conf &
+emacs --daemon &
 exec xmonad

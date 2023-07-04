@@ -120,25 +120,27 @@ Set up relative line numbers, and set which types of files should have them.
 
 ** Font setup
 
-Set default font with =vars/default-font/size=.
-
 #+begin_src emacs-lisp
+  (defun lq/set-fonts ()
+    (set-face-attribute 'default nil
+                        :font "JetBrains Mono"
+                        :weight 'light
+                        :height vars/default-font-size)
 
-  (set-face-attribute 'default nil
-                      :font "JetBrains Mono"
-                      :weight 'light
-                      :height vars/default-font-size)
+    (set-face-attribute 'fixed-pitch nil
+                        :font "JetBrains Mono" :height 140)
 
+    (set-face-attribute 'variable-pitch nil
+                        :font "DejaVu Sans" :height 180 :weight 'regular)
+    )
 #+end_src
 
-Set fixed (monospace) and variable width fonts.
-
 #+begin_src emacs-lisp
-  (set-face-attribute 'fixed-pitch nil
-                      :font "JetBrains Mono" :height 140)
-
-  (set-face-attribute 'variable-pitch nil
-                      :font "DejaVu Sans" :height 180 :weight 'regular)
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (with-selected-frame frame
+                (lq/set-fonts))))
+  (lq/set-fonts)
 #+end_src
 
 Install font with icons

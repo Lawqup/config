@@ -1,6 +1,6 @@
 # -*- mode: Conf;-*-
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/.cargo/bin:$HOME/bin:/usr/local/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$PATH
+export PATH=$HOME/.cargo/bin:$HOME/bin:/usr/local/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/.ghcup/bin:$HOME/.local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -141,7 +141,7 @@ export NVM_NODEJS_ORG_MIRROR=http://nodejs.org/dist/
 NPM_PACKAGES="${HOME}/.npm-packages"
 
 alias vim='nvim'
-alias em='emacs -nw'
+alias e='emacsclient --tty'
 alias p='sudo pacman'
 
 # if in tty, startx
@@ -197,4 +197,6 @@ then
    eval $(ssh-agent) > /dev/null
    ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
 fi
+
+export ALTERNATE_EDITOR=""
 
