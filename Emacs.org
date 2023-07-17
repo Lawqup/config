@@ -338,7 +338,9 @@ Magit makes git based and coolpilled. ~C-x g~ brings up =magit-status=.
 #+begin_src emacs-lisp
   (use-package magit
     :custom
-    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+    :hook
+    (git-commit-setup . git-commit-turn-on-flyspell))
 #+end_src
 
 Escape Magit popups with =<escape>=.
@@ -592,10 +594,11 @@ Automatically save org buffers on refile, so we don't need to go to the file to 
 Define which files affect =Org-agenda= and setup =TODO= behavior.
 
 #+begin_src emacs-lisp
-    (setq org-agenda-files '("~/Documents/Org"))
-    (setq org-agenda-start-with-log-mode t)
-    (setq org-log-done 'time)
-    (setq org-log-into-drawer t)
+  (setq org-agenda-files '("~/Documents/Org"))
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+  (setq org-todo-keywords '((sequence "TODO(t)" "PROJ(p)" "WORK(w)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(c)" )))
 #+end_src
 
 Enter agenda using ~C-c a~.
@@ -605,6 +608,15 @@ Enter agenda using ~C-c a~.
    "C-c a" '(org-agenda :which-key))
 #+end_src
 
+Display agenda on Emacs startup
+
+#+begin_src emacs-lisp
+  (defun emacs-startup-screen ()
+    "Display the weekly org-agenda and all todos."
+    (org-agenda nil "n"))
+  (add-hook 'emacs-startup-hook #'emacs-startup-screen)
+#+end_src
+
 ** Capture Templates
 
 Define capture templates for quick journaling, adding =TODOs=, logging weight, and more.
@@ -612,8 +624,10 @@ Define capture templates for quick journaling, adding =TODOs=, logging weight, a
 #+begin_src emacs-lisp
   (setq org-capture-templates
         `(("t" "Tasks / Projects")
-          ("tt" "Task" entry (file+olp "~/Documents/Org/todo.org" "Inbox")
+          ("tt" "Task" entry (file+olp "~/Documents/Org/todo.org" "Open Loops")
            "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+          ("tp" "Project" entry (file+olp "~/Documents/Org/todo.org" "Projects")
+           "* PROJ %?\n  %U\n  %a\n  %i" :empty-lines 1)
           ("td" "Deadlined Task" entry (file+olp "~/Documents/Org/todo.org" "Active")
            "* TODO %?\nDEADLINE: %^t\n" :empty-lines 1)
           ("ts" "Scheduled Task" entry (file+olp "~/Documents/Org/todo.org" "Active")
@@ -881,6 +895,7 @@ Specify the timer end sound for org timer.
   (setq org-clock-sound "~/.emacs.d/assets/ding.wav")
 #+end_src
 
+
 * Development
 ** Languages
 *** Frontend + JS
@@ -947,14 +962,14 @@ Make sure =ts-ls= is downloaded
 
 #+begin_src emacs-lisp
   ;; Shopify template lsp with theme-check
-  (with-eval-after-load 'lsp-mode
-    (add-to-list 'lsp-language-id-configuration
-                 '(liquid-mode . "liquid"))
+  ;; (with-eval-after-load 'lsp-mode
+  ;;   (add-to-list 'lsp-language-id-configuration
+  ;;                '(liquid-mode . "liquid"))
 
-    (lsp-register-client
-     (make-lsp-client :new-connection (lsp-stdio-connection "theme-check-language-server")
-                      :activation-fn (lsp-activate-on "liquid")
-                      :server-id 'theme-check)))
+  ;;   (lsp-register-client
+  ;;    (make-lsp-client :new-connection (lsp-stdio-connection "theme-check-language-server")
+  ;;                     :activation-fn (lsp-activate-on "liquid")
+  ;;                     :server-id 'theme-check)))
 
 #+end_src
 
@@ -1397,7 +1412,10 @@ VTerm is just better Term
     ("<f2>" . vterm)
     :config
     (setq vterm-max-scrollback 10000))
-  
+
+  (put 'vterm-send-C-s 'disabled t)
+  (bind-key* "C-s" 'swiper)
+
 #+end_src
 
 * File management
