@@ -1,0 +1,23 @@
+# -*- conf -*-
+
+IMAPAccount gmail
+HOST imap.gmail.com
+User lawrencequp@gmail.com
+PassCmd "cat ~/.unsecure"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore gmail-remote
+Account gmail
+
+MaildirStore gmail-local
+Subfolders verbatim
+Path ~/Mail/
+Inbox ~/Mail/Inbox
+
+Channel gmail
+Far :gmail-remote:
+Near :gmail-local:
+Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail" "[Gmail]/Trash"
+Create Both
+SyncState *

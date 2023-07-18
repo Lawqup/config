@@ -11,6 +11,7 @@ Variables to be used across the entire config
 
 #+begin_src emacs-lisp
   (defvar vars/default-font-size 130)
+  (setq user-mail-address "lawrencequp@gmail.com")
 #+end_src
 
 ** Passwords
@@ -27,11 +28,19 @@ Configure password and authentication related things, like where to store authto
 Set backup directory to not be the directory of the backed-up file, and =custom-set-variables= shouldn't write directly in =init.el=.
 
 #+begin_src emacs-lisp
-  (setq backup-directory-alist `(("." . "~/.saves")))
+  (setq backup-directory-alist `((".", "~/.saves"/)))
   (setq backup-by-copying t)
 
   (setq custom-file "~/.emacs.d/custom.el")
   (load custom-file)
+
+  (setq auto-save-list-file-prefix "~/.saves/")
+  (setq auto-save-file-name-transforms `((".*", "~/.saves/" t)))
+  (setq create-lockfiles nil)
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq byte-compile-warnings '(not obsolete))
 #+end_src
 
 Also, make sure environement variables carry over to emacs from the shell.
@@ -147,6 +156,7 @@ Install font with icons
 
 #+begin_src emacs-lisp
   (use-package all-the-icons)
+  (use-package nerd-icons)
 #+end_src
 
 ** Theme setup
@@ -170,7 +180,8 @@ Install and setup doom modeline and doom themes.
     (doom-themes-neotree-config)
     ;; or for treemacs users
     ;; use "doom-colors" for less minimal icon theme
-    (setq doom-themes-treemacs-theme "doom-atom")    (doom-themes-treemacs-config)
+    (setq doom-themes-treemacs-theme "doom-atom")
+    (doom-themes-treemacs-config)
     ;; Corrects (and improves) org-mode's native fontification.
     (doom-themes-org-config))
 #+end_src
@@ -258,14 +269,6 @@ Ace-window makes window movement and management simple. Use ~M-o~ to call =ace-w
     - ~o~ - maximize current window
     - ~?~ - show these command bindings
 
-*** Winner
-
-Winner allows restoration of window config with ~C-c <left>~ (undo) and ~C-c <right>~ (redo)
-
-#+begin_src emacs-lisp
-  (winner-mode 1)
-#+end_src
-
 ** Misc Keybindings
 *** Custom emacs behavior
 
@@ -277,7 +280,7 @@ Kill a buffer without needing to ask for confirmation, unless that buffer is mod
 
   (general-define-key
    "C-x k" 'kill-buffer-and-window
-   "C-x C-k" 'message-kill-buffer)
+   "C-x C-k" 'kill-this-buffer)
 #+end_src
 
 *** General Keybindings
@@ -436,6 +439,16 @@ Helpful gives quick information for Counsel items.
     ([remap describe-variable] . counsel-describe-variable)
     ([remap describe-command] . helpful-command)
     ([remap describe-key] . helpful-key))
+#+end_src
+
+Prescient for better autocompletion
+
+#+begin_src emacs-lisp
+  (use-package ivy-prescient
+    :after counsel
+    :config
+    (ivy-prescient-mode 1)
+    (prescient-persist-mode 1))
 #+end_src
 
 * Documents
@@ -608,13 +621,35 @@ Enter agenda using ~C-c a~.
    "C-c a" '(org-agenda :which-key))
 #+end_src
 
-Display agenda on Emacs startup
+** Dashboard
 
 #+begin_src emacs-lisp
-  (defun emacs-startup-screen ()
-    "Display the weekly org-agenda and all todos."
-    (org-agenda nil "n"))
-  (add-hook 'emacs-startup-hook #'emacs-startup-screen)
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-items '((agenda . 7)
+                            (recents  . 3)
+                            (projects . 5)))
+    (setq startup-dashboard-banner 2)
+    (setq dashboard-icon-type 'all-the-icons)
+    (setq dashboard-heading-icons '((recents   . "history")
+                                (bookmarks . "bookmark")
+                                (agenda    . "calendar")
+                                (projects  . "rocket")
+                                (registers . "database")))
+    (setq dashboard-set-heading-icons t)
+    (setq dashboard-set-file-icons t)
+    (setq dashboard-projects-switch-function
+          'counsel-projectile-switch-project-by-name)
+    (setq dashboard-week-agenda t)
+    (setq dashboard-filter-agenda-entry 'dashboard-filter-agenda-by-time))
+#+end_src
+
+Display dashboard on Emacs startup
+
+#+begin_src emacs-lisp
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
 #+end_src
 
 ** Capture Templates
@@ -628,8 +663,8 @@ Define capture templates for quick journaling, adding =TODOs=, logging weight, a
            "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
           ("tp" "Project" entry (file+olp "~/Documents/Org/todo.org" "Projects")
            "* PROJ %?\n  %U\n  %a\n  %i" :empty-lines 1)
-          ("td" "Deadlined Task" entry (file+olp "~/Documents/Org/todo.org" "Active")
-           "* TODO %?\nDEADLINE: %^t\n" :empty-lines 1)
+          ("tw" "Work Task" entry (file+olp "~/Documents/Org/todo.org" "Work")
+           "* WORK %?\nDEADLINE: %^t\n" :empty-lines 1)
           ("ts" "Scheduled Task" entry (file+olp "~/Documents/Org/todo.org" "Active")
            "* TODO %?\nSCHEDULED: %^t\n" :empty-lines 1)
 
@@ -684,7 +719,7 @@ Define visual-fill params to add bars on the sides for ease of reading.
 
 #+begin_src emacs-lisp
   (defun lq/org-mode-visual-fill ()
-    (setq visual-fill-column-width 100
+    (setq visual-fill-column-width 110
           visual-fill-column-center-text t)
     (visual-fill-column-mode 1))
 #+end_src
@@ -894,7 +929,6 @@ Specify the timer end sound for org timer.
 #+begin_src emacs-lisp
   (setq org-clock-sound "~/.emacs.d/assets/ding.wav")
 #+end_src
-
 
 * Development
 ** Languages
@@ -1227,11 +1261,10 @@ Setup DAP-mode
 
 *** Company mode
 
+
 Better completions than =completions-at-point=!
 
 #+begin_src emacs-lisp
-  (global-company-mode)
-
   (use-package company
     :after lsp-mode
     :hook (lsp-mode . company-mode)
@@ -1247,48 +1280,13 @@ Better completions than =completions-at-point=!
     :hook (company-mode . company-box-mode))
 #+end_src
 
-Yasnippet integration with company.
+Prescient for reasonable sorting of entries
 
 #+begin_src emacs-lisp
-  (defvar company-mode/enable-yas t
-    "Enable yasnippet for all backends.")
-
-  (defun company-mode/backend-with-yas (backend)
-    (if (or (not company-mode/enable-yas)
-            (and (listp backend) (member 'company-yasnippet backend)))
-        backend
-      (append (if (consp backend) backend (list backend))
-              '(:with company-yasnippet))))
-
-  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
-#+end_src
-
-** Treemacs
-
-=LSP-treemacs= for tree file view.
-
-#+begin_src emacs-lisp
-  (use-package lsp-treemacs
-      :after lsp)
-
-  (defun lq/treemacs-display-then-switch-right ()
-    "Display current project in treemacs then switch window right"
-    (interactive)
-    (treemacs-display-current-project-exclusively)
-    (windmove-right))
-
-  (general-define-key
-   "<f7>" 'treemacs
-   "<f8>" 'lq/treemacs-display-then-switch-right)
-  
-#+end_src
-
-=treemacs-projectile= for switching treemacs workspace to projects automatically
-
-#+begin_src emacs-lisp
-  (use-package treemacs-projectile
-    :ensure t
-    :after (treemacs projectile))
+  (use-package company-prescient
+    :after company
+    :config
+    (company-prescient-mode 1))
 #+end_src
 
 ** Misc
@@ -1305,15 +1303,6 @@ Highlight hex color codes with the actual color.
 #+begin_src emacs-lisp
   (use-package rainbow-mode
     :hook (prog-mode . rainbow-mode))
-#+end_src
-
-Foldable code blocks
-
-#+begin_src emacs-lisp
-  (use-package origami)
-  (use-package lsp-origami)
-  
-  (add-hook 'lsp-after-open-hook #'lsp-origami-try-enable)
 #+end_src
 
 ** Delimiters and Tabs
@@ -1519,7 +1508,6 @@ Power command: ~C-x C-q~ (=dired-toggle-read-only=) - Makes all file names in th
 - ~S~ - Create a symbolic link to this file
 - ~L~ - Load an Emacs Lisp file into Emacs
 
-  
 ** Tramp
 
 Some settings to speed things up
@@ -1538,3 +1526,84 @@ Some settings to speed things up
   (defadvice projectile-project-root (around ignore-remote first activate)
     (unless (file-remote-p default-directory) ad-do-it))
 #+end_src
+
+** Mu4e
+
+#+begin_src sh
+  mu index --maildir=~/Mail --my-address=lawrencequp@gmail.com
+#+end_src
+
+#+begin_src emacs-lisp
+    (use-package mu4e
+      :ensure nil
+      ;; :load-path "/usr/share/emacs/site-lisp/mu4e/"
+      ;; :defer 20 ; Wait until 20 seconds after startup
+      :config
+      ;; This is set to 't' to avoid mail syncing issues when using mbsync
+      (setq mu4e-change-filenames-when-moving t)
+
+      ;; Refresh mail using isync every 10 minutes
+      (setq mu4e-update-interval (* 10 60))
+      (setq mu4e-get-mail-command "mbsync -a")
+      (setq mu4e-maildir "~/Mail")
+
+      (setq mu4e-drafts-folder "/[Gmail]/Drafts")
+      (setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
+      (setq mu4e-refile-folder "/[Gmail]/All Mail")
+      (setq mu4e-trash-folder  "/[Gmail]/Trash")
+
+      (setq mu4e-maildir-shortcuts
+            '((:maildir "/Inbox"             :key ?i)
+              (:maildir "/[Gmail]/Sent Mail" :key ?s)
+              (:maildir "/[Gmail]/Trash"     :key ?t)
+              (:maildir "/[Gmail]/Drafts"    :key ?d)
+              (:maildir "/[Gmail]/All Mail"  :key ?a)))
+      (mu4e t))
+#+end_src
+
+*** Help
+
+When reading mail, you start out in the Headers buffer.  When you select an email with ~RET~, the View buffer is displayed in a window below the Headers buffer window.
+
+Key Bindings:
+
+| Evil | Command                               | Description                          |
+|------+---------------------------------------+--------------------------------------|
+|      | *Movement*                            |                                      |
+| ~j~  | =next-line=                           | Moves to the next header line        |
+| ~k~  | =previous-line=                       | Moves to the previous header line    |
+| ~[[~ | =mu4e-headers-prev-unread=            | Moves to previous unread message     |
+| ~]]~ | =mu4e-headers-next-unread=            | Moves to next unread message         |
+| ~J~  | =mu4e~headers-jump-to-maildir=        | Jump to another mail directory       |
+|      |                                       |                                      |
+|      | *Toggles*                             |                                      |
+| ~zt~ | =mu4e-headers-toggle-threading=       | Toggles threaded message display     |
+| ~zr~ | =mu4e-headers-toggle-include-related= | Toggles related message display      |
+|      |                                       |                                      |
+|      | *Marking*                             |                                      |
+| ~d~  | =mu4e-headers-mark-for-trash=         | Marks message for deletion           |
+| ~m~  | =mu4e-headers-mark-for-move=          | Marks message for move to folder     |
+| ~+~  | =mu4e-headers-mark-for-flag=          | Marks message for flagging           |
+| ~-~  | =mu4e-headers-mark-for-unflag=        | Marks message for unflagging         |
+| ~%~  | =mu4e-headers-mark-pattern=           | Marks based on a regex pattern       |
+| ~u~  | =mu4e-headers-mark-for-unmark=        | Removes mark for message             |
+| ~U~  | =mu4e-mark-unmark-all=                | Unmarks all marks in the view        |
+| ~x~  | =mu4e-mark-execute-all=               | Executes all marks in the view       |
+|      |                                       |                                      |
+|      | *Searching*                           |                                      |
+| ~s~  | =mu4e-headers-search=                 | Search all e-mails                   |
+| ~S~  | =mu4e-headers-search-edit=            | Edit current search (useful!)        |
+| ~/~  | =mu4e-headers-search-narrow=          | Narrow down the current results      |
+| ~b~  | =mu4e-headers-search-bookmark=        | Select a bookmark to search with     |
+| ~B~  | =mu4e-headers-search-bookmark-edit=   | Edit bookmark before search          |
+| ~gr~ | =mu4e-rerun-search=                   | Rerun the current search             |
+|      |                                       |                                      |
+|      | *Composing*                           |                                      |
+| ~C~  | =mu4e-compose-new=                    | Compose a new e-mail                 |
+| ~R~  | =mu4e-compose-reply=                  | Compose a reply to selected email    |
+| ~F~  | =mu4e-compose-forward=                | Compose a forward for selected email |
+| ~E~  | =mu4e-compose-edit=                   | Edit selected draft message          |
+|      |                                       |                                      |
+|      | *Other Actions*                       |                                      |
+| ~q~  | =mu4e~headers-quit-buffer=            | Quit the headers view                |
+

@@ -5,6 +5,8 @@ export PATH=$HOME/.cargo/bin:$HOME/bin:/usr/local/bin:$HOME/.local/share/gem/rub
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+export EMAIL="lawrencequp@gmail.com"
+
 NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 
 
