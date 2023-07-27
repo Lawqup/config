@@ -28,7 +28,7 @@ Configure password and authentication related things, like where to store authto
 Set backup directory to not be the directory of the backed-up file, and =custom-set-variables= shouldn't write directly in =init.el=.
 
 #+begin_src emacs-lisp
-  (setq backup-directory-alist `((".", "~/.saves"/)))
+  (setq backup-directory-alist `(("." . ,"~/.saves/")))
   (setq backup-by-copying t)
 
   (setq custom-file "~/.emacs.d/custom.el")
@@ -561,7 +561,9 @@ Set up helper function to define fonts and sizes for specific indentation levels
                         :inherit '(font-lock-comment-face fixed-pitch))
     (set-face-attribute 'org-meta-line nil
                         :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+    (flyspell-mode))
 #+end_src
 
 ** General Config Setup
@@ -594,6 +596,7 @@ Define which files can be targets for refiling. Right now refiling is only used 
   (setq org-refile-targets
         '(("archive.org" :maxlevel . 1)
           ("todo.org" :maxlevel . 1)))
+  (setq org-refile-allow-creating-parent-nodes (quote confirm))
 #+end_src
 
 Automatically save org buffers on refile, so we don't need to go to the file to do it manually, as that kinda defeats the purpose of =org-refile=.
@@ -621,38 +624,19 @@ Enter agenda using ~C-c a~.
    "C-c a" '(org-agenda :which-key))
 #+end_src
 
-** Dashboard
+Display agenda on Emacs startup
 
 #+begin_src emacs-lisp
-  (use-package dashboard
-    :ensure t
-    :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-items '((agenda . 7)
-                            (recents  . 3)
-                            (projects . 5)))
-    (setq startup-dashboard-banner 2)
-    (setq dashboard-icon-type 'all-the-icons)
-    (setq dashboard-heading-icons '((recents   . "history")
-                                (bookmarks . "bookmark")
-                                (agenda    . "calendar")
-                                (projects  . "rocket")
-                                (registers . "database")))
-    (setq dashboard-set-heading-icons t)
-    (setq dashboard-set-file-icons t)
-    (setq dashboard-projects-switch-function
-          'counsel-projectile-switch-project-by-name)
-    (setq dashboard-week-agenda t)
-    (setq dashboard-filter-agenda-entry 'dashboard-filter-agenda-by-time))
-#+end_src
-
-Display dashboard on Emacs startup
-
-#+begin_src emacs-lisp
-  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+  (setq initial-buffer-choice (lambda ()
+      (org-agenda nil "n")
+      (delete-other-windows)
+      (get-buffer "*Org Agenda*")))    
 #+end_src
 
 ** Capture Templates
+:LOGBOOK:
+CLOCK: [2023-07-18 Tue 21:31]--[2023-07-18 Tue 21:31] =>  0:00
+:END:
 
 Define capture templates for quick journaling, adding =TODOs=, logging weight, and more.
 
@@ -672,20 +656,11 @@ Define capture templates for quick journaling, adding =TODOs=, logging weight, a
           ("jj" "Journal" entry
            (file+olp+datetree "~/Documents/Org/journal.org")
            "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-           ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
-           :clock-in :clock-resume
            :empty-lines 1)
-          ("jm" "Meeting" entry
+          ("js" "Story" entry
            (file+olp+datetree "~/Documents/Org/journal.org")
-           "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-           :clock-in :clock-resume
+           "* %<%I:%M %p> - %^{prompt|Daily Story} :stories:\n\n%?\n\n"
            :empty-lines 1)
-
-          ("w" "Workflows")
-          ("we" "Checking Email" entry
-           (file+olp+datetree "~/Documents/Org/journal.org")
-           "* Checking Email :email:\n\n%?"
-           :clock-in :clock-resume :empty-lines 1)
 
           ("m" "Metrics Capture")
           ("mw" "Weight" table-line
@@ -938,7 +913,13 @@ Specify the timer end sound for org timer.
 #+begin_src emacs-lisp
   (use-package web-mode
     :hook
-    (web-mode . lsp-deferred))
+    (web-mode . lsp-deferred)
+    :config
+    (setq web-mode-css-indent-offset 2)
+    (setq web-mode-markup-indent-offset 2)
+    (setq web-mode-sql-indent-offset 2)
+    (setq web-mode-attr-indent-offset 2)
+    (setq web-mode-code-indent-offset 2))
 
   (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 #+end_src
@@ -1031,7 +1012,7 @@ Make sure =ts-ls= is downloaded
 #+begin_src emacs-lisp
   (use-package prettier
     :hook
-    ((svelte-mode liquid-mode typescript-mode json-mode web-mode vue-mode) . prettier-mode))
+    ((svelte-mode typescript-mode json-mode vue-mode) . prettier-mode))
 #+end_src
 
 **** Tailwind
@@ -1534,31 +1515,104 @@ Some settings to speed things up
 #+end_src
 
 #+begin_src emacs-lisp
-    (use-package mu4e
-      :ensure nil
-      ;; :load-path "/usr/share/emacs/site-lisp/mu4e/"
-      ;; :defer 20 ; Wait until 20 seconds after startup
-      :config
-      ;; This is set to 't' to avoid mail syncing issues when using mbsync
-      (setq mu4e-change-filenames-when-moving t)
+  (use-package org-msg
+    :config
+    (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
+        org-msg-startup "hidestars indent inlineimages"
+        org-msg-greeting-fmt "\nHi%s,\n\n"
+        org-msg-greeting-name-limit 3
+        org-msg-default-alternatives '((new		. (text html))
+                                       (reply-to-html	. (text html))
+                                       (reply-to-text	. (text)))
+        org-msg-convert-citation t))
 
-      ;; Refresh mail using isync every 10 minutes
-      (setq mu4e-update-interval (* 10 60))
-      (setq mu4e-get-mail-command "mbsync -a")
-      (setq mu4e-maildir "~/Mail")
+  (org-msg-mode)
+#+end_src
 
-      (setq mu4e-drafts-folder "/[Gmail]/Drafts")
-      (setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
-      (setq mu4e-refile-folder "/[Gmail]/All Mail")
-      (setq mu4e-trash-folder  "/[Gmail]/Trash")
+#+begin_src emacs-lisp
+  (use-package mu4e
+    :ensure nil
+    ;; :load-path "/usr/share/emacs/site-lisp/mu4e/"
+    ;; :defer 20 ; Wait until 20 seconds after startup
+    :after org-msg
+    :config
+    ;; Refresh mail using isync every 10 minutes
+    (setq mu4e-update-interval (* 10 60))
+    (setq mu4e-get-mail-command "mbsync -a")
+    (setq mu4e-maildir "~/Mail")
+    ;; This is set to 't' to avoid mail syncing issues when using mbsync
+    (setq mu4e-change-filenames-when-moving t)
 
-      (setq mu4e-maildir-shortcuts
-            '((:maildir "/Inbox"             :key ?i)
-              (:maildir "/[Gmail]/Sent Mail" :key ?s)
-              (:maildir "/[Gmail]/Trash"     :key ?t)
-              (:maildir "/[Gmail]/Drafts"    :key ?d)
-              (:maildir "/[Gmail]/All Mail"  :key ?a)))
-      (mu4e t))
+    (setq mu4e-contexts
+          (list
+           (make-mu4e-context
+            :name "Personal"
+            :match-func
+            (lambda (msg)
+              (when msg
+                (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
+            :vars '((user-mail-address . "lawrencequp@gmail.com")
+                    (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
+                    (mu4e-sent-folder   . "/personal/[Gmail]/Sent Mail")
+                    (mu4e-refile-folder . "/personal/[Gmail]/All Mail")
+                    (mu4e-trash-folder  . "/personal/[Gmail]/Trash")
+                    (org-msg-signature . "
+  Best,
+
+  ,#+begin_signature
+  --
+  ,*Lawrence*
+  ,#+end_signature")))
+
+           (make-mu4e-context
+            :name "Work"
+            :match-func
+            (lambda (msg)
+              (when msg
+                (string-prefix-p "/work" (mu4e-message-field msg :maildir))))
+            :vars '((user-mail-address . "lawrence@udundi.com")
+                    (mu4e-drafts-folder . "/work/[Gmail]/Drafts")
+                    (mu4e-sent-folder   . "/work/[Gmail]/Sent Mail")
+                    (mu4e-refile-folder . "/work/[Gmail]/All Mail")
+                    (mu4e-trash-folder  . "/work/[Gmail]/Trash")
+                    (org-msg-signature . "
+  Best,
+
+  ,#+begin_signature
+  --
+  [[~/Pictures/Profiles/udundi.png]]
+  Lawrence Qupty
+  Junior Developer
+  [[mailto:lawrenec@udundi.com][lawrence@udundi.com]]
+  [[https://www.udundi.com/][udundi.com]]
+  ,#+end_signature")))))
+
+    (setq mu4e-context-policy 'pick-first)
+    (setq mu4e-compose-context-policy 'ask-if-none)
+
+    (add-to-list 'mu4e-bookmarks '("m:/personal/Inbox or m:/work/Inbox" "All Inboxes" ?i))
+    (setq mu4e-maildir-shortcuts
+          '((:maildir "/personal/Inbox"             :key ?i)
+            (:maildir "/personal/[Gmail]/Sent Mail" :key ?s)
+            (:maildir "/personal/[Gmail]/Trash"     :key ?t)
+            (:maildir "/personal/[Gmail]/Drafts"    :key ?d)
+            (:maildir "/personal/[Gmail]/All Mail"  :key ?a)))
+
+    (setq smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 465
+      smtpmail-stream-type  'ssl)
+
+    ;; Configure the function to use for sending mail
+    (setq message-send-mail-function 'smtpmail-send-it)
+
+    ;; Make sure plain text mails flow correctly for recipients
+    (setq mu4e-compose-format-flowed t)
+
+    (setq mail-user-agent 'mu4e-user-agent)
+
+    (mu4e-marker-icons-mode)
+    (mu4e t))
+
 #+end_src
 
 *** Help
