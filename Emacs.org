@@ -526,6 +526,16 @@ Use Auctex for many emacs latex features.
   (pdf-tools-install)  ; Standard activation command
 #+end_src
 
+** Grammarly
+
+#+begin_src emacs-lisp
+  (use-package lsp-grammarly
+    :ensure t
+    :hook (text-mode . (lambda ()
+                         (require 'lsp-grammarly)
+                         (lsp-deferred))))
+#+end_src
+
 * Org Mode
 ** Font Setup
 
@@ -561,9 +571,7 @@ Set up helper function to define fonts and sizes for specific indentation levels
                         :inherit '(font-lock-comment-face fixed-pitch))
     (set-face-attribute 'org-meta-line nil
                         :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-
-    (flyspell-mode))
+    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 #+end_src
 
 ** General Config Setup
@@ -574,7 +582,8 @@ Helper function that will run as a hook to setup basic things including some UI.
   (defun lq/org-mode-setup ()
     (org-indent-mode)
     (variable-pitch-mode 1)
-    (visual-line-mode 1))
+    (visual-line-mode 1)
+    (turn-on-flyspell))
 #+end_src
 
 ** Tie Everything Together
@@ -610,11 +619,18 @@ Automatically save org buffers on refile, so we don't need to go to the file to 
 Define which files affect =Org-agenda= and setup =TODO= behavior.
 
 #+begin_src emacs-lisp
-  (setq org-agenda-files '("~/Documents/Org"))
+  (setq org-agenda-files '("~/important_files/Org"))
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
   (setq org-todo-keywords '((sequence "TODO(t)" "PROJ(p)" "WORK(w)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(c)" )))
+
+  (defun org-summary-todo (n-done n-not-done)
+    "Switch entry to DONE when all subentries are done, to TODO otherwise."
+    (let (org-log-done org-log-states)   ; turn off logging
+      (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+
+  (add-hook 'org-after-todo-statistics-hook #'org-summary-todo)
 #+end_src
 
 Enter agenda using ~C-c a~.
@@ -643,28 +659,28 @@ Define capture templates for quick journaling, adding =TODOs=, logging weight, a
 #+begin_src emacs-lisp
   (setq org-capture-templates
         `(("t" "Tasks / Projects")
-          ("tt" "Task" entry (file+olp "~/Documents/Org/todo.org" "Open Loops")
+          ("tt" "Task" entry (file+olp "~/important_files/Org/todo.org" "Open Loops")
            "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
-          ("tp" "Project" entry (file+olp "~/Documents/Org/todo.org" "Projects")
+          ("tp" "Project" entry (file+olp "~/important_files/Org/todo.org" "Projects")
            "* PROJ %?\n  %U\n  %a\n  %i" :empty-lines 1)
-          ("tw" "Work Task" entry (file+olp "~/Documents/Org/todo.org" "Work")
+          ("tw" "Work Task" entry (file+olp "~/important_files/Org/todo.org" "Work")
            "* WORK %?\nDEADLINE: %^t\n" :empty-lines 1)
-          ("ts" "Scheduled Task" entry (file+olp "~/Documents/Org/todo.org" "Active")
+          ("ts" "Scheduled Task" entry (file+olp "~/important_files/Org/todo.org" "Active")
            "* TODO %?\nSCHEDULED: %^t\n" :empty-lines 1)
 
           ("j" "Journal Entries")
           ("jj" "Journal" entry
-           (file+olp+datetree "~/Documents/Org/journal.org")
+           (file+olp+datetree "~/important_files/Org/journal.org")
            "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
            :empty-lines 1)
           ("js" "Story" entry
-           (file+olp+datetree "~/Documents/Org/journal.org")
+           (file+olp+datetree "~/important_files/Org/journal.org")
            "* %<%I:%M %p> - %^{prompt|Daily Story} :stories:\n\n%?\n\n"
            :empty-lines 1)
 
           ("m" "Metrics Capture")
           ("mw" "Weight" table-line
-           (file+headline "~/Documents/Org/stats.org" "Weight")
+           (file+headline "~/important_files/Org/stats.org" "Weight")
            "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
 #+end_src
@@ -707,16 +723,6 @@ Then use the function we just defined:
 #+end_src
 
 ** Extra UI Features
-
-Use unicode checkboxes with =prettify-symbols-mode=.
-
-#+begin_src emacs-lisp
-  (add-hook 'org-mode-hook (lambda ()
-     (push '("[ ]" . "☐") prettify-symbols-alist)
-     (push '("[X]" . "☑" ) prettify-symbols-alist)
-     (push '("[-]" . "❍" ) prettify-symbols-alist)
-     (prettify-symbols-mode)))
-#+end_src
 
 Make sure indenting is fixed pitch to keep consistent indentation across levels.
 
@@ -1096,14 +1102,7 @@ Use LSP-mode in src block buffers (access when on python source block with ~C-c 
   (use-package rustic
     :ensure
     :bind (:map rustic-mode-map
-                ("M-j" . lsp-ui-imenu)
-                ("M-?" . lsp-find-references)
-                ("C-c C-c l" . flycheck-list-errors)
-                ("C-c C-c a" . lsp-execute-code-action)
-                ("C-c C-c r" . lsp-rename)
-                ("C-c C-c q" . lsp-workspace-restart)
-                ("C-c C-c Q" . lsp-workspace-shutdown)
-                ("C-c C-c s" . lsp-rust-analyzer-status))
+                ("C-c C-l s" . lsp-rust-analyzer-status))
     :config
     ;; uncomment for less flashiness
     ;; (setq lsp-eldoc-hook nil)
@@ -1223,10 +1222,10 @@ Setup DAP-mode
   (use-package lsp-mode
     :commands (lsp lsp-deferred)
     :hook (lsp-mode . lq/lsp-mode-setup)
-    :init
-    (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
     :config
     (lsp-enable-which-key-integration t))
+  
+  (define-key lsp-mode-map (kbd "C-c C-l") lsp-command-map)
 #+end_src
 
 *** LSP mode extras

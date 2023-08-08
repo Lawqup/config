@@ -1,0 +1,11 @@
+#!/usr/bin/zsh
+
+n_layouts=${#@}
+
+curr_layout=$(setxkbmap -query | awk '/layout:/{ print $2 }')
+curr_idx=${@[(i)${(q)curr_layout}]}
+
+next_idx=$((curr_idx % n_layouts + 1))
+next_layout=${@[next_idx]}
+
+setxkbmap "$next_layout"

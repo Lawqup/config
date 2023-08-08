@@ -364,6 +364,7 @@ conf = def {
        ("M-f", spawn "firefox"),
        ("M-e", spawn "emacsclient -c -n"),
        ("M-r", spawn "xmonad --recompile; xmonad --restart"),
+       ("M-S-<Space>", spawn "cyclekb us 'us(intl)'"),
        ("M-s", namedScratchpadAction myScratchPads "terminal"),
        ("M-q", namedScratchpadAction myScratchPads "calculator")
       ]
