@@ -35,8 +35,8 @@ fi
 # default browser
 export BROWSER=/usr/bin/firefox
 
-# swap caps and escape
-setxkbmap -option caps:swapescape
+# swap caps and ctrl 
+setxkbmap -option ctrl:swapcaps
 
 nitrogen --restore &
 picom --config /home/lawrence/configRepo/config/picom.conf &
