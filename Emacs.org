@@ -529,11 +529,7 @@ Use Auctex for many emacs latex features.
 ** Grammarly
 
 #+begin_src emacs-lisp
-  (use-package lsp-grammarly
-    :ensure t
-    :hook (text-mode . (lambda ()
-                         (require 'lsp-grammarly)
-                         (lsp-deferred))))
+  (use-package lsp-grammarly)
 #+end_src
 
 * Org Mode
@@ -692,7 +688,64 @@ Define capture templates for quick journaling, adding =TODOs=, logging weight, a
    "C-c c" '(org-capture :which-key))
 #+end_src
 
-** Org Bullets
+** Skeleton Templates
+
+#+begin_src emacs-lisp
+  (define-skeleton decision-skeleton
+    "A skeleton for decisions" nil
+    " Ask yourself or do the following:
+
+  - What is the decision?
+  - Where did the desire to make this decision come from?
+  - What is the dream result? Are there alternative options than this decision to get to the same result?
+  - If this is a big decision ask the smart people in your life what they think.
+  - What would my 85-year-old self think about this decision?
+  - Now, after doing all this, will you make this decision?
+  ")
+#+end_src
+
+#+begin_src emacs-lisp
+  (define-skeleton genius-idea-skeleton
+    "A skeleton for ideas by Dan Koe"
+    "Idea name: "
+    "** " str "
+  
+  *Topic* - What are you writing about from The Queue?
+
+  - 
+
+  *Braindump* - Write out everything that comes to mind. A summary in a way that you understand at this point in your life.
+
+  - 
+
+  *References* - Are there any quotes, books, or other content that comes to mind?
+
+  - 
+
+  *Big Problem* - What is the main problem and how has it impacted your life or others’ lives?
+
+  - 
+
+  *Big Benefit* - What’s in it for me? Why should I solve this problem?
+
+  - 
+
+  *Objections* - How do people talk themselves out of solving this problem for themselves?
+
+  - 
+
+  *Personal Experience* -  Have you experienced the problem or benefit? What’s the story behind that?
+
+  - 
+
+  *Frameworks* -  Can you create a memorable, step-by-step solution to solving the problem?
+
+  - ")
+#+end_src
+
+** Extra UI Features
+
+*** Unicode replace 
 
 Replaces org-mode header asterisks with bullets as listed, by order of indentation level.
 
@@ -704,7 +757,13 @@ Replaces org-mode header asterisks with bullets as listed, by order of indentati
     (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 #+end_src
 
-** Visual Fill
+And change the elipsis to be an arrow.
+
+#+begin_src emacs-lisp
+  (setq org-ellipsis " ▾")
+#+end_src
+
+*** Visual Fill
 
 Define visual-fill params to add bars on the sides for ease of reading.
 
@@ -722,19 +781,13 @@ Then use the function we just defined:
     :hook (org-mode . lq/org-mode-visual-fill))
 #+end_src
 
-** Extra UI Features
+*** Indenting
 
 Make sure indenting is fixed pitch to keep consistent indentation across levels.
 
 #+begin_src emacs-lisp
   (with-eval-after-load 'org-indent
     (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch)))
-#+end_src
-
-And change the elipsis to be an arrow.
-
-#+begin_src emacs-lisp
-  (setq org-ellipsis " ▾")
 #+end_src
 
 ** Extra Ease of Use
