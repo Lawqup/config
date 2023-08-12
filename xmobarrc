@@ -26,7 +26,7 @@ Config { overrideRedirect = False
 		    , Run Battery [ "-t", "<fn=2>\xf0e7</fn> <left>% / <timeleft>" ] 60
 			-- echos wifi icon before wifi
 		    , Run Com "echo" ["<fn=2>\xf1eb</fn>"] "wifi_icon" 3600
-		    , Run Com "/home/lawrence/configRepo/config/xmobar/get-wifi.sh" [] "wifi" 30
+		    , Run Com "/home/lawrence/configRepo/config/scripts/get-wifi.sh" [] "wifi" 30
 		    , Run XMonadLog
                     ]
        , sepChar  = "%"

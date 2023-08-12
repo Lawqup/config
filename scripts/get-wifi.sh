@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 #gets wifi strength
 
@@ -7,9 +7,11 @@ iwconfig wlan0 2>&1 | grep -q no\ wireless\ extensions\. && {
   exit 0
 }
 
-essid=`iwconfig wlo1 | awk -F '"' '/ESSID/ {print $2}'`
-stngth=`iwconfig wlo1 | awk -F '=' '/Quality/ {print $2}' | cut -d '/' -f 1`
-bars=`expr $stngth / 10`
+essid=$(iwconfig wlan0 | awk -F '"' '/ESSID/ {print $2}')
+stngth=$(iwconfig wlan0 | awk -F '=' '/Quality/ {print $2}' | cut -d ' ' -f 1)
+numer=$(($(echo $stngth | cut -d '/' -f 1) * 10))
+denom=$(echo $stngth | cut -d '/' -f 2)
+bars=$(($numer / $denom))
 
 case $bars in
   0)  bar='[----------]' ;;
