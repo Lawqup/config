@@ -218,6 +218,8 @@ Use Evil for Vim keybindings (based)
     (evil-global-set-key 'motion "j" 'evil-next-visual-line)
     (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
+    (keymap-unset evil-visual-state-map (kbd "u"))
+
     (evil-set-initial-state 'messages-buffer-mode 'normal)
     (evil-set-initial-state 'dashboard-mode 'normal))
 #+end_src
@@ -291,6 +293,8 @@ Kill a buffer without needing to ask for confirmation, unless that buffer is mod
    "C-x C-h" 'counsel-switch-buffer
    "C-c n" 'flycheck-next-error
    "C-c p" 'flycheck-previous-error)
+
+  (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 #+end_src
 
 *** Evil-org-mode
@@ -575,11 +579,12 @@ Set up helper function to define fonts and sizes for specific indentation levels
 Helper function that will run as a hook to setup basic things including some UI.
 
 #+begin_src emacs-lisp
-  (defun lq/org-mode-setup ()
-    (org-indent-mode)
-    (variable-pitch-mode 1)
-    (visual-line-mode 1)
-    (turn-on-flyspell))
+    (defun lq/org-mode-setup ()
+      (org-indent-mode)
+      (variable-pitch-mode 1)
+      (visual-line-mode 1)
+      (turn-on-flyspell)
+      (setq line-spacing 2))
 #+end_src
 
 ** Tie Everything Together
@@ -707,12 +712,12 @@ Define capture templates for quick journaling, adding =TODOs=, logging weight, a
 #+begin_src emacs-lisp
   (define-skeleton genius-idea-skeleton
     "A skeleton for ideas by Dan Koe"
-    "Idea name: "
-    "** " str "
+    "Topic: "
+    "*** Genius Idea Template (Big Idea Goes Here)
   
   *Topic* - What are you writing about from The Queue?
 
-  - 
+  - " str "
 
   *Braindump* - Write out everything that comes to mind. A summary in a way that you understand at this point in your life.
 
