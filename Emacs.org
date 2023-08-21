@@ -951,7 +951,7 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 #+begin_src emacs-lisp
   (defun efs/org-babel-tangle-config ()
     (when (string-equal (buffer-file-name)
-                        (expand-file-name "~/configRepo/config/Emacs.org"))
+                        (expand-file-name "~/config/Emacs.org"))
       ;; Dynamic scoping to the rescue
       (let ((org-confirm-babel-evaluate nil))
         (org-babel-tangle))))
@@ -1385,7 +1385,7 @@ Yasnippet provides placing code snippets in code.
 #+begin_src emacs-lisp
   (use-package yasnippet
     :hook (prog-mode . yas-minor-mode)
-    :config (setq yas-snippet-dirs '("~/configRepo/config/snippets"))
+    :config (setq yas-snippet-dirs '("~/config/snippets"))
     (yas-global-mode 1))
 #+end_src
 

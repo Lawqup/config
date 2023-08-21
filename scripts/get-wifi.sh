@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-#gets wifi strength
+# Gets wifi strength
 
 iwconfig wlan0 2>&1 | grep -q no\ wireless\ extensions\. && {
   echo wired

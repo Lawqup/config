@@ -27,24 +27,24 @@ SyncState *
 
 # WORK SETUP
 
-IMAPAccount work
-HOST imap.gmail.com
-User lawrence@udundi.com
-PassCmd "cat ~/.unsecure2"
-SSLType IMAPS
-CertificateFile /etc/ssl/certs/ca-certificates.crt
+# IMAPAccount work
+# HOST imap.gmail.com
+# User lawrence@unemployedlmao.com
+# PassCmd "cat ~/.unsecure2"
+# SSLType IMAPS
+# CertificateFile /etc/ssl/certs/ca-certificates.crt
 
-IMAPStore work-remote
-Account work 
+# IMAPStore work-remote
+# Account work 
 
-MaildirStore work-local
-Subfolders Verbatim
-Path ~/Mail/work/
-Inbox ~/Mail/work/Inbox
+# MaildirStore work-local
+# Subfolders Verbatim
+# Path ~/Mail/work/
+# Inbox ~/Mail/work/Inbox
 
-Channel work
-Far :work-remote:
-Near :work-local:
-Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail" "[Gmail]/Trash"
-Create Both
-SyncState *
+# Channel work
+# Far :work-remote:
+# Near :work-local:
+# Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail" "[Gmail]/Trash"
+# Create Both
+# SyncState *
