@@ -1,4 +1,4 @@
-# -*- mode: Conf;-*-
+# -*- mode: sh;-*-
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/.cargo/bin:$HOME/bin:/usr/local/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/.ghcup/bin:$HOME/.local/bin:$HOME/config/scripts:$PATH
 
@@ -132,7 +132,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export FZF_ALT_C_COMMAND="fd . $HOME --exclude={.git,Music,Videos,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo} --type d -H"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
