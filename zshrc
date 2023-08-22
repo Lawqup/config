@@ -192,13 +192,13 @@ PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
 alias ls="exa"
 
 # automatically run ssh-add and combine processes accross shells
-emulate ksh -c ". ~/.ssh-find-agent/ssh-find-agent.sh"
-ssh_find_agent -a
-if [ -z "$SSH_AUTH_SOCK" ]
-then
-   eval $(ssh-agent) > /dev/null
-   ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
-fi
+# emulate ksh -c ". ~/.ssh-find-agent/ssh-find-agent.sh"
+# ssh_find_agent -a
+# if [ -z "$SSH_AUTH_SOCK" ]
+# then
+#    eval $(ssh-agent) > /dev/null
+#    ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
+# fi
 
 export ALTERNATE_EDITOR=""
 

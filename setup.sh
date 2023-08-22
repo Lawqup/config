@@ -14,6 +14,8 @@ sudo pacman -S alacritty
 sudo pacman -S isync
 sudo pacman -S flameshot
 sudo pacman -S cron
+sudo pacman -S nitrogen
+sudo pacman -S picom
 
 echo "Installing XMonad and Haskell dependencies"
 curl -sSL https://get.haskellstack.org/ | sh
