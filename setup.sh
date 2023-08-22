@@ -5,6 +5,9 @@
 
 echo "Installing programs"
 sudo pacman -S zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sudo pacman -S inetutils  # "hostname" command
+sudo pacman -S exa
 sudo pacman -S emacs
 sudo pacman -S rofi
 sudo pacman -S alacritty
