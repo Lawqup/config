@@ -16,24 +16,28 @@ echo "Installing XMonad and Haskell dependencies"
 curl -sSL https://get.haskellstack.org/ | sh
 
 mkdir ~/.xmonad
-git clone https://github.com/xmonad/xmonad ~/.xmonad
-git clone https://github.com/xmonad/xmonad-contrib ~/.xmonad
-git clone https://codeberg.org/xmobar/xmobar ~/.xmonad
+git -C ~/.xmonad/ clone https://github.com/xmonad/xmonad
+git -C ~/.xmonad/ clone https://github.com/xmonad/xmonad-contrib
+git -C ~/.xmonad/ clone https://codeberg.org/xmobar/xmobar
 
 echo "Linking configs"
-ln ./xmonad.hs ~/.xmonad/xmonad.hs
-ln ./xmobarrc ~/.xmobarrc
-ln ./zshrc ~/.zshrc
-ln ./gitconfig ~/.gitconfig
-ln ./xinitrc ~/.xinitrc
-ln ./mbsyncrc ~/.mbsyncrc
+ln -fn ./xmonad.hs ~/.xmonad/xmonad.hs
+ln -fn ./xmobarrc ~/.xmobarrc
+ln -fn ./zshrc ~/.zshrc
+ln -fn ./gitconfig ~/.gitconfig
+ln -fn ./xinitrc ~/.xinitrc
+ln -fn ./mbsyncrc ~/.mbsyncrc
 
 mkdir ~/.config/rofi
-ln ~/.config/rofi/config.rasi ./rofi.rasi
+ln -fn ./rofi.rasi ~/.config/rofi/config.rasi 
 
 mkdir ~/.config/alacritty
-ln ~/.config/alacritty/alacritty.yml ./alacritty.yml
+ln -fn ./alacritty.yml ~/.config/alacritty/alacritty.yml
 
+echo "Building XMonad"
+
+(cd ~/.xmonad && stack init)
+(cd ~/.xmonad && stack install)
 
 echo "Restoring crontab"
 crontab ./crontab
