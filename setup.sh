@@ -1,7 +1,5 @@
 # Needs to be already installed:
 # - Git
-# - XMonad (in .xmonad directory)
-# - XMobar
 # - iwd
 
 
@@ -12,14 +10,23 @@ sudo pacman -S rofi
 sudo pacman -S alacritty
 sudo pacman -S isync
 sudo pacman -S flameshot
+sudo pacman -S cron
+
+echo "Installing XMonad and Haskell dependencies"
+curl -sSL https://get.haskellstack.org/ | sh
+
+mkdir ~/.xmonad
+git clone https://github.com/xmonad/xmonad ~/.xmonad
+git clone https://github.com/xmonad/xmonad-contrib ~/.xmonad
+git clone https://codeberg.org/xmobar/xmobar ~/.xmonad
 
 echo "Linking configs"
-ln ~/.xmonad/xmonad.hs ./xmonad.hs
-ln ~/.xmobarrc ./xmobarrc
-ln ~/.zshrc ./zshrc
-ln ~/.gitconfig ./gitconfig
-ln ~/.xinitrc ./xinitrc
-ln ~/.mbsyncrc ./mbsyncrc
+ln ./xmonad.hs ~/.xmonad/xmonad.hs
+ln ./xmobarrc ~/.xmobarrc
+ln ./zshrc ~/.zshrc
+ln ./gitconfig ~/.gitconfig
+ln ./xinitrc ~/.xinitrc
+ln ./mbsyncrc ~/.mbsyncrc
 
 mkdir ~/.config/rofi
 ln ~/.config/rofi/config.rasi ./rofi.rasi

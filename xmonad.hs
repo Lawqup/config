@@ -258,7 +258,7 @@ myLogHook = return ()
 -- per-workspace layout choices.
 --
 
-myStartupHook = setWMName "LG3D"
+myStartupHook = return ()
 
 ------------------------------------------------------------------------
 -- misc helper functions
