@@ -6,9 +6,12 @@
 echo "Installing programs"
 sudo pacman -S zsh inetutils exa emacs rofi\
      alacritty isync flameshot cron nitrogen\
-     picom gcc
+     picom gcc cmake
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+echo "Installing fonts"
+sudo pacman -S ttf-jetbrains-mono ttf-dejavu
 
 echo "Installing XMonad and Haskell dependencies"
 curl -sSL https://get.haskellstack.org/ | sh
