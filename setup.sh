@@ -4,18 +4,11 @@
 
 
 echo "Installing programs"
-sudo pacman -S zsh
+sudo pacman -S zsh inetutils exa emacs rofi\
+     alacritty isync flameshot cron nitrogen\
+     picom gcc
+
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-sudo pacman -S inetutils  # "hostname" command
-sudo pacman -S exa
-sudo pacman -S emacs
-sudo pacman -S rofi
-sudo pacman -S alacritty
-sudo pacman -S isync
-sudo pacman -S flameshot
-sudo pacman -S cron
-sudo pacman -S nitrogen
-sudo pacman -S picom
 
 echo "Installing XMonad and Haskell dependencies"
 curl -sSL https://get.haskellstack.org/ | sh
@@ -49,3 +42,5 @@ crontab ./crontab
 
 echo "Tangling emacs config"
 emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "~/config/Emacs.org")'
+touch ~/.emacs.d/custom.el
+
