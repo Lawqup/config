@@ -152,7 +152,7 @@ Set up relative line numbers, and set which types of files should have them.
   (lq/set-fonts)
 #+end_src
 
-Install font with icons
+Install font with icons. Run ~M-x all-the-icons-install-fonts~ and ~M-x nerd-icons-install-fonts~ for a fresh install.
 
 #+begin_src emacs-lisp
   (use-package all-the-icons)
