@@ -368,7 +368,7 @@ In order to use remote version control systems, however, you need to login via a
   (use-package forge)
 #+end_src
 
-* Autocompletion and LSP
+* Autocompletion
 
 Here goes everything related to autocompletion, including Emacs as a whole and specific programming languages.
 
@@ -969,7 +969,7 @@ Specify the timer end sound for org timer.
   (setq org-clock-sound "~/.emacs.d/assets/ding.wav")
 #+end_src
 
-* Development
+* Development and LSP
 ** Languages
 *** Frontend + JS
 **** HTML
@@ -1209,6 +1209,12 @@ Run leptosfmt on save
 
   (use-package haskell-mode
     :hook (haskell-mode . lsp-deferred))
+#+end_src
+
+**** YAML
+
+#+begin_src emacs-lisp
+  (use-package yaml-mode)
 #+end_src
 
 *** C/C++

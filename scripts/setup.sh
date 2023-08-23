@@ -4,11 +4,12 @@
 
 RED='\033[1;31m'
 GREEN='\033[1;32m'
+cd ~/config
 
 echo -e "${GREEN}Installing programs"
 sudo pacman -S zsh inetutils exa emacs rofi\
      alacritty isync flameshot cron nitrogen\
-     picom gcc cmake fd fzf firefox
+     picom gcc cmake fd fzf firefox wireless_tools
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
@@ -39,8 +40,10 @@ ln -fn ./alacritty.yml ~/.config/alacritty/alacritty.yml
 
 echo -e "${GREEN}Building XMonad"
 
-(cd ~/.xmonad && stack init)
-(cd ~/.xmonad && stack install)
+(cd ~/.xmonad &&\
+     stack init &&\
+     cp ~/config/scripts/xmonad_build_stack.yaml stack.yaml &&\
+     stack install)
 
 echo -e "${GREEN}Restoring crontab"
 crontab ./crontab

@@ -1,0 +1,9 @@
+resolver: lts-21.8
+packages:
+  - xmobar
+  - xmonad
+  - xmonad-contrib
+
+extra-deps: []
+flags: {}
+extra-package-dbs: []

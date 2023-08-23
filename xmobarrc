@@ -1,3 +1,4 @@
+-- -*- mode: haskell;-*-
 Config { overrideRedirect = False
        , font             = "xft:Ubuntu:weight=bold:pixelsize=11:antialias=true:hinting=true"
        , additionalFonts = [ "xft:Mononoki:pixelsize=11:antialias=true:hinting=true"
