@@ -34,6 +34,10 @@ fi
 
 # default browser
 export BROWSER=/usr/bin/opera
+xdg-mime default opera.desktop x-scheme-handler/http
+xdg-mime default opera.desktop scheme-handler/http
+xdg-mime default opera.desktop x-scheme-handler/https
+xdg-mime default opera.desktop scheme-handler/https
 
 # swap caps and ctrl 
 setxkbmap -option ctrl:swapcaps
