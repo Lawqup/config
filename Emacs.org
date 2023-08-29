@@ -713,7 +713,7 @@ Define capture templates for quick journaling, adding =TODOs=, logging weight, a
   (define-skeleton genius-idea-skeleton
     "A skeleton for ideas by Dan Koe"
     "Topic: "
-    "*** Genius Idea Template (Big Idea Goes Here)
+    "Genius Idea Template (Big Idea Goes Here)
   
   *Topic* - What are you writing about from The Queue?
 
@@ -794,6 +794,7 @@ Make sure indenting is fixed pitch to keep consistent indentation across levels.
   (with-eval-after-load 'org-indent
     (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch)))
 #+end_src
+
 
 ** Extra Ease of Use
 

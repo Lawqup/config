@@ -361,7 +361,7 @@ conf = def {
        ]
       `additionalKeysP`
       [
-       ("M-f", spawn "firefox"),
+       ("M-f", spawn "opera"),
        ("M-e", spawn "emacsclient -c -n"),
        ("M-r", spawn "xmonad --recompile; xmonad --restart"),
        ("M-S-<Space>", spawn "cyclekb us 'us(intl)'"),

@@ -1,7 +1,3 @@
-# Needs to be already installed:
-# - Git
-# - iwd
-
 RED='\033[1;31m'
 GREEN='\033[1;32m'
 cd ~/config
@@ -9,7 +5,7 @@ cd ~/config
 echo -e "${GREEN}Installing programs"
 sudo pacman -S zsh inetutils exa emacs rofi\
      alacritty isync flameshot cron nitrogen\
-     picom gcc cmake fd fzf firefox wireless_tools
+     picom gcc cmake fd fzf opera wireless_tools
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
