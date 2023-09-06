@@ -1,11 +1,8 @@
-# Get editor completions based on the config schema
-"$schema" = 'https://starship.rs/config-schema.json'
-
 # Inserts a blank line between shell prompts
 add_newline = false
 
 format = """
-[┌───⟨](bold green)$username\
+[┌─────⟨](bold blue)$username\
 $hostname\
 $localip\
 $shlvl\
@@ -88,11 +85,11 @@ $status\
 $os\
 $container\
 $shell\
-[└─](bold green)$character"""
+$character"""
 
 [character]
-success_symbol = '[Σ](bold green)'
-error_symbol = '[Σ](bold red)'
+success_symbol = '[└](dimmed green)[─](dimmed green)[Σ](bold green)'
+error_symbol = '[└](bold yellow)[─](bold yellow)[Σ](bold red)'
 
 [directory]
 format = " [$path]($style) "
