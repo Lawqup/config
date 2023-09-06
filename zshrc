@@ -77,7 +77,20 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+# https://dev.to/kumareth/a-beginner-s-guide-for-setting-up-autocomplete-on-ohmyzsh-hyper-with-plugins-themes-47f2
+
+plugins=(zsh-syntax-highlighting
+         zsh-autosuggestions
+         git
+         colorize
+         colored-man-pages
+         sudo
+         dirhistory
+         web-search)
+
+bindkey -M emacs '^S' sudo-command-line 
+bindkey -M vicmd '^S' sudo-command-line 
+bindkey -M viins '^S' sudo-command-line 
 
 source $ZSH/oh-my-zsh.sh
 
@@ -168,37 +181,29 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Tell emacs vterm what a prompt is
 # also allow directory tracking
-vterm_printf(){
-    if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ] ); then
-        # Tell tmux to pass the escape sequences through
-        printf "\ePtmux;\e\e]%s\007\e\\" "$1"
-    elif [ "${TERM%%-*}" = "screen" ]; then
-        # GNU screen (screen, screen-256color, screen-256color-bce)
-        printf "\eP\e]%s\007\e\\" "$1"
-    else
-        printf "\e]%s\e\\" "$1"
-    fi
-}
+if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
+    alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
+fi
 
-alias x="xdg-open"
-
-# vterm directory tracking
-vterm_prompt_end() {
-    vterm_printf "51;A$(whoami)@$(hostname):$(pwd)";
+emacs_vterm_prompt () {
+    buffer_title_update=$(print -Pn "\e]2;%2~\a")
+    pwd_update=$(print -Pn "\e]51;A$(whoami)@$(hostname):$(pwd)\e")
+    prompt_end=$(print "%{$buffer_title_update$pwd_update%}\\")
+    PROMPT="$PROMPT$prompt_end"
 }
-setopt PROMPT_SUBST
-PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
+autoload -U add-zsh-hook
+add-zsh-hook precmd emacs_vterm_prompt
 
 alias ls="exa"
-
-# automatically run ssh-add and combine processes accross shells
-# emulate ksh -c ". ~/.ssh-find-agent/ssh-find-agent.sh"
-# ssh_find_agent -a
-# if [ -z "$SSH_AUTH_SOCK" ]
-# then
-#    eval $(ssh-agent) > /dev/null
-#    ssh-add -l >/dev/null || alias ssh='ssh-add -l >/dev/null || ssh-add && unalias ssh; ssh'
-# fi
+alias x="xdg-open"
 
 export ALTERNATE_EDITOR=""
 
+# Put a line between prompts, but not before the first
+precmd() {
+  precmd() {
+    echo
+  }
+}
+
+eval "$(starship init zsh)"

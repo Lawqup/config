@@ -2,12 +2,20 @@ RED='\033[1;31m'
 GREEN='\033[1;32m'
 cd ~/config
 
+echo -e "${GREEN}Installing Yay"
+sudo pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+
 echo -e "${GREEN}Installing programs"
 sudo pacman -S zsh inetutils exa emacs rofi\
      alacritty isync flameshot cron nitrogen\
      picom gcc cmake fd fzf opera wireless_tools
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+curl -sS https://starship.rs/install.sh | sh
 
 echo -e "${GREEN}Installing fonts"
 sudo pacman -S ttf-jetbrains-mono ttf-dejavu
@@ -21,12 +29,14 @@ git -C ~/.xmonad/ clone https://github.com/xmonad/xmonad-contrib
 git -C ~/.xmonad/ clone https://codeberg.org/xmobar/xmobar
 
 echo -e "${GREEN}Linking configs"
+mkdir -p ~/.config
 ln -fn ./xmonad.hs ~/.xmonad/xmonad.hs
 ln -fn ./xmobarrc ~/.xmobarrc
 ln -fn ./zshrc ~/.zshrc
 ln -fn ./gitconfig ~/.gitconfig
 ln -fn ./xinitrc ~/.xinitrc
 ln -fn ./mbsyncrc ~/.mbsyncrc
+ln -fn ./starship.toml ~/.config/starship.toml
 
 mkdir ~/.config/rofi
 ln -fn ./rofi.rasi ~/.config/rofi/config.rasi 

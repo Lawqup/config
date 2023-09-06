@@ -1411,47 +1411,16 @@ Restclient to test http requests
 #+end_src
 
 * Terminal
-** Term
-
-One important thing to understand is line-mode versus char-mode. line-mode enables you to use normal Emacs keybindings while moving around in the terminal buffer while char-mode sends most of your keypresses to the underlying terminal. While using term-mode, you will want to be in char-mode for any terminal applications that have their own keybindings. If you’re just in your usual shell, line-mode is sufficient and feels more integrated with Emacs.
-
-With evil-collection installed, you will automatically switch to char-mode when you enter Evil’s insert mode. You will automatically be switched back to line-mode when you enter Evil’s normal mode.
-
-Run a terminal with ~M-x term~!
-
-Useful key bindings:
-
-    ~C-c C-n~ / ~C-c C-p~ - go forwards and backwards in the buffer’s prompts (also ~]]~ and ~[[~ with evil-mode)
-    ~C-c C-k~ - Enter char-mode
-    ~C-c C-j~ - Return to line-mode
-    
-#+begin_src emacs-lisp
-  (use-package term
-    :config
-    (setq explicit-shell-file-name "zsh") ;; Change this to bash, etc
-  
-    ;; Match the default Bash shell prompt.  Update this if you have a custom prompt
-    (setq term-prompt-regexp "^[^~\n]*[~] *"))
-#+end_src
-
-Turn on better colors:
-
-#+begin_src emacs-lisp
-  (use-package eterm-256color
-    :hook (term-mode . eterm-256color-mode))
-#+end_src
-
-** VTerm
 
 VTerm is just better Term
 
 #+begin_src emacs-lisp
-
   (use-package vterm
     :bind
     ("<f2>" . vterm)
     :config
-    (setq vterm-max-scrollback 10000))
+    (setq vterm-max-scrollback 10000)
+    (setq vterm-buffer-name-string "vterm %s"))
 
   (put 'vterm-send-C-s 'disabled t)
   (bind-key* "C-s" 'swiper)
