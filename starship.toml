@@ -2,24 +2,14 @@
 add_newline = false
 
 format = """
-[┌─────⟨](bold blue)$username\
+[╭─────⟨](bold blue)$username\
 $hostname\
-$localip\
-$shlvl\
-$singularity\
-$kubernetes\
 $directory\
-$vcsh\
-$fossil_branch\
 $git_branch\
 $git_commit\
 $git_state\
 $git_metrics\
 $git_status\
-$hg_branch\
-$pijul_channel\
-$docker_context\
-$package\
 $c\
 $cmake\
 $cobol\
@@ -65,31 +55,14 @@ $zig\
 $buf\
 $nix_shell\
 $conda\
-$meson\
-$spack\
-$memory_usage\
-$aws\
-$gcloud\
-$openstack\
-$azure\
-$env_var\
-$crystal\
-$custom\
 $sudo\
 $cmd_duration\
 $line_break\
-$jobs\
-$battery\
-$time\
-$status\
-$os\
-$container\
-$shell\
 $character"""
 
 [character]
-success_symbol = '[└](dimmed green)[─](dimmed green)[Σ](bold green)'
-error_symbol = '[└](bold yellow)[─](bold yellow)[Σ](bold red)'
+success_symbol = '[╰](bold green)[─](bold green)[Σ](bold green)'
+error_symbol = '[╰](bold yellow)[─](bold yellow)[Σ](bold red)'
 
 [directory]
 format = " [$path]($style) "

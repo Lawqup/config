@@ -9,23 +9,17 @@ iwconfig wlan0 2>&1 | grep -q no\ wireless\ extensions\. && {
 
 essid=$(iwconfig wlan0 | awk -F '"' '/ESSID/ {print $2}')
 stngth=$(iwconfig wlan0 | awk -F '=' '/Quality/ {print $2}' | cut -d ' ' -f 1)
-numer=$(($(echo $stngth | cut -d '/' -f 1) * 10))
+numer=$(($(echo $stngth | cut -d '/' -f 1) * 4))
 denom=$(echo $stngth | cut -d '/' -f 2)
-bars=$(($numer / $denom))
+bars=$((($numer + $denom/2)/ $denom))  # Round to the nearest half
 
 case $bars in
-  0)  bar='[----------]' ;;
-  1)  bar='[/---------]' ;;
-  2)  bar='[//--------]' ;;
-  3)  bar='[///-------]' ;;
-  4)  bar='[////------]' ;;
-  5)  bar='[/////-----]' ;;
-  6)  bar='[//////----]' ;;
-  7)  bar='[///////---]' ;;
-  8)  bar='[////////--]' ;;
-  9)  bar='[/////////-]' ;;
-  10) bar='[//////////]' ;;
-  *)  bar='[----!!----]' ;;
+  0)  bar='⟨────⟩' ;;
+  1)  bar='⟨/───⟩' ;;
+  2)  bar='⟨//──⟩' ;;
+  3)  bar='⟨///─⟩' ;;
+  4)  bar='⟨////⟩' ;;
+  *)  bar='⟨─!!─⟩' ;;
 esac
 
 echo $essid $bar

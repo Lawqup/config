@@ -79,7 +79,7 @@ ZSH_THEME="robbyrussell"
 # Add wisely, as too many plugins slow down shell startup.
 # https://dev.to/kumareth/a-beginner-s-guide-for-setting-up-autocomplete-on-ohmyzsh-hyper-with-plugins-themes-47f2
 
-plugins=(zsh-syntax-highlighting
+plugins=(fast-syntax-highlighting
          zsh-autosuggestions
          git
          colorize
@@ -87,10 +87,6 @@ plugins=(zsh-syntax-highlighting
          sudo
          dirhistory
          web-search)
-
-bindkey -M emacs '^S' sudo-command-line 
-bindkey -M vicmd '^S' sudo-command-line 
-bindkey -M viins '^S' sudo-command-line 
 
 source $ZSH/oh-my-zsh.sh
 
@@ -179,20 +175,53 @@ export MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
 export BUN_INSTALL="/home/lawrence/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
+function clear-scrollback-buffer {
+  # Behavior of clear: 
+  # 1. clear scrollback if E3 cap is supported (terminal, platform specific)
+  # 2. then clear visible screen
+  # For some terminal 'e[3J' need to be sent explicitly to clear scrollback
+  clear && printf '\e[3J'
+  # .reset-prompt: bypass the zsh-syntax-highlighting wrapper
+  # https://github.com/sorin-ionescu/prezto/issues/1026
+  # https://github.com/zsh-users/zsh-autosuggestions/issues/107#issuecomment-183824034
+  # -R: redisplay the prompt to avoid old prompts being eaten up
+  # https://github.com/Powerlevel9k/powerlevel9k/pull/1176#discussion_r299303453
+  zle && zle .reset-prompt && zle -R
+}
+
+zle -N clear-scrollback-buffer
+bindkey '^L' clear-scrollback-buffer
+
+
 # Tell emacs vterm what a prompt is
 # also allow directory tracking
 if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
     alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
 fi
 
-emacs_vterm_prompt () {
-    buffer_title_update=$(print -Pn "\e]2;%2~\a")
-    pwd_update=$(print -Pn "\e]51;A$(whoami)@$(hostname):$(pwd)\e")
-    prompt_end=$(print "%{$buffer_title_update$pwd_update%}\\")
-    PROMPT="$PROMPT$prompt_end"
+vterm_printf() {
+    # update buffer title
+    print -Pn "\e]2;%2~\a"
+
+    if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ]); then
+        # Tell tmux to pass the escape sequences through
+        printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+    elif [ "${TERM%%-*}" = "screen" ]; then
+        # GNU screen (screen, screen-256color, screen-256color-bce)
+        printf "\eP\e]%s\007\e\\" "$1"
+    else
+        printf "\e]%s\e\\" "$1"
+    fi
+
 }
+
+vterm_prompt_end() {
+    prompt_end=$(vterm_printf "51;A$USER@$HOST:$PWD")
+    PROMPT="$PROMPT%{$prompt_end%}"
+}
+
 autoload -U add-zsh-hook
-add-zsh-hook precmd emacs_vterm_prompt
+add-zsh-hook precmd vterm_prompt_end
 
 alias ls="exa"
 alias x="xdg-open"
@@ -206,4 +235,9 @@ precmd() {
   }
 }
 
+bindkey -M emacs '^S' sudo-command-line 
+bindkey -M vicmd '^S' sudo-command-line 
+bindkey -M viins '^S' sudo-command-line 
+
 eval "$(starship init zsh)"
+

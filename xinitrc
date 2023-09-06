@@ -42,7 +42,4 @@ xdg-mime default opera.desktop scheme-handler/https
 # swap caps and ctrl 
 setxkbmap -option ctrl:swapcaps
 
-nitrogen --restore &
-picom --config /home/lawrence/config/picom.conf &
-emacs --daemon &
 exec xmonad

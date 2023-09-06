@@ -16,17 +16,36 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.Gaps
 import XMonad.Hooks.ManageDocks
 import Graphics.X11.ExtraTypes.XF86
+import XMonad.Layout.LimitWindows (limitWindows, increaseLimit, decreaseLimit)
+import XMonad.Layout.WindowNavigation
+import XMonad.Layout.SubLayouts
+import XMonad.Layout.Simplest
+import XMonad.Layout.ResizableTile
+import XMonad.Layout.LayoutModifier
+import XMonad.Layout.SimplestFloat
+import XMonad.Layout.ThreeColumns
+import XMonad.Layout.Tabbed
+import XMonad.Layout.Accordion
+import XMonad.Actions.MouseResize
 
+
+import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
 import XMonad.Actions.Minimize
 import XMonad.Actions.NoBorders
 import XMonad.Layout.Minimize
-import XMonad.Layout.NoBorders (smartBorders)
+import XMonad.Layout.NoBorders
 import XMonad.Layout.MultiToggle
+import qualified XMonad.Layout.ToggleLayouts as T (toggleLayouts, ToggleLayout(Toggle))
+import qualified XMonad.Layout.MultiToggle as MT (Toggle(..))
 import XMonad.Layout.MultiToggle.Instances
-import XMonad.Layout.Grid (Grid(..))
+import XMonad.Layout.GridVariants (Grid(Grid))
 import XMonad.Hooks.SetWMName
 import XMonad.Util.NamedScratchpad
+import XMonad.Util.SpawnOnce
+import XMonad.Layout.Renamed
+import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
 
+import XMonad.Util.Hacks (windowedFullscreenFixEventHook, javaHack, trayerAboveXmobarEventHook, trayAbovePanelEventHook, trayerPaddingXmobarEventHook, trayPaddingXmobarEventHook, trayPaddingEventHook)
 
 
 -- The preferred terminal program, which is used in a binding below and by
@@ -78,7 +97,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $
     -- launch a terminal
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
 
-    -- launch dmenu
+    -- launch rofi
     , ((modm,               xK_p), spawn "rofi -show drun")
 
     -- launch gmrun
@@ -191,21 +210,42 @@ myMouseBindings XConfig {XMonad.modMask = modm} = M.fromList
 -- which denotes layout choice.
 --
 -- Gaps between windows
-mySpacing = spacingRaw True
-        (Border 10 10 10 10)
-        True
-        (Border 10 10 10 10)
-        True
+
+--Makes setting the spacingRaw simpler to write. The spacingRaw module adds a configurable amount of space around windows.
+mySpacing :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
+mySpacing i = spacingRaw False (Border i i i i) True (Border i i i i) True
+
+-- Below is a variation of the above except no borders are applied
+-- if fewer than two windows. So a single window has no gaps.
+mySpacing' :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
+mySpacing' i = spacingRaw True (Border i i i i) True (Border i i i i) True
+
+tall     = renamed [Replace "tall"]
+           $ limitWindows 5
+           $ smartBorders
+           $ windowNavigation
+           $ subLayout [] (smartBorders Simplest)
+           $ mySpacing 8
+           $ ResizableTall 1 (3/100) (1/2) []
+floats   = renamed [Replace "floats"]
+           $ smartBorders
+           $ simplestFloat
+threeCol = renamed [Replace "threeCol"]
+           $ limitWindows 7
+           $ smartBorders
+           $ windowNavigation
+           $ subLayout [] (smartBorders Simplest)
+           $ ThreeCol 1 (3/100) (1/2)
 
 -- Layouts available via mod + space
-myLayout =
-        avoidStruts $
-        smartBorders $
-        mySpacing $
-        minimize $
-        mkToggle (NOBORDERS ?? FULL ?? EOT) $
-                Tall 1 (10/100) (60/100)
-                ||| Grid
+myLayout = avoidStruts
+           $ mouseResize
+           $ windowArrange
+           $ T.toggleLayouts floats
+           $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
+  where
+    myDefaultLayout = withBorder myBorderWidth tall
+                                           ||| withBorder myBorderWidth threeCol
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -258,7 +298,11 @@ myLogHook = return ()
 -- per-workspace layout choices.
 --
 
-myStartupHook = return ()
+myStartupHook = do
+  spawnOnce "picom --config /home/lawrence/config/picom.conf"
+  spawn "emacs --daemon"
+  spawnOnce "nitrogen --restore &"
+  -- setWMName "LG3D"
 
 ------------------------------------------------------------------------
 -- misc helper functions
@@ -366,6 +410,7 @@ conf = def {
        ("M-r", spawn "xmonad --recompile; xmonad --restart"),
        ("M-S-<Space>", spawn "cyclekb us 'us(intl)'"),
        ("M-s", namedScratchpadAction myScratchPads "terminal"),
-       ("M-q", namedScratchpadAction myScratchPads "calculator")
+       ("M-q", namedScratchpadAction myScratchPads "calculator"),
+       ("M-y", sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts)
       ]
 
