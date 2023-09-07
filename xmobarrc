@@ -37,7 +37,7 @@ Config { font            = "Ubuntu Bold 10"
                         -- Echos a "battery" icon in front of the pacman updates.
                     , Run Com "echo" ["<fn=2>\xf242</fn>"] "baticon" 3600
                         -- Battery
-		    , Run Battery [ "-t", "<fn=2>\xf0e7</fn> <left>% / <timeleft>" ] 60                        -- Time and date
+		    , Run Battery [ "-t", "<left>% / <timeleft>" ] 60                        -- Time and date
                     , Run Date "<fn=2>\xf017</fn>  %b %d %Y - (%I:%M %P) " "date" 50
                         -- Prints out the left side items such as workspaces, layout, etc.
                     , Run XMonadLog
