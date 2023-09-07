@@ -30,7 +30,7 @@ window:
   # Spread additional padding evenly around the terminal content.
   dynamic_padding: false
 
-  opacity: 0.8
+  opacity: 0.65
 
   # Window decorations
   # Setting this to false will result in window without borders and title bar.
@@ -200,7 +200,7 @@ schemes:
 colors:
   # Default colors
   primary:
-    background: '0x000000'
+    background: '0x3b4252'
     foreground: '0xe0e0e0'
 
   # Colors the cursor will use if `custom_cursor_colors` is true
