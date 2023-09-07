@@ -9,6 +9,7 @@ iwconfig wlan0 2>&1 | grep -q no\ wireless\ extensions\. && {
 
 essid=$(iwconfig wlan0 | awk -F '"' '/ESSID/ {print $2}')
 stngth=$(iwconfig wlan0 | awk -F '=' '/Quality/ {print $2}' | cut -d ' ' -f 1)
+[[ -z $stngth ]] && stngth='-1/1'
 numer=$(($(echo $stngth | cut -d '/' -f 1) * 4))
 denom=$(echo $stngth | cut -d '/' -f 2)
 bars=$((($numer + $denom/2)/ $denom))  # Round to the nearest half
