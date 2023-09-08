@@ -21,15 +21,15 @@ Config { font            = "Ubuntu Bold 10"
                       Run Com "echo" ["<fn=2>\xf1eb</fn>"] "wifi_icon" 3600
 		    , Run Com "/home/lawrence/config/scripts/get-wifi.sh" [] "wifi" 30
                       -- Cpu usage in percent
-                    , Run Cpu ["-t", "<fn=2>\xf108</fn>  cpu: (<total>%)","-H","50","--high","red"] 20
+                    , Run Cpu ["-t", "<fn=2>\xf108</fn>  <total>%","-H","50","--high","red"] 20
                         -- Ram used number and percent
-                    , Run Memory ["-t", "<fn=2>\xf233</fn>  mem: <used>M (<usedratio>%)"] 20
+                    , Run Memory ["-t", "<fn=2>\xf233</fn>  <used>M (<usedratio>%)"] 20
                         -- Disk space free
-                    , Run DiskU [("/", "<fn=2>\xf0c7</fn>  hdd: <free> free")] [] 60
+                    , Run DiskU [("/", "<fn=2>\xf0c7</fn>  <free> free")] [] 60
                         -- Echos an "up arrow" icon in front of the uptime output.
                     , Run Com "echo" ["<fn=2>\xf0aa</fn>"] "uparrow" 3600
                         -- Uptime
-                    , Run Uptime ["-t", "uptime: <days>d <hours>h"] 360
+                    , Run Uptime ["-t", "<days>d <hours>h"] 360
                         -- Echos a "bell" icon in front of the pacman updates.
                     , Run Com "echo" ["<fn=2>\xf0f3</fn>"] "bell" 3600
                         -- Check for pacman updates
@@ -40,10 +40,15 @@ Config { font            = "Ubuntu Bold 10"
 		    , Run Battery [ "-t", "<left>% / <timeleft>" ] 60                        -- Time and date
                     , Run Date "<fn=2>\xf017</fn>  %b %d %Y - (%I:%M %P) " "date" 50
                         -- Prints out the left side items such as workspaces, layout, etc.
+                    , Run Alsa "default" "Master"
+                      [ "--template", "<fn=2>\xf028</fn>  <volumestatus>"
+                      , "--suffix"  , "True"
+                      , "--"
+                      , "--on", ""
+                      ]
                     , Run XMonadLog
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "   %XMonadLog% }{<box type=Bottom width=2 mb=2 color=#FFA0A0><fc=#FFA0A0><action=`alacritty -e iwctl`>%wifi%</action></fc></box>   <box type=Bottom width=2 mb=2 color=#A3BE8C><fc=#A3BE8C><action=`alacritty -e htop`>%cpu%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#81A1C1><fc=#81A1C1><action=`alacritty -e htop`>%memory%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#EBCB8B><fc=#EBCB8B>%disku%</fc></box>    <box type=Bottom width=2 mb=2 color=#B48EAD><fc=#B48EAD>%uparrow%  %uptime%</fc></box>    <box type=Bottom width=2 mb=2 color=#88C0D0><fc=#88C0D0>%bell%  <action=`alacritty -e sudo pacman -Syu`>%updates%</action></fc></box>   <box type=Bottom width=2 mb=2 color=#BF616A><fc=#BF616A>%baticon%  %battery%</fc></box>    <box type=Bottom width=2 mb=2 color=#A3BE8C><fc=#A3BE8C><action=`emacsclient -c -n`>%date%</action></fc></box>   "
-       }
+       , template = "    <box type=Bottom width=2 mb=2 color=#EBCB8B><fc=#EBCB8B>%alsa:default:Master%</fc></box>    <box type=Bottom width=2 mb=2 color=#FFA0A0><fc=#FFA0A0><action=`alacritty -e iwctl`>%wifi%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#A3BE8C><fc=#A3BE8C><action=`alacritty -e htop`>%cpu%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#81A1C1><fc=#81A1C1><action=`alacritty -e htop`>%memory%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#BF616A><fc=#BF616A>%baticon%  %battery%</fc></box>} %XMonadLog% {<box type=Bottom width=2 mb=2 color=#EBCB8B><fc=#EBCB8B>%disku%</fc></box>    <box type=Bottom width=2 mb=2 color=#B48EAD><fc=#B48EAD>%uparrow%  %uptime%</fc></box>    <box type=Bottom width=2 mb=2 color=#88C0D0><fc=#88C0D0>%bell%  <action=`alacritty -e sudo pacman -Syu`>%updates%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#A3BE8C><fc=#A3BE8C><action=`emacsclient -c -n`>%date%</action></fc></box>    "}
 
