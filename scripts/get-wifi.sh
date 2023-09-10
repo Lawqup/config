@@ -23,6 +23,6 @@ case $bars in
   *)  bar='⟨─!!─⟩' ;;
 esac
 
-echo $essid $bar
+echo "$essid <fc=#AAC0F0>$bar</fc>"
 
 exit 0

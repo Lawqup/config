@@ -1,17 +1,21 @@
 -- -*- mode: haskell;-*-
-Config { font            = "Ubuntu Bold 10"
-       , additionalFonts = [ "Mononoki 12"
-                           , "Font Awesome 6 Free Solid 12"
-                           , "Font Awesome 6 Brands 12"
-                           ]
-       , bgColor      = "#2E3440"
-       , fgColor      = "#D8DEE9"
+Config { font = "Roboto Bold 10"
+       , additionalFonts =
+           [ "FontAwesome 12"
+           , "FontAwesome Bold 8"
+           , "FontAwesome 14"
+           , "Hack 19"
+           , "Hack 14"
+           ]
+       , bgColor      = "#2B2E37"
+       , fgColor      = "#929AAD"
+       , alpha = 255
        -- Position TopSize and BottomSize take 3 arguments:
        --   an alignment parameter (L/R/C) for Left, Right or Center.
        --   an integer for the percentage width, so 100 would be 100%.
        --   an integer for the minimum pixel height for xmobar, so 24 would force a height of at least 24 pixels.
        --   NOTE: The height should be the same as the trayer (system tray) height.
-       , position     = TopSize L 100 28
+       , position     = TopSize L 100 32
        , lowerOnStart = True
        , hideOnStart  = False
        , allDesktops  = True
@@ -21,34 +25,49 @@ Config { font            = "Ubuntu Bold 10"
                       Run Com "echo" ["<fn=2>\xf1eb</fn>"] "wifi_icon" 3600
 		    , Run Com "/home/lawrence/config/scripts/get-wifi.sh" [] "wifi" 30
                       -- Cpu usage in percent
-                    , Run Cpu ["-t", "<fn=2>\xf108</fn>  <total>%","-H","50","--high","red"] 20
-                        -- Ram used number and percent
-                    , Run Memory ["-t", "<fn=2>\xf233</fn>  <used>M (<usedratio>%)"] 20
+                    , Run Cpu ["-t", "Cpu: <fc=#AAC0F0><total>%</fc>",
+                               "-H","50",
+                               "--high","red"] 20
+                        -- Ram used percent
+                    , Run Memory ["-t","Mem: <fc=#AAC0F0><usedratio>%</fc>"] 10
                         -- Disk space free
-                    , Run DiskU [("/", "<fn=2>\xf0c7</fn>  <free> free")] [] 60
-                        -- Echos an "up arrow" icon in front of the uptime output.
-                    , Run Com "echo" ["<fn=2>\xf0aa</fn>"] "uparrow" 3600
-                        -- Uptime
-                    , Run Uptime ["-t", "<days>d <hours>h"] 360
-                        -- Echos a "bell" icon in front of the pacman updates.
-                    , Run Com "echo" ["<fn=2>\xf0f3</fn>"] "bell" 3600
+                    , Run DiskU [("/", "<fn=1>\xf0c7</fn>  <fc=#AAC0F0><free></fc> free")] [] 60
                         -- Check for pacman updates
                     , Run Com "/home/lawrence/config/scripts/updates.sh" [] "updates" 36000
                         -- Echos a "battery" icon in front of the pacman updates.
-                    , Run Com "echo" ["<fn=2>\xf242</fn>"] "baticon" 3600
+                    , Run Com "echo" ["<fn=1>\xf242</fn>"] "baticon" 3600
                         -- Battery
-		    , Run Battery [ "-t", "<left>% / <timeleft>" ] 60                        -- Time and date
-                    , Run Date "<fn=2>\xf017</fn>  %b %d %Y - (%I:%M %P) " "date" 50
+		    , Run Battery [ "-t", "<fc=#AAC0F0><left>%</fc>" ] 60                        -- Time and date
+                    , Run Date "<fn=1>\xf017</fn>  %b %d %Y - <fc=#AAC0F0>%I:%M %P</fc> " "date" 50
                         -- Prints out the left side items such as workspaces, layout, etc.
                     , Run Alsa "default" "Master"
-                      [ "--template", "<fn=2>\xf028</fn>  <volumestatus>"
+                      [ "--template", "<fn=1>\xf028</fn>  <fc=#AAC0F0><volumestatus></fc>"
                       , "--suffix"  , "True"
                       , "--"
                       , "--on", ""
                       ]
-                    , Run XMonadLog
+                    , Run UnsafeXMonadLog
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "    <box type=Bottom width=2 mb=2 color=#EBCB8B><fc=#EBCB8B>%alsa:default:Master%</fc></box>    <box type=Bottom width=2 mb=2 color=#FFA0A0><fc=#FFA0A0><action=`alacritty -e iwctl`>%wifi%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#A3BE8C><fc=#A3BE8C><action=`alacritty -e htop`>%cpu%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#81A1C1><fc=#81A1C1><action=`alacritty -e htop`>%memory%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#BF616A><fc=#BF616A>%baticon%  %battery%</fc></box>} %XMonadLog% {<box type=Bottom width=2 mb=2 color=#EBCB8B><fc=#EBCB8B>%disku%</fc></box>    <box type=Bottom width=2 mb=2 color=#B48EAD><fc=#B48EAD>%uparrow%  %uptime%</fc></box>    <box type=Bottom width=2 mb=2 color=#88C0D0><fc=#88C0D0>%bell%  <action=`alacritty -e sudo pacman -Syu`>%updates%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#A3BE8C><fc=#A3BE8C><action=`emacsclient -c -n`>%date%</action></fc></box>    "}
+       , template = "\
+       \    \
+       \%alsa:default:Master%\
+       \    |    \
+       \<action=`alacritty -e iwctl`>%wifi%</action>\
+       \    |    \
+       \<action=`alacritty -e htop`>%cpu%</action>\
+       \    |    \
+       \<action=`alacritty -e htop`>%memory%</action>\
+       \}\
+       \%UnsafeXMonadLog%\
+       \{\
+       \%baticon%  %battery%\
+       \    |    \
+       \%disku%\
+       \    |    \
+       \<action=`alacritty -e sudo pacman -Syu`>%updates%</action>\
+       \    |    \
+       \<action=`emacsclient -c -n`>%date%</action>\
+       \    "}
 

@@ -16,3 +16,5 @@ flags:
   xmobar:
     all_extensions: true
 extra-package-dbs: []
+
+system-ghc: true

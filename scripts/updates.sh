@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cupd=$(checkupdates | wc -l)
-echo "$cupd updates "
+echo "<fn=1></fn>  <fc=#AAC0F0>$cupd</fc>"
 

@@ -1,4 +1,6 @@
-# config
+## config
 Repo for all my config files.
 
-Most up-to-date and fleshed-out configurations are my [Emacs](./Emacs.org) and [Xmonad](./xmonad.hs) configs.
+### Preview of config
+
+<img src="./assets/preview.png" alt="Preview of config" width="100%" height="auto">
