@@ -971,6 +971,67 @@ Specify the timer end sound for org timer.
 #+end_src
 
 * Development and LSP
+** Language server config
+*** LSP mode
+
+=LSP-mode= enables the protocol that allows connecting to language servers.
+
+#+begin_src emacs-lisp
+  (defun lq/lsp-mode-setup ()
+    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+    (setq lsp-completion-provider :none) ;; don't touch company backends
+    (lsp-headerline-breadcrumb-mode))
+
+  (use-package lsp-mode
+    :commands (lsp lsp-deferred)
+    :hook (lsp-mode . lq/lsp-mode-setup)
+    :config
+    (lsp-enable-which-key-integration t))
+  
+  (bind-key* "C-c C-l" lsp-command-map)
+#+end_src
+
+*** LSP mode extras
+
+=LSP-ui= for better LSP UI.
+
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    (lsp-ui-doc-position 'bottom))
+#+end_src
+
+*** Company mode
+
+
+Better completions than =completions-at-point=!
+
+#+begin_src emacs-lisp
+  (use-package company
+    :after lsp-mode
+    :hook (lsp-mode . company-mode)
+    :bind (:map company-active-map
+           ("<tab>" . company-complete-selection))
+          (:map lsp-mode-map
+           ("<tab>" . company-indent-or-complete-common))
+    :custom
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0))
+
+  (use-package company-box
+    :hook (company-mode . company-box-mode))
+#+end_src
+
+Prescient for reasonable sorting of entries
+
+#+begin_src emacs-lisp
+  (use-package company-prescient
+    :after company
+    :config
+    (company-prescient-mode 1))
+#+end_src
+
 ** Languages
 *** Frontend + JS
 **** HTML
@@ -1209,11 +1270,11 @@ Run leptosfmt on save
 
 #+begin_src emacs-lisp
   (use-package lsp-haskell)
-  (add-hook 'haskell-mode-hook #'lsp)
-  (add-hook 'haskell-literate-mode-hook #'lsp)
 
   (use-package haskell-mode
     :hook (haskell-mode . lsp-deferred))
+  
+  (add-hook 'haskell-literate-mode-hook #'lsp)
 #+end_src
 
 **** YAML
@@ -1275,67 +1336,6 @@ Setup DAP-mode
                                      :projectName "myapp"
                                      :mainClass "com.domain.AppRunner"
                                      :env '(("DEV" . "1"))))
-#+end_src
-
-** Language server config
-*** LSP mode
-
-=LSP-mode= enables the protocol that allows connecting to language servers.
-
-#+begin_src emacs-lisp
-  (defun lq/lsp-mode-setup ()
-    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-    (setq lsp-completion-provider :none) ;; don't touch company backends
-    (lsp-headerline-breadcrumb-mode))
-
-  (use-package lsp-mode
-    :commands (lsp lsp-deferred)
-    :hook (lsp-mode . lq/lsp-mode-setup)
-    :config
-    (lsp-enable-which-key-integration t))
-  
-  (define-key lsp-mode-map (kbd "C-c C-l") lsp-command-map)
-#+end_src
-
-*** LSP mode extras
-
-=LSP-ui= for better LSP UI.
-
-#+begin_src emacs-lisp
-  (use-package lsp-ui
-    :hook (lsp-mode . lsp-ui-mode)
-    :custom
-    (lsp-ui-doc-position 'bottom))
-#+end_src
-
-*** Company mode
-
-
-Better completions than =completions-at-point=!
-
-#+begin_src emacs-lisp
-  (use-package company
-    :after lsp-mode
-    :hook (lsp-mode . company-mode)
-    :bind (:map company-active-map
-           ("<tab>" . company-complete-selection))
-          (:map lsp-mode-map
-           ("<tab>" . company-indent-or-complete-common))
-    :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
-
-  (use-package company-box
-    :hook (company-mode . company-box-mode))
-#+end_src
-
-Prescient for reasonable sorting of entries
-
-#+begin_src emacs-lisp
-  (use-package company-prescient
-    :after company
-    :config
-    (company-prescient-mode 1))
 #+end_src
 
 ** Misc

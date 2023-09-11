@@ -312,6 +312,8 @@ myLogHook = return ()
 myStartupHook = do
   spawnOnce "picom --config /home/lawrence/config/picom.conf"
   spawn "emacs --daemon"
+  spawn "setxkbmap -option ctrl:swapcaps"
+  spawn "setxkbmap us"
   spawnOnce "nitrogen --restore &"
 
 -- setWMName "LG3D"

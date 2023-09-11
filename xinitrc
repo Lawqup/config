@@ -39,7 +39,4 @@ xdg-mime default opera.desktop scheme-handler/http
 xdg-mime default opera.desktop x-scheme-handler/https
 xdg-mime default opera.desktop scheme-handler/https
 
-# swap caps and ctrl 
-setxkbmap -option ctrl:swapcaps
-
 exec xmonad

@@ -223,7 +223,7 @@ vterm_prompt_end() {
 autoload -U add-zsh-hook
 add-zsh-hook precmd vterm_prompt_end
 
-alias ls="exa"
+alias ls="eza"
 alias x="xdg-open"
 
 export ALTERNATE_EDITOR=""
