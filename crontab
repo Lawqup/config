@@ -1,2 +1,3 @@
 */3 * * * * /home/lawrence/configRepo/config/scripts/batterynotify
+0 10 * * *  (cd ~/important-files && git add . && git commit -m "backup" && git push) 
 
