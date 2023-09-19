@@ -9,9 +9,10 @@ cd yay
 makepkg -si
 
 echo -e "${GREEN}Installing programs"
-sudo pacman -S zsh inetutils exa emacs rofi\
+sudo pacman -S zsh inetutils eza emacs rofi\
      alacritty isync flameshot cron nitrogen\
-     picom gcc cmake fd fzf opera wireless_tools
+     picom gcc cmake fd fzf opera wireless_tools\
+     opera-ffmpeg-codecs
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
