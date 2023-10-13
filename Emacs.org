@@ -620,7 +620,7 @@ Automatically save org buffers on refile, so we don't need to go to the file to 
 Define which files affect =Org-agenda= and setup =TODO= behavior.
 
 #+begin_src emacs-lisp
-  (setq org-agenda-files '("~/important_files/Org"))
+  (setq org-agenda-files '("~/important-files/Org"))
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
@@ -651,37 +651,34 @@ Display agenda on Emacs startup
 #+end_src
 
 ** Capture Templates
-:LOGBOOK:
-CLOCK: [2023-07-18 Tue 21:31]--[2023-07-18 Tue 21:31] =>  0:00
-:END:
 
 Define capture templates for quick journaling, adding =TODOs=, logging weight, and more.
 
 #+begin_src emacs-lisp
   (setq org-capture-templates
         `(("t" "Tasks / Projects")
-          ("tt" "Task" entry (file+olp "~/important_files/Org/todo.org" "Open Loops")
+          ("tt" "Task" entry (file+olp "~/important-files/Org/todo.org" "Open Loops")
            "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
-          ("tp" "Project" entry (file+olp "~/important_files/Org/todo.org" "Projects")
+          ("tp" "Project" entry (file+olp "~/important-files/Org/todo.org" "Projects")
            "* PROJ %?\n  %U\n  %a\n  %i" :empty-lines 1)
-          ("tw" "Work Task" entry (file+olp "~/important_files/Org/todo.org" "Work")
+          ("tw" "Work Task" entry (file+olp "~/important-files/Org/todo.org" "Work")
            "* WORK %?\nDEADLINE: %^t\n" :empty-lines 1)
-          ("ts" "Scheduled Task" entry (file+olp "~/important_files/Org/todo.org" "Active")
+          ("ts" "Scheduled Task" entry (file+olp "~/important-files/Org/todo.org" "Active")
            "* TODO %?\nSCHEDULED: %^t\n" :empty-lines 1)
 
           ("j" "Journal Entries")
           ("jj" "Journal" entry
-           (file+olp+datetree "~/important_files/Org/journal.org")
+           (file+olp+datetree "~/important-files/Org/journal.org")
            "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
            :empty-lines 1)
           ("js" "Story" entry
-           (file+olp+datetree "~/important_files/Org/journal.org")
+           (file+olp+datetree "~/important-files/Org/journal.org")
            "* %<%I:%M %p> - %^{prompt|Daily Story} :stories:\n\n%?\n\n"
            :empty-lines 1)
 
           ("m" "Metrics Capture")
           ("mw" "Weight" table-line
-           (file+headline "~/important_files/Org/stats.org" "Weight")
+           (file+headline "~/important-files/Org/stats.org" "Weight")
            "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
 #+end_src
@@ -746,6 +743,15 @@ Define capture templates for quick journaling, adding =TODOs=, logging weight, a
   *Frameworks* -  Can you create a memorable, step-by-step solution to solving the problem?
 
   - ")
+#+end_src
+
+#+begin_src emacs-lisp
+  (define-skeleton newsletter-skeleton
+    "A skeleton for newsletters"
+    "Title: "
+    "#+title: " str
+    "\n#+date: " (format-time-string "%b %e %Y")
+    "\n#+OPTIONS: \\n:t toc:nil num:nil")
 #+end_src
 
 ** Extra UI Features
@@ -1221,6 +1227,7 @@ Use LSP-mode in src block buffers (access when on python source block with ~C-c 
 Run leptosfmt on save
 
 #+begin_src emacs-lisp
+  ;; Defines leptos-format-buffer
   (reformatter-define leptos-format
     :program "leptosfmt"
     :args '("--stdin"))
@@ -1241,6 +1248,9 @@ Run leptosfmt on save
     ;; (setq lsp-eldoc-hook nil)
     ;; (setq lsp-enable-symbol-highlighting nil)
     ;; (setq lsp-signature-auto-activate nil)
+
+    ;; make lsp rust work with all features
+    (setq lsp-rust-features "all")
 
     ;; comment to disable rustfmt on save
     (setq rustic-format-on-save t)
