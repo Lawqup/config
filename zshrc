@@ -7,6 +7,9 @@ export ZSH="$HOME/.oh-my-zsh"
 
 export EMAIL="lawrencequp@gmail.com"
 
+export FLYCTL_INSTALL="/home/lawrence/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
+
 NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 
 
