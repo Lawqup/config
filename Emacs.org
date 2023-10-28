@@ -750,6 +750,7 @@ Define capture templates for quick journaling, adding =TODOs=, logging weight, a
     "A skeleton for newsletters"
     "Title: "
     "#+title: " str
+    "\n#+description:"
     "\n#+date: " (format-time-string "%b %e %Y")
     "\n#+OPTIONS: \\n:t toc:nil num:nil")
 #+end_src

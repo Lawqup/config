@@ -9,3 +9,4 @@ next_idx=$((curr_idx % n_layouts + 1))
 next_layout=${@[next_idx]}
 
 setxkbmap "$next_layout"
+setxkbmap -option ctrl:swapcaps
