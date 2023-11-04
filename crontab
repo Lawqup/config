@@ -1,3 +1,4 @@
-*/3 * * * * /home/lawrence/configRepo/config/scripts/batterynotify
-0 10 * * *  (cd ~/important-files && git add . && git commit -m "backup" && git push) 
+*/3 * * * * /home/lawrence/config/scripts/battery_notify
+0 10 * * *  (cd ~/important-files && git add . && git commit -m "backup" && git push)
+0 21 * * * /home/lawrence/config/scripts/lights_off_notify
 

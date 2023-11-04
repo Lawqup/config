@@ -4,6 +4,8 @@
 export DISPLAY=:0
 export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus"
 
+ICON_DIR=/home/lawrence/config/icons/
+
 # Get some important values
 WARNING_LEVEL_1=20
 WARNING_LEVEL_2=10
@@ -27,12 +29,12 @@ fi
 
 # Send notifications if haven't been sent yet
 if [ $BATTERY_LEVEL -gt 95 ] && [ $BATTERY_DISCHARGING -eq 0 ] && [ ! -f $FULL_FILE ]; then
-    notify-send "Battery Charged" "Battery is fully charged." -i "battery" -r 9991
+    notify-send "Battery Charged" "Battery is fully charged." -r 9991
     touch $FULL_FILE
 elif [ $BATTERY_LEVEL -le $WARNING_LEVEL_1 ] && [ $BATTERY_DISCHARGING -eq 1 ] && [ ! -f $EMPTY_FILE_1 ]; then
-    notify-send "Charge yo computer bruh" "${BATTERY_LEVEL}% left." -u critical -i "battery-critical" -r 9991
+    notify-send "Charge yo computer bruh" "${BATTERY_LEVEL}% left." -u critical -r 9991
     touch $EMPTY_FILE_1
 elif [ $BATTERY_LEVEL -le $WARNING_LEVEL_2 ] && [ $BATTERY_DISCHARGING -eq 1 ] && [ ! -f $EMPTY_FILE_2 ]; then
-    notify-send "CHARGE NOW" "${BATTERY_LEVEL}% left." -u critical -i "battery-critical" -r 9991
+    notify-send "CHARGE NOW" "${BATTERY_LEVEL}% left." -u critical -r 9991
     touch $EMPTY_FILE_2
 fi

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Tell cron where to send notifications
+export DISPLAY=:0
+export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus"
+
+notify-send "LIGHTS OFF" -r 9992 -u critical

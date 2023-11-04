@@ -315,6 +315,7 @@ myStartupHook = do
   spawn "setxkbmap -option ctrl:swapcaps"
   spawn "setxkbmap us"
   spawnOnce "nitrogen --restore &"
+  spawnOnce "dunst &"
 
 -- setWMName "LG3D"
 

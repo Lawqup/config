@@ -9,20 +9,21 @@ alias p="sudo pacman -S --noconfirm"
 echo -e "${GREEN}Installing Yay${NC}"
 
 p --needed git base-devel
-git clone https://aur.archlinux.org/yay.git ~
+git clone https://aur.archlinux.org/yay.git ~/yay
 cd ~/yay
 makepkg -si
 
 cd ~/config
 
 echo -e "${GREEN}Installing programs${NC}"
-p zsh inetutils eza emacs rofi\
+p zsh inetutils eza emacs rofi pacman-contrib\
   alacritty isync flameshot cron nitrogen\
   picom gcc cmake fd fzf opera wireless_tools\
   opera-ffmpeg-codecs alsa-utils xorg xorg-xinit\
   openssh ttf-nerd-fonts-symbols ttf-roboto\
   noto-font-emoji noto-fonts noto-fonts-extra\
-  htop
+  htop pulseaudio pulseaudio-alsa pulseaudio-bluetooth\
+  bluez bluez-utils acpi dunst
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
@@ -62,6 +63,9 @@ ln -fn ../rofi.rasi ~/.config/rofi/config.rasi
 mkdir ~/.config/alacritty
 ln -fn ../alacritty.yml ~/.config/alacritty/alacritty.yml
 
+mkdir ~/.config/dunst
+ln -fn ../dunstrc ~/.config/dunst/dunstrc
+
 echo -e "${GREEN}Building XMonad${NC}"
 
 (cd ~/.xmonad &&\
@@ -70,7 +74,7 @@ echo -e "${GREEN}Building XMonad${NC}"
      stack install)
 
 echo -e "${GREEN}Restoring crontab${NC}"
-crontab ./crontab
+crontab ../crontab
 
 echo -e "${GREEN}Tangling emacs config${NC}"
 emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "~/config/Emacs.org")'
