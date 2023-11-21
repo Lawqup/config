@@ -23,7 +23,7 @@ p zsh inetutils eza emacs rofi pacman-contrib\
   openssh ttf-nerd-fonts-symbols ttf-roboto\
   noto-font-emoji noto-fonts noto-fonts-extra\
   htop pulseaudio pulseaudio-alsa pulseaudio-bluetooth\
-  bluez bluez-utils acpi dunst
+  bluez bluez-utils acpi dunst qalculate-gtk
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
@@ -75,6 +75,7 @@ echo -e "${GREEN}Building XMonad${NC}"
 
 echo -e "${GREEN}Restoring crontab${NC}"
 crontab ../crontab
+systemctl enable --now cronie.service
 
 echo -e "${GREEN}Tangling emacs config${NC}"
 emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "~/config/Emacs.org")'

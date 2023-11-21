@@ -579,12 +579,16 @@ Set up helper function to define fonts and sizes for specific indentation levels
 Helper function that will run as a hook to setup basic things including some UI.
 
 #+begin_src emacs-lisp
-    (defun lq/org-mode-setup ()
-      (org-indent-mode)
-      (variable-pitch-mode 1)
-      (visual-line-mode 1)
-      (turn-on-flyspell)
-      (setq line-spacing 2))
+  (defun lq/org-mode-setup ()
+    (org-indent-mode)
+    (variable-pitch-mode 1)
+    (visual-line-mode 1)
+    (turn-on-flyspell)
+    (setq line-spacing 2))
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq ispell-dictionary "american")
 #+end_src
 
 ** Tie Everything Together
@@ -802,7 +806,6 @@ Make sure indenting is fixed pitch to keep consistent indentation across levels.
     (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch)))
 #+end_src
 
-
 ** Extra Ease of Use
 
 Allow toggling of emphasis markers with ~C-c e~. 
@@ -993,8 +996,11 @@ Specify the timer end sound for org timer.
     :commands (lsp lsp-deferred)
     :hook (lsp-mode . lq/lsp-mode-setup)
     :config
-    (lsp-enable-which-key-integration t))
-  
+    (lsp-enable-which-key-integration t)
+    (setq gc-cons-threshold 100000000)
+    ;; 1 MB
+    (setq read-process-output-max (* 1024 1024)))
+
   (bind-key* "C-c C-l" lsp-command-map)
 #+end_src
 
@@ -1024,7 +1030,7 @@ Better completions than =completions-at-point=!
            ("<tab>" . company-indent-or-complete-common))
     :custom
     (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
+    (company-idle-delay 0.2))
 
   (use-package company-box
     :hook (company-mode . company-box-mode))
@@ -1191,10 +1197,13 @@ Make sure =ts-ls= is downloaded
 
 *** Python
 
-Download the =pyls= language server.
+Install stuff:
 
 #+begin_src sh
-  pip install --user "python-lsp-server"
+  pip install --user "python-lsp-server" ;
+      python -m pip install flake8 ;
+      pip install --user black ;
+      pip install --user flake8-bugbear
 #+end_src
 
 Use =python-mode= and flycheck.
@@ -1203,7 +1212,9 @@ Use =python-mode= and flycheck.
   (use-package python-mode
     :ensure nil
     :hook
-    (python-mode . lsp-deferred))
+    (python-mode . lsp-deferred)
+    :config
+    ((setq lsp-pylsp-plugins-flake8-config "/home/lawrence/config/flake8")))
 #+end_src
 
 Run the =python-black= formatter on save.
