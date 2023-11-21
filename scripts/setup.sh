@@ -16,12 +16,12 @@ makepkg -si
 cd ~/config
 
 echo -e "${GREEN}Installing programs${NC}"
-p zsh inetutils eza emacs rofi pacman-contrib\
+sudo pacman -S zsh inetutils eza emacs rofi pacman-contrib\
   alacritty isync flameshot cron nitrogen\
   picom gcc cmake fd fzf opera wireless_tools\
   opera-ffmpeg-codecs alsa-utils xorg xorg-xinit\
   openssh ttf-nerd-fonts-symbols ttf-roboto\
-  noto-font-emoji noto-fonts noto-fonts-extra\
+  noto-fonts-emoji noto-fonts noto-fonts-extra\
   htop pulseaudio pulseaudio-alsa pulseaudio-bluetooth\
   bluez bluez-utils acpi dunst qalculate-gtk
 
@@ -49,27 +49,27 @@ git -C ~/.xmonad/ clone https://codeberg.org/xmobar/xmobar
 
 echo -e "${GREEN}Linking configs${NC}"
 mkdir -p ~/.config
-ln -fn ../xmonad.hs ~/.xmonad/xmonad.hs
-ln -fn ../xmobarrc ~/.xmobarrc
-ln -fn ../zshrc ~/.zshrc
-ln -fn ../gitconfig ~/.gitconfig
-ln -fn ../xinitrc ~/.xinitrc
-ln -fn ../mbsyncrc ~/.mbsyncrc
-ln -fn ../starship.toml ~/.config/starship.toml
+ln -fn ./xmonad.hs ~/.xmonad/xmonad.hs
+ln -fn ./xmobarrc ~/.xmobarrc
+ln -fn ./zshrc ~/.zshrc
+ln -fn ./gitconfig ~/.gitconfig
+ln -fn ./xinitrc ~/.xinitrc
+ln -fn ./mbsyncrc ~/.mbsyncrc
+ln -fn ./starship.toml ~/.config/starship.toml
 
 mkdir ~/.config/rofi
-ln -fn ../rofi.rasi ~/.config/rofi/config.rasi 
+ln -fn ./rofi.rasi ~/.config/rofi/config.rasi 
 
 mkdir ~/.config/alacritty
-ln -fn ../alacritty.yml ~/.config/alacritty/alacritty.yml
+ln -fn ./alacritty.yml ~/.config/alacritty/alacritty.yml
 
 mkdir ~/.config/dunst
-ln -fn ../dunstrc ~/.config/dunst/dunstrc
+ln -fn ./dunstrc ~/.config/dunst/dunstrc
 
 echo -e "${GREEN}Building XMonad${NC}"
 
 (cd ~/.xmonad &&\
-     stack init &&\
+     stack init --force &&\
      cp ~/config/scripts/xmonad_build_stack.yaml stack.yaml &&\
      stack install)
 
