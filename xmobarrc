@@ -1,9 +1,9 @@
 -- -*- mode: haskell;-*-
-Config { font = "Roboto Bold 10"
+Config { font = "Roboto Bold 12"
        , additionalFonts =
-           [ "FontAwesome 12"
-           , "FontAwesome Bold 8"
-           , "FontAwesome 14"
+           [ "FontAwesome 14"
+           , "FontAwesome Bold 12"
+           , "FontAwesome 16"
            , "Hack 19"
            , "Hack 14"
            ]
@@ -15,7 +15,7 @@ Config { font = "Roboto Bold 10"
        --   an integer for the percentage width, so 100 would be 100%.
        --   an integer for the minimum pixel height for xmobar, so 24 would force a height of at least 24 pixels.
        --   NOTE: The height should be the same as the trayer (system tray) height.
-       , position     = TopSize L 100 32
+       , position     = TopSize L 100 40
        , lowerOnStart = True
        , hideOnStart  = False
        , allDesktops  = True
@@ -62,7 +62,7 @@ Config { font = "Roboto Bold 10"
        \}\
        \%UnsafeXMonadLog%\
        \{\
-       \%baticon%  %battery%\
+       \<action=`alacritty -e sudo powertop`>%baticon%  %battery%</action>\
        \    |    \
        \%disku%\
        \    |    \

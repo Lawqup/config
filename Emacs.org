@@ -54,7 +54,7 @@ Install straight.el for advanced package management.
 Variables to be used across the entire config
 
 #+begin_src emacs-lisp
-  (defvar vars/default-font-size 150)
+  (defvar vars/default-font-size 120)
   (setq user-mail-address "lawrencequp@gmail.com")
 #+end_src
 
@@ -137,10 +137,10 @@ Set up relative line numbers, and set which types of files should have them.
                         :height vars/default-font-size)
 
     (set-face-attribute 'fixed-pitch nil
-                        :font "JetBrains Mono" :height 180)
+                        :font "JetBrains Mono" :height 150)
 
     (set-face-attribute 'variable-pitch nil
-                        :font "DejaVu Sans" :height 240 :weight 'regular)
+                        :font "DejaVu Sans" :height 180 :weight 'regular)
     )
 #+end_src
 
@@ -317,18 +317,17 @@ Evil keybindings in Org mode stuff. List of keybindings can be found [[https://g
 Projectile makes it easy to manage projects across directories. ~C-c p~ brings up the projectile menu.
 
 #+begin_src emacs-lisp
-    (use-package projectile
-      :diminish projectile-mode
-      :config (projectile-mode)
-      :custom ((projectile-completion-system 'ivy))
-      :init
-      ;; NOTE: Set this to the folder where you keep your Git repos!
-      (when (file-directory-p "~/Documents/Code")
-        (setq projectile-project-search-path '("~/Documents/Code")))
-      (setq projectile-switch-project-action #'projectile-dired))
+  (use-package projectile
+    :diminish projectile-mode
+    :config (projectile-mode)
+    :custom ((projectile-completion-system 'ivy))
+    :init
+    ;; NOTE: Set this to the folder where you keep your Git repos!
+    (setq projectile-project-search-path '(("~/important-files/documents/YT/videos") ("~/Documents/Projects")))
+    (setq projectile-switch-project-action #'projectile-dired))
 
-    (general-define-key
-     "C-c p" '(projectile-command-map :which-key))
+  (general-define-key
+   "C-c p" '(projectile-command-map :which-key))
 #+end_src
 
 Use counsel autocompletion with projectile mode
@@ -1188,7 +1187,6 @@ Make sure =ts-ls= is downloaded
   (add-hook 'svelte-mode-hook 'lsp-deferred)
 #+end_src
 
-#+end_src
 **** Graphql
 
 #+begin_src emacs-lisp
@@ -1214,7 +1212,10 @@ Use =python-mode= and flycheck.
     :hook
     (python-mode . lsp-deferred)
     :config
-    ((setq lsp-pylsp-plugins-flake8-config "/home/lawrence/config/flake8")))
+    (setq lsp-pylsp-plugins-flake8-config "/home/lawrence/config/flake8"))
+
+
+  (setq lsp-pylsp-plugins-flake8-config "/home/lawrence/config/flake8")
 #+end_src
 
 Run the =python-black= formatter on save.
@@ -1565,6 +1566,10 @@ Some settings to speed things up
 #+begin_src emacs-lisp
   (defadvice projectile-project-root (around ignore-remote first activate)
     (unless (file-remote-p default-directory) ad-do-it))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package sudo-edit)
 #+end_src
 
 ** Mu4e

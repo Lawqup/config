@@ -43,4 +43,6 @@ xdg-mime default opera.desktop text/xml
 
 setxkbmap -option ctrl:swapcaps
 
+xrdb -merge ~/.Xresources
+
 exec xmonad

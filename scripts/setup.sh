@@ -35,6 +35,8 @@ git clone https://github.com/zdharma-continuum/fast-syntax-highlighting.git \
 git clone https://github.com/zsh-users/zsh-autosuggestions \
     ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
+yay -S --noconfirm lux
+
 echo -e "${GREEN}Installing fonts${NC}"
 p ttf-jetbrains-mono ttf-dejavu
 yay -S --noconfirm tff-all-the-icons
