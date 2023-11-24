@@ -100,6 +100,9 @@ addActions [] ws = ws
 addActions (x:xs) ws = addActions xs (actionPrefix ++ k ++ actionButton ++ show b ++ ">" ++ ws ++ actionSuffix)
     where k = fst x
           b = snd x
+
+script :: String -> String
+script s = "/home/lawrence/config/scripts/" ++ s
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 --
@@ -148,8 +151,8 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
       -- Minimize + maximize via mod + n
       ((modm, xK_n), sequence_ [withFocused minimizeWindow, spawn "echo temp\n >> ~/.xmonad/temp"]),
       ((modm .|. shiftMask, xK_n), sequence_ [withLastMinimized maximizeWindow, spawn "sed -i.bak 'ld' ~/.xmonad/temp"]),
-      ((0, xF86XK_MonBrightnessUp), spawn "lux -a 10%"),
-      ((0, xF86XK_MonBrightnessDown), spawn "lux -s 10%")
+      ((0, xF86XK_MonBrightnessUp), spawn $ script "ch_brightness up"),
+      ((0, xF86XK_MonBrightnessDown), spawn $ script "ch_brightness down")
     ]
       ++
       --
@@ -430,5 +433,6 @@ conf =
                         ("M-S-<Space>", spawn "cyclekb us 'us(intl)'"),
                         ("M-s", namedScratchpadAction myScratchPads "terminal"),
                         ("M-q", namedScratchpadAction myScratchPads "calculator"),
-                        ("M-y", sendMessage (MT.Toggle NBFULL))
+                        ("M-y", sendMessage (MT.Toggle NBFULL)),
+                        ("M-l", spawn "slock")
                       ]
