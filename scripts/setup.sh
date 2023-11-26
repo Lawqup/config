@@ -59,6 +59,8 @@ ln -fn ./xinitrc ~/.xinitrc
 ln -fn ./mbsyncrc ~/.mbsyncrc
 ln -fn ./starship.toml ~/.config/starship.toml
 
+(cd /etc/X11 && sudo ln -s ~/config/xorg.conf.d xorg.conf.d)
+
 mkdir ~/.config/rofi
 ln -fn ./rofi.rasi ~/.config/rofi/config.rasi 
 
