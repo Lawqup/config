@@ -434,5 +434,5 @@ conf =
                         ("M-s", namedScratchpadAction myScratchPads "terminal"),
                         ("M-q", namedScratchpadAction myScratchPads "calculator"),
                         ("M-y", sendMessage (MT.Toggle NBFULL)),
-                        ("M-l", spawn "slock")
+                        ("M-;", spawn "slock")
                       ]

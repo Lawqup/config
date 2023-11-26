@@ -50,25 +50,7 @@ git -C ~/.xmonad/ clone https://github.com/xmonad/xmonad-contrib
 git -C ~/.xmonad/ clone https://codeberg.org/xmobar/xmobar
 
 echo -e "${GREEN}Linking configs${NC}"
-mkdir -p ~/.config
-ln -fn ./xmonad.hs ~/.xmonad/xmonad.hs
-ln -fn ./xmobarrc ~/.xmobarrc
-ln -fn ./zshrc ~/.zshrc
-ln -fn ./gitconfig ~/.gitconfig
-ln -fn ./xinitrc ~/.xinitrc
-ln -fn ./mbsyncrc ~/.mbsyncrc
-ln -fn ./starship.toml ~/.config/starship.toml
-
-(cd /etc/X11 && sudo ln -s ~/config/xorg.conf.d xorg.conf.d)
-
-mkdir ~/.config/rofi
-ln -fn ./rofi.rasi ~/.config/rofi/config.rasi 
-
-mkdir ~/.config/alacritty
-ln -fn ./alacritty.yml ~/.config/alacritty/alacritty.yml
-
-mkdir ~/.config/dunst
-ln -fn ./dunstrc ~/.config/dunst/dunstrc
+./scripts/link.sh
 
 echo -e "${GREEN}Building XMonad${NC}"
 

@@ -1,0 +1,1 @@
+/home/lawrence/config/xorg.conf.d

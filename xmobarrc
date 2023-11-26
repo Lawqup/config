@@ -52,7 +52,7 @@ Config { font = "Roboto Bold 12"
        , alignSep = "}{"
        , template = "\
        \    \
-       \%alsa:default:Master%\
+       \<action=`alacritty -e bluetoothctl`>%alsa:default:Master%</action>\
        \    |    \
        \<action=`alacritty -e iwctl`>%wifi%</action>\
        \    |    \
