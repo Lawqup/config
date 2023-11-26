@@ -42,7 +42,7 @@ p ttf-jetbrains-mono ttf-dejavu
 yay -S --noconfirm tff-all-the-icons
 
 echo -e "${GREEN}Installing XMonad and Haskell dependencies${NC}"
-curl -sSL https://get.haskellstack.org/ | sh
+curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
 mkdir ~/.xmonad
 git -C ~/.xmonad/ clone https://github.com/xmonad/xmonad

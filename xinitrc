@@ -45,4 +45,7 @@ setxkbmap -option ctrl:swapcaps
 
 xrdb -merge ~/.Xresources
 
+# Guestures
+xinput set-prop "10" "libinput Click Method Enabled" 0 1
+
 exec xmonad
