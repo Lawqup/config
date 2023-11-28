@@ -4,5 +4,5 @@
 export DISPLAY=:0
 export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus"
 
-lux -S 40%
+brillo -S 0
 notify-send "LIGHTS OFF" -r 9992 -u critical

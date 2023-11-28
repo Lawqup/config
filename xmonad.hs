@@ -3,6 +3,7 @@ import Data.Maybe (fromJust)
 import Data.Monoid
 import Graphics.X11.ExtraTypes.XF86
 import System.Exit
+import Data.Ratio
 
 import Text.Read
 import System.IO
@@ -277,9 +278,8 @@ myManageHook =
       title =? "Picture in Picture" --> doFloat,
       title =? "Picture in Picture" --> hasBorder False,
       className =? "discord" --> doShift (addActions [("3", 3)] " "),
-      className =? "discord" --> doShift (addActions [("2", 2)] " "),
       appName =? "pavucontrol" --> doCenterFloat,
-      isDialog --> doCenterFloat,
+      isDialog --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)),
       isFullscreen --> doFullFloat
     ]
     <+> namedScratchpadManageHook myScratchPads
@@ -428,7 +428,7 @@ conf =
                        ((0, 0x1008FF12), spawn "amixer set Master toggle")
                      ]
     `additionalKeysP` [ ("M-f", spawn "opera"),
-                        ("M-e", spawn "emacsclient -c -n"),
+                        ("M-e", spawn "emacsclient -cn"),
                         ("M-r", spawn "xmonad --recompile; xmonad --restart"),
                         ("M-S-<Space>", spawn "cyclekb us 'us(intl)'"),
                         ("M-s", namedScratchpadAction myScratchPads "terminal"),
