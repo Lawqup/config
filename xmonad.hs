@@ -423,9 +423,9 @@ conf =
       logHook = myLogHook,
       startupHook = myStartupHook
     }
-    `additionalKeys` [ ((0, 0x1008FF11), spawn "amixer -q sset Master 4%-"),
-                       ((0, 0x1008FF13), spawn "amixer -q sset Master 4%+"),
-                       ((0, 0x1008FF12), spawn "amixer set Master toggle")
+    `additionalKeys` [ ((0, 0x1008FF11), spawn "pamixer -d 5"),
+                       ((0, 0x1008FF13), spawn "pamixer -i 5"),
+                       ((0, 0x1008FF12), spawn "pamixer -t")
                      ]
     `additionalKeysP` [ ("M-f", spawn "opera"),
                         ("M-e", spawn "emacsclient -cn"),

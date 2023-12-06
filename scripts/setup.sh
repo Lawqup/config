@@ -22,7 +22,7 @@ sudo pacman -S zsh inetutils eza emacs rofi pacman-contrib\
   opera-ffmpeg-codecs alsa-utils xorg xorg-xinit\
   openssh ttf-nerd-fonts-symbols ttf-roboto\
   noto-fonts-emoji noto-fonts noto-fonts-extra\
-  htop pulseaudio pulseaudio-alsa pulseaudio-bluetooth\
+  htop pipewire-pulse pipewire-alsa pamixer\
   bluez bluez-utils acpi dunst qalculate-gtk
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

@@ -89,7 +89,8 @@ plugins=(fast-syntax-highlighting
          colored-man-pages
          sudo
          dirhistory
-         web-search)
+         web-search
+         dotenv)
 
 source $ZSH/oh-my-zsh.sh
 
