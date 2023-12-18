@@ -319,6 +319,7 @@ myStartupHook = do
   spawn "setxkbmap us"
   spawnOnce "nitrogen --restore &"
   spawnOnce "dunst &"
+  spawnOnce "easyeffects --gapplication-service &"
 
 -- setWMName "LG3D"
 

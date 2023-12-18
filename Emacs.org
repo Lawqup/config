@@ -947,6 +947,8 @@ For example, create a source block for elisp by typing ~<el<TAB>~
   (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  
+  (add-to-list 'org-structure-template-alist '("rs" . "src rust"))
 #+end_src
 
 ** Babel Setup
