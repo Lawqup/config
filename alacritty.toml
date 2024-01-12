@@ -1,32 +1,31 @@
 live_config_reload = true
-"window.dynamic_title" = true
 
 [colors]
 draw_bold_text_with_bright_colors = true
 
 [colors.bright]
-black = "0xb0b0b0"
-blue = "0xd0d0d0"
-cyan = "0xbe643c"
-green = "0x303030"
-magenta = "0xf5f5f5"
-red = "0xfc6d24"
+black = "0x666666"
+blue = "0x7aa6da"
+cyan = "0x54ced6"
+green = "0x9ec400"
+magenta = "0xb77ee0"
+red = "0xff3334"
 white = "0xffffff"
-yellow = "0x505050"
+yellow = "0xe7c547"
 
 [colors.cursor]
-cursor = "0xe0e0e0"
-text = "0x000000"
+cursor = "0xeaeaea"
+text = "0x191919"
 
 [colors.normal]
 black = "0x000000"
-blue = "0x6fb3d2"
-cyan = "0x76c7b7"
-green = "0xa1c659"
-magenta = "0xd381c3"
-red = "0xfb0120"
-white = "0xe0e0e0"
-yellow = "0xfda331"
+blue = "0x7aa6da"
+cyan = "0x70c0ba"
+green = "0xb9ca4a"
+magenta = "0xc397d8"
+red = "0xd54e53"
+white = "0xffffff"
+yellow = "0xe6c547"
 
 [colors.primary]
 background = "0x3b4252"
@@ -677,102 +676,6 @@ hide_when_typing = true
 [[mouse.bindings]]
 action = "PasteSelection"
 mouse = "Middle"
-
-[mouse.double_click]
-threshold = 300
-
-[mouse.triple_click]
-threshold = 300
-
-[schemes.dark.bright]
-black = "0x666666"
-blue = "0x7aa6da"
-cyan = "0x54ced6"
-green = "0x9ec400"
-magenta = "0xb77ee0"
-red = "0xff3334"
-white = "0xffffff"
-yellow = "0xe7c547"
-
-[schemes.dark.cursor]
-cursor = "0xeaeaea"
-text = "0x191919"
-
-[schemes.dark.dim]
-black = "0x333333'"
-blue = "0x6699cc"
-cyan = "0x66cccc"
-green = "0x99cc99"
-magenta = "0xcc99cc"
-red = "0xf2777a"
-white = "0xdddddd"
-yellow = "0xffcc66"
-
-[schemes.dark.normal]
-black = "0x000000"
-blue = "0x7aa6da"
-cyan = "0x70c0ba"
-green = "0xb9ca4a"
-magenta = "0xc397d8"
-red = "0xd54e53"
-white = "0xffffff"
-yellow = "0xe6c547"
-
-[schemes.dark.primary]
-background = "0x191919"
-foreground = "0xeaeaea"
-
-[schemes.light.bright]
-black = "#5c6370"
-blue = "#61afef"
-cyan = "#56b6c2"
-green = "#98c379"
-magenta = "#c678dd"
-red = "#e06c75"
-white = "#ffffff"
-yellow = "#d19a66"
-
-[schemes.light.cursor]
-cursor = "0x657d83"
-text = "0xfdf6e3"
-
-[schemes.light.normal]
-black = "#282c34"
-blue = "#61afef"
-cyan = "#56b6c2"
-green = "#98c379"
-magenta = "#c678dd"
-red = "#e06c75"
-white = "#abb2bf"
-yellow = "#d19a66"
-
-[schemes.light.primary]
-background = "#ffffff"
-foreground = "#282c34"
-
-[schemes.onedark.bright]
-black = "#5c6370"
-blue = "#61afef"
-cyan = "#56b6c2"
-green = "#98c379"
-magenta = "#c678dd"
-red = "#e06c75"
-white = "#ffffff"
-yellow = "#d19a66"
-
-[schemes.onedark.normal]
-black = "#282c34"
-blue = "#61afef"
-cyan = "#56b6c2"
-green = "#98c379"
-magenta = "#c678dd"
-red = "#e06c75"
-white = "#abb2bf"
-yellow = "#d19a66"
-
-[schemes.onedark.primary]
-background = "#282c34"
-foreground = "#abb2bf"
 
 [scrolling]
 history = 10000
