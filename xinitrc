@@ -33,13 +33,13 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
 fi
 
 # default browser
-export BROWSER=opera
-xdg-mime default opera.desktop x-scheme-handler/http
-xdg-mime default opera.desktop scheme-handler/http
-xdg-mime default opera.desktop x-scheme-handler/https
-xdg-mime default opera.desktop scheme-handler/https
-xdg-mime default opera.desktop text/html
-xdg-mime default opera.desktop text/xml
+export BROWSER=firefox
+xdg-mime default firefox.desktop x-scheme-handler/http
+xdg-mime default firefox.desktop scheme-handler/http
+xdg-mime default firefox.desktop x-scheme-handler/https
+xdg-mime default firefox.desktop scheme-handler/https
+xdg-mime default firefox.desktop text/html
+xdg-mime default firefox.desktop text/xml
 
 setxkbmap -option ctrl:swapcaps
 

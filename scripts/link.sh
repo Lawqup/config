@@ -15,7 +15,7 @@ mkdir -p ~/.config/rofi
 ln -fnv "${DIR}/rofi.rasi" ~/.config/rofi/config.rasi 
 
 mkdir -p ~/.config/alacritty
-ln -fnv "${DIR}/alacritty.yml" ~/.config/alacritty/alacritty.yml
+ln -fnv "${DIR}/alacritty.toml" ~/.config/alacritty/alacritty.toml
 
 mkdir -p ~/.config/dunst
 ln -fnv "${DIR}/dunstrc" ~/.config/dunst/dunstrc

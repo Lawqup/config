@@ -103,9 +103,9 @@ export MANPATH="/usr/local/man:$MANPATH"
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-	export EDITOR='emacsclient'
+	export EDITOR='emacsclient -cn'
 else
-	export EDITOR='emacsclient'
+	export EDITOR='emacsclient -cn'
 fi
 
 # Compilation flags

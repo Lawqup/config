@@ -277,7 +277,7 @@ myManageHook =
       resource =? "kdesktop" --> doIgnore,
       title =? "Picture in Picture" --> doFloat,
       title =? "Picture in Picture" --> hasBorder False,
-      className =? "discord" --> doShift (addActions [("3", 3)] " "),
+      className =? "discord" --> doShift "3",
       appName =? "pavucontrol" --> doCenterFloat,
       isDialog --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)),
       isFullscreen --> doFullFloat
@@ -428,7 +428,7 @@ conf =
                        ((0, 0x1008FF13), spawn "pamixer -i 5"),
                        ((0, 0x1008FF12), spawn "pamixer -t")
                      ]
-    `additionalKeysP` [ ("M-f", spawn "opera"),
+    `additionalKeysP` [ ("M-f", spawn "firefox"),
                         ("M-e", spawn "emacsclient -cn"),
                         ("M-r", spawn "xmonad --recompile; xmonad --restart"),
                         ("M-S-<Space>", spawn "cyclekb us 'us(intl)'"),
