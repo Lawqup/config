@@ -1,0 +1,22 @@
+[pyprland]
+plugins = [
+        "scratchpads",
+]
+
+[scratchpads.term]
+animation = "fromTop"
+command = "alacritty --class alacritty-dropterm"
+class = "alacritty-dropterm"
+size = "85% 85%"
+
+[scratchpads.calc]
+animation = "fromRight"
+command = "qalculate-gtk --class qalculate-scratch"
+class = "qalculate-scratch"
+size = "40% 40%"
+
+[scratchpads.audio]
+animation = "fromBottom"
+command = "pavucontrol --class pavucontrol-scratch"
+class = "pavucontrol-scratch"
+size = "40% 40%"

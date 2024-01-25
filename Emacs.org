@@ -54,7 +54,7 @@ Install straight.el for advanced package management.
 Variables to be used across the entire config
 
 #+begin_src emacs-lisp
-  (defvar vars/default-font-size 120)
+  (defvar vars/default-font-size 150)
   (setq user-mail-address "lawrencequp@gmail.com")
 #+end_src
 
@@ -137,10 +137,10 @@ Set up relative line numbers, and set which types of files should have them.
                         :height vars/default-font-size)
 
     (set-face-attribute 'fixed-pitch nil
-                        :font "JetBrains Mono" :height 150)
+                        :font "JetBrains Mono" :height 180)
 
     (set-face-attribute 'variable-pitch nil
-                        :font "DejaVu Sans" :height 180 :weight 'regular)
+                        :font "DejaVu Sans" :height 225 :weight 'regular)
     )
 #+end_src
 

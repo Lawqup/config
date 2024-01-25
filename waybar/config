@@ -1,0 +1,29 @@
+// -*- mode: json;-*-
+  {
+
+    "layer": "top",
+    "margin-top": 0,
+    "margin-bottom": 0,
+
+    "spacing": 0, // Gaps between modules (4px)
+    "margin-left": 0,
+    "margin-right": 0,
+
+    "include": ["~/config/waybar/modules.json"],
+
+    // Choose the order of the modules
+    "modules-left": ["custom/updates", "hyprland/window", "hyprland/mode"],
+    "modules-center": ["hyprland/workspaces"],
+    "modules-right": ["pulseaudio", "network", "group/hardware", "battery", "clock"],
+
+
+    "group/hardware": {
+      "orientation": "horizontal",
+      "modules": [
+        "disk",
+        "cpu",
+        "memory",
+      ],
+    }
+}
+
