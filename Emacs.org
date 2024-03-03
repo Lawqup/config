@@ -54,7 +54,7 @@ Install straight.el for advanced package management.
 Variables to be used across the entire config
 
 #+begin_src emacs-lisp
-  (defvar vars/default-font-size 150)
+  (defvar vars/default-font-size 120)
   (setq user-mail-address "lawrencequp@gmail.com")
 #+end_src
 
@@ -137,10 +137,10 @@ Set up relative line numbers, and set which types of files should have them.
                         :height vars/default-font-size)
 
     (set-face-attribute 'fixed-pitch nil
-                        :font "JetBrains Mono" :height 180)
+                        :font "JetBrains Mono" :height 150)
 
     (set-face-attribute 'variable-pitch nil
-                        :font "DejaVu Sans" :height 225 :weight 'regular)
+                        :font "DejaVu Sans" :height 180 :weight 'regular)
     )
 #+end_src
 
@@ -149,7 +149,7 @@ Set up relative line numbers, and set which types of files should have them.
             (lambda (frame)
               (with-selected-frame frame
                 (lq/set-fonts))))
-  (lq/set-fonts)
+  ;; (lq/set-fonts)
 #+end_src
 
 Install font with icons. Run ~M-x all-the-icons-install-fonts~ and ~M-x nerd-icons-install-fonts~ for a fresh install.
@@ -1352,6 +1352,19 @@ Run leptosfmt on save
   (use-package solidity-mode)
 #+end_src
 
+*** Go
+
+#+begin_src emacs-lisp
+  (use-package go-mode
+    :hook
+    (go-mode . lsp-deferred)
+    (go-mode . (lambda ()
+                 (setq-default)
+                 (setq tab-width 2)
+                 (setq standard-indent 2)
+                 (setq indent-tabs-mode nil)))
+    )
+#+end_src
 ** Debugging
 
 Setup DAP-mode
@@ -1583,157 +1596,4 @@ Some settings to speed things up
 #+begin_src emacs-lisp
   (use-package sudo-edit)
 #+end_src
-
-** Mu4e
-
-#+begin_src sh
-  mu index --maildir=~/Mail --my-address=lawrencequp@gmail.com
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package org-msg
-    :config
-    (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
-        org-msg-startup "hidestars indent inlineimages"
-        org-msg-greeting-fmt "\nHi%s,\n\n"
-        org-msg-greeting-name-limit 3
-        org-msg-default-alternatives '((new		. (text html))
-                                       (reply-to-html	. (text html))
-                                       (reply-to-text	. (text)))
-        org-msg-convert-citation t))
-
-  (org-msg-mode)
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package mu4e
-    :ensure nil
-    ;; :load-path "/usr/share/emacs/site-lisp/mu4e/"
-    ;; :defer 20 ; Wait until 20 seconds after startup
-    :after org-msg
-    :config
-    ;; Refresh mail using isync every 10 minutes
-    (setq mu4e-update-interval (* 10 60))
-    (setq mu4e-get-mail-command "mbsync -a")
-    (setq mu4e-maildir "~/Mail")
-    ;; This is set to 't' to avoid mail syncing issues when using mbsync
-    (setq mu4e-change-filenames-when-moving t)
-
-    (setq mu4e-contexts
-          (list
-           (make-mu4e-context
-            :name "Personal"
-            :match-func
-            (lambda (msg)
-              (when msg
-                (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "lawrencequp@gmail.com")
-                    (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
-                    (mu4e-sent-folder   . "/personal/[Gmail]/Sent Mail")
-                    (mu4e-refile-folder . "/personal/[Gmail]/All Mail")
-                    (mu4e-trash-folder  . "/personal/[Gmail]/Trash")
-                    (org-msg-signature . "
-  Best,
-
-  ,#+begin_signature
-  --
-  ,*Lawrence*
-  ,#+end_signature")))
-
-           (make-mu4e-context
-            :name "Work"
-            :match-func
-            (lambda (msg)
-              (when msg
-                (string-prefix-p "/work" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "lawrence@udundi.com")
-                    (mu4e-drafts-folder . "/work/[Gmail]/Drafts")
-                    (mu4e-sent-folder   . "/work/[Gmail]/Sent Mail")
-                    (mu4e-refile-folder . "/work/[Gmail]/All Mail")
-                    (mu4e-trash-folder  . "/work/[Gmail]/Trash")
-                    (org-msg-signature . "
-  Best,
-
-  ,#+begin_signature
-  --
-  [[~/Pictures/Profiles/udundi.png]]
-  Lawrence Qupty
-  Junior Developer
-  [[mailto:lawrenec@udundi.com][lawrence@udundi.com]]
-  [[https://www.udundi.com/][udundi.com]]
-  ,#+end_signature")))))
-
-    (setq mu4e-context-policy 'pick-first)
-    (setq mu4e-compose-context-policy 'ask-if-none)
-
-    (add-to-list 'mu4e-bookmarks '("m:/personal/Inbox or m:/work/Inbox" "All Inboxes" ?i))
-    (setq mu4e-maildir-shortcuts
-          '((:maildir "/personal/Inbox"             :key ?i)
-            (:maildir "/personal/[Gmail]/Sent Mail" :key ?s)
-            (:maildir "/personal/[Gmail]/Trash"     :key ?t)
-            (:maildir "/personal/[Gmail]/Drafts"    :key ?d)
-            (:maildir "/personal/[Gmail]/All Mail"  :key ?a)))
-
-    (setq smtpmail-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 465
-      smtpmail-stream-type  'ssl)
-
-    ;; Configure the function to use for sending mail
-    (setq message-send-mail-function 'smtpmail-send-it)
-
-    ;; Make sure plain text mails flow correctly for recipients
-    (setq mu4e-compose-format-flowed t)
-
-    (setq mail-user-agent 'mu4e-user-agent)
-
-    (mu4e-marker-icons-mode)
-    (mu4e t))
-
-#+end_src
-
-*** Help
-
-When reading mail, you start out in the Headers buffer.  When you select an email with ~RET~, the View buffer is displayed in a window below the Headers buffer window.
-
-Key Bindings:
-
-| Evil | Command                               | Description                          |
-|------+---------------------------------------+--------------------------------------|
-|      | *Movement*                            |                                      |
-| ~j~  | =next-line=                           | Moves to the next header line        |
-| ~k~  | =previous-line=                       | Moves to the previous header line    |
-| ~[[~ | =mu4e-headers-prev-unread=            | Moves to previous unread message     |
-| ~]]~ | =mu4e-headers-next-unread=            | Moves to next unread message         |
-| ~J~  | =mu4e~headers-jump-to-maildir=        | Jump to another mail directory       |
-|      |                                       |                                      |
-|      | *Toggles*                             |                                      |
-| ~zt~ | =mu4e-headers-toggle-threading=       | Toggles threaded message display     |
-| ~zr~ | =mu4e-headers-toggle-include-related= | Toggles related message display      |
-|      |                                       |                                      |
-|      | *Marking*                             |                                      |
-| ~d~  | =mu4e-headers-mark-for-trash=         | Marks message for deletion           |
-| ~m~  | =mu4e-headers-mark-for-move=          | Marks message for move to folder     |
-| ~+~  | =mu4e-headers-mark-for-flag=          | Marks message for flagging           |
-| ~-~  | =mu4e-headers-mark-for-unflag=        | Marks message for unflagging         |
-| ~%~  | =mu4e-headers-mark-pattern=           | Marks based on a regex pattern       |
-| ~u~  | =mu4e-headers-mark-for-unmark=        | Removes mark for message             |
-| ~U~  | =mu4e-mark-unmark-all=                | Unmarks all marks in the view        |
-| ~x~  | =mu4e-mark-execute-all=               | Executes all marks in the view       |
-|      |                                       |                                      |
-|      | *Searching*                           |                                      |
-| ~s~  | =mu4e-headers-search=                 | Search all e-mails                   |
-| ~S~  | =mu4e-headers-search-edit=            | Edit current search (useful!)        |
-| ~/~  | =mu4e-headers-search-narrow=          | Narrow down the current results      |
-| ~b~  | =mu4e-headers-search-bookmark=        | Select a bookmark to search with     |
-| ~B~  | =mu4e-headers-search-bookmark-edit=   | Edit bookmark before search          |
-| ~gr~ | =mu4e-rerun-search=                   | Rerun the current search             |
-|      |                                       |                                      |
-|      | *Composing*                           |                                      |
-| ~C~  | =mu4e-compose-new=                    | Compose a new e-mail                 |
-| ~R~  | =mu4e-compose-reply=                  | Compose a reply to selected email    |
-| ~F~  | =mu4e-compose-forward=                | Compose a forward for selected email |
-| ~E~  | =mu4e-compose-edit=                   | Edit selected draft message          |
-|      |                                       |                                      |
-|      | *Other Actions*                       |                                      |
-| ~q~  | =mu4e~headers-quit-buffer=            | Quit the headers view                |
 
