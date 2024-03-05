@@ -21,8 +21,6 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
     jq
     zsh
     inetutils
@@ -35,9 +33,8 @@
     jetbrains-mono
     # emacs
     eza
-    rofi
-    # alacritty
-    isync
+    # rofi
+    alacritty
     flameshot
     cron
     nitrogen
@@ -78,6 +75,7 @@
     # # symlink to the Nix store copy.
     # ".screenrc".source = dotfiles/screenrc;
 
+    ".config/alacritty/alacritty.toml".source = ~/config/alacritty.toml;
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
     #   org.gradle.console=verbose
@@ -108,4 +106,7 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # # enable picom
+  services.picom.enable = true;
 }

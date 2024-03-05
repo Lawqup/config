@@ -96,7 +96,9 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
-export MANPATH="/usr/local/man:$MANPATH"
+# export MANPATH="/usr/local/man:$MANPATH"
+
+export LOCALE_ARCHIVE="/usr/lib/locale/locale-archive"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
