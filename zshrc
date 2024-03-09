@@ -1,6 +1,6 @@
 # -*- mode: sh;-*-
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/.ghcup/bin:$HOME/.local/bin:$HOME/config/scripts:$HOME/.cargo/bin:$HOME/go/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/.ghcup/bin:$HOME/.local/bin:$HOME/config/scripts:$HOME/.cargo/bin:$HOME/go/bin:/opt/homebrew/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -119,23 +119,6 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# ctrl-z on the prompt will resume last
-# This means, from vim I can ctrl-z to the shell, and ctrl-z back again.
-foreground-last() {
-  fg %
-}
-zle -N foreground-last
-bindkey '^z' foreground-last
-
-
-alias attu='cd &&  mkdir attu && sshfs quptylaw@attu.cs.washington.edu:/homes/iws/quptylaw ~/attu && cd ~/attu'
-
-alias unattu='cd && umount attu &&  rm -r ~/attu'
-# unmount force to kill
-alias unattuf='cd && sudo umount -lf attu &&  rm -r ~/attu'
-
-alias neofetch='neofetch --source ~/.config/neofetch/pictures/gigachad-ascii.txt'
 
 # FZF
 

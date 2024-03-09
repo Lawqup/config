@@ -91,11 +91,26 @@ Also, make sure environement variables carry over to emacs from the shell.
 
 #+begin_src emacs-lisp
   (use-package exec-path-from-shell)
-  
+
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize))
 #+end_src
 
+Make Mac usuable
+
+#+begin_src emacs-lisp
+  (setq mac-command-modifier 'control)
+  (setq mac-option-modifier 'meta)
+  (setq mac-control-modifier 'hyper)
+
+  (menu-bar-mode t)
+#+end_src
+
+** Server
+
+#+begin_src emacs-lisp
+  (server-start)
+#+end_src
 * Basic UI Configuration
 
 First, remove useless UI features
@@ -108,6 +123,7 @@ First, remove useless UI features
   (set-fringe-mode 10)        ; Give some breathing room
   (menu-bar-mode -1)          ; Disable menu bar
   (setq use-dialog-box nil)   ; Dialog boxes are for mouse users (bad!)
+  (setq frame-resize-pixelwise t)
 #+end_src
 
 Set up relative line numbers, and set which types of files should have them.
@@ -149,7 +165,7 @@ Set up relative line numbers, and set which types of files should have them.
             (lambda (frame)
               (with-selected-frame frame
                 (lq/set-fonts))))
-  ;; (lq/set-fonts)
+  (lq/set-fonts)
 #+end_src
 
 Install font with icons. Run ~M-x all-the-icons-install-fonts~ and ~M-x nerd-icons-install-fonts~ for a fresh install.
@@ -283,6 +299,9 @@ Kill a buffer without needing to ask for confirmation, unless that buffer is mod
   (general-define-key
    "C-x k" 'kill-buffer-and-window
    "C-x C-k" 'kill-this-buffer)
+
+
+  (global-unset-key (kbd "M-c"))
 #+end_src
 
 *** General Keybindings
@@ -1461,16 +1480,15 @@ Restclient to test http requests
 VTerm is just better Term
 
 #+begin_src emacs-lisp
-  (use-package vterm
-    :bind
-    ("<f2>" . vterm)
-    :config
-    (setq vterm-max-scrollback 10000)
-    (setq vterm-buffer-name-string "vterm %s"))
+   (use-package vterm
+     :bind
+     ("<f2>" . vterm)
+     :config
+     (setq vterm-max-scrollback 10000)
+     (setq vterm-buffer-name-string "vterm %s"))
 
-  (put 'vterm-send-C-s 'disabled t)
-  (bind-key* "C-s" 'swiper)
-
+   (put 'vterm-send-C-s 'disabled t)
+   (bind-key* "C-s" 'swiper)
 #+end_src
 
 * File management
@@ -1480,6 +1498,7 @@ VTerm is just better Term
 Dired is a mode made for file management.
 
 #+begin_src emacs-lisp
+
   (use-package dired
     :ensure nil
     :commands (dired dired-jump)
@@ -1490,6 +1509,9 @@ Dired is a mode made for file management.
     (evil-collection-define-key 'normal 'dired-mode-map
       "h" 'dired-up-directory
       "l" 'dired-find-file))
+
+  (setq insert-directory-program "gls" dired-use-ls-dired t)
+  (setq dired-listing-switches "-al --group-directories-first")
 #+end_src
 
 Add file icons in dired.
@@ -1580,12 +1602,13 @@ Some settings to speed things up
 
 #+begin_src emacs-lisp
   (setq remote-file-name-inhibit-cache nil)
-  (setq vc-ignore-dir-regexp
-        (format "%s\\|%s"
-                vc-ignore-dir-regexp
-                tramp-file-name-regexp))
+  ;; (setq vc-ignore-dir-regexp
+  ;;       (format "%s\\|%s"
+  ;;               vc-ignore-dir-regexp
+  ;;               tramp-file-name-regexp))
+  (setq vc-handled-backends '(Git))
   (setq tramp-verbose 1)
-  (eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))  
+  (setq tramp-default-method "sshx")
 #+end_src
 
 #+begin_src emacs-lisp

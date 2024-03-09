@@ -1,0 +1,5 @@
+#!/bin/bash
+
+socket_file=$(lsof -c Emacs | grep server | grep -E -o '[^[:blank:]]*$')
+
+/opt/homebrew/bin/emacsclient -c -n -a "" -s $socket_file
