@@ -147,8 +147,6 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export FZF_ALT_C_COMMAND="fd . $HOME --exclude={.git,Music,Videos,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo} --type d -H"
 
-[ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -157,7 +155,7 @@ export NVM_NODEJS_ORG_MIRROR=http://nodejs.org/dist/
 
 NPM_PACKAGES="${HOME}/.npm-packages"
 
-alias vim='nvim'
+#alias vim='nvim'
 alias e='emacsclient --tty'
 alias p='sudo pacman'
 
@@ -245,5 +243,15 @@ bindkey -M emacs '^S' sudo-command-line
 bindkey -M vicmd '^S' sudo-command-line 
 bindkey -M viins '^S' sudo-command-line 
 
-eval "$(starship init zsh)"
+# if you wish to use IMDS set AWS_EC2_METADATA_DISABLED=false
 
+export AWS_EC2_METADATA_DISABLED=true
+
+source /home/lawqup/.brazil_completion/zsh_completion
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
+
+# All non-dumb stuff must go here
+eval "$(starship init zsh)"
