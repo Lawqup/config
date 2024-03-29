@@ -1237,15 +1237,22 @@ Install stuff:
 Use =python-mode= and flycheck.
 
 #+begin_src emacs-lisp
-  (use-package python-mode
-    :ensure nil
-    :hook
-    (python-mode . lsp-deferred)
-    :config
-    (setq lsp-pylsp-plugins-flake8-config "/home/lawrence/config/flake8"))
+  ;; (use-package python-mode
+  ;;   :ensure nil
+  ;;   :hook
+  ;;   (python-mode . lsp-deferred)
+  ;;   :config
+  ;;   (setq lsp-pylsp-plugins-flake8-config "/home/lawrence/config/flake8"))
 
+  ;; (setq lsp-pylsp-plugins-flake8-config "/home/lawrence/config/flake8")
 
-  (setq lsp-pylsp-plugins-flake8-config "/home/lawrence/config/flake8")
+  (use-package lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-pyright)
+                         (lsp))))
+
+  ;; (setq flycheck-python-flake8-executable "flake8")
 #+end_src
 
 Run the =python-black= formatter on save.
@@ -1480,15 +1487,16 @@ Restclient to test http requests
 VTerm is just better Term
 
 #+begin_src emacs-lisp
-   (use-package vterm
-     :bind
-     ("<f2>" . vterm)
-     :config
-     (setq vterm-max-scrollback 10000)
-     (setq vterm-buffer-name-string "vterm %s"))
+  (use-package vterm
+    :bind
+    ("<f2>" . vterm)
+    :hook (vterm-mode . compilation-shell-minor-mode)
+    :config
+    (setq vterm-max-scrollback 10000)
+    (setq vterm-buffer-name-string "vterm %s"))
 
-   (put 'vterm-send-C-s 'disabled t)
-   (bind-key* "C-s" 'swiper)
+  (put 'vterm-send-C-s 'disabled t)
+  (bind-key* "C-s" 'swiper)
 #+end_src
 
 * File management
