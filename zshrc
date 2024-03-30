@@ -1,6 +1,13 @@
-# -*- mode: sh;-*-
+# -*- mode: zsh;-*-
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/.ghcup/bin:$HOME/.local/bin:$HOME/config/scripts:$HOME/.cargo/bin:$HOME/go/bin:/opt/homebrew/bin:$PATH
+
+if [[ "$TERM" == "dumb" ]]; then
+    unset zle_bracketed_paste
+    unset zle
+    PS1='$ '
+    return
+fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -51,18 +58,18 @@ ZSH_THEME="robbyrussell"
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # You can also set it to another string to have that shown instead of the default red dots.
 # e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
 # Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -90,7 +97,8 @@ plugins=(fast-syntax-highlighting
          sudo
          dirhistory
          web-search
-         dotenv)
+         dotenv
+         eza-omz-plugin)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -210,7 +218,6 @@ vterm_prompt_end() {
 autoload -U add-zsh-hook
 add-zsh-hook precmd vterm_prompt_end
 
-alias ls="eza"
 alias x="xdg-open"
 
 export ALTERNATE_EDITOR=""
@@ -234,7 +241,11 @@ source /home/lawqup/.brazil_completion/zsh_completion
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
 
-# All non-dumb stuff must go here
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=245'
+
 eval "$(starship init zsh)"
+
+export LS_COLORS="di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
+
+export EZA_COLORS="di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
