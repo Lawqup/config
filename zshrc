@@ -233,12 +233,6 @@ bindkey -M emacs '^S' sudo-command-line
 bindkey -M vicmd '^S' sudo-command-line 
 bindkey -M viins '^S' sudo-command-line 
 
-# if you wish to use IMDS set AWS_EC2_METADATA_DISABLED=false
-
-export AWS_EC2_METADATA_DISABLED=true
-
-source /home/lawqup/.brazil_completion/zsh_completion
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 
