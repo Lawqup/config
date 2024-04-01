@@ -89,8 +89,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Add wisely, as too many plugins slow down shell startup.
 # https://dev.to/kumareth/a-beginner-s-guide-for-setting-up-autocomplete-on-ohmyzsh-hyper-with-plugins-themes-47f2
 
-plugins=(fast-syntax-highlighting
-         zsh-autosuggestions
+plugins=(zsh-autosuggestions
          git
          colorize
          colored-man-pages
@@ -98,7 +97,7 @@ plugins=(fast-syntax-highlighting
          dirhistory
          web-search
          dotenv
-         eza-omz-plugin)
+         eza)
 
 source $ZSH/oh-my-zsh.sh
 

@@ -124,6 +124,7 @@ First, remove useless UI features
   (menu-bar-mode -1)          ; Disable menu bar
   (setq use-dialog-box nil)   ; Dialog boxes are for mouse users (bad!)
   (setq frame-resize-pixelwise t)
+  (add-to-list 'default-frame-alist '(undecorated-round . t)) ; No titlebar
 #+end_src
 
 Set up relative line numbers, and set which types of files should have them.
