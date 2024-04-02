@@ -1,13 +1,16 @@
 # -*- conf -*-
-
 ctrl - e : /Users/lawqup/config/scripts/emacsclient
 ctrl - f : /Applications/Firefox.app/Contents/MacOS/firefox
 ctrl - return : /Applications/iTerm.app/Contents/MacOS/iTerm2
 ctrl - q : /opt/homebrew/bin/qalculate-gtk
 
 # moves focus between windows in the current focused display
-ctrl - k : yabai -m window --focus next 
-ctrl - j : yabai -m window --focus prev 
+ctrl - k : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "next" else "stack.next" end') || yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "first" else "stack.first" end')
+
+ctrl - j : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "prev" else "stack.prev" end') || yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "prev" else "stack.last" end')
+
+ctrl + cmd - j  :  yabai -m window --focus south || yabai -m display --focus south
+ctrl + cmd - k  :  yabai -m window --focus north || yabai -m display --focus north
 
 # moves focus between spaces 
 # ctrl - 1 : yabai -m space --focus 1
@@ -47,9 +50,9 @@ ctrl - b : yabai -m space --toggle padding; yabai -m space --toggle gap
 ctrl - t : yabai -m window --toggle float;\
           yabai -m window --grid 4:4:1:1:2:2
 
-# toggle window fullscreen zoom
+# toggle stack layout
 ctrl - y : yabai -m window --focus mouse && \
-          yabai -m window --toggle zoom-fullscreen
+     yabai -m space --layout $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "stack" else "bsp" end')
 
 # toggle window native fullscreen
 shift + ctrl - y : yabai -m window --toggle native-fullscreen
