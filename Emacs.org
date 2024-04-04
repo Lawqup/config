@@ -56,6 +56,7 @@ Variables to be used across the entire config
 #+begin_src emacs-lisp
   (defvar vars/default-font-size 120)
   (setq user-mail-address "lawrencequp@gmail.com")
+  (setenv "LSP_USE_PLISTS" "true")
 #+end_src
 
 ** Passwords
@@ -1221,7 +1222,7 @@ Run leptosfmt on save
   (defun leptosfmt-file ()
     (when (eq major-mode 'rustic-mode)
       (leptos-format-buffer)))
-
+  
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1251,7 +1252,8 @@ Run leptosfmt on save
     (when buffer-file-name
       (setq-local buffer-save-without-query t))
 
-    (add-hook 'before-save-hook #'leptos-format-buffer nil t))
+    ; (add-hook 'before-save-hook #'leptos-format-buffer nil t)
+    )
 #+end_src
 
 
@@ -1325,9 +1327,12 @@ Run leptosfmt on save
                  (setq tab-width 2)
                  (setq standard-indent 2)
                  (setq indent-tabs-mode nil)
-                 (add-hook 'before-save-hook 'gofmt-before-save)))
-    )
+                 (defun godef-jump ()
+                   (interactive)
+                   (lsp-find-definition))
+                 (add-hook 'before-save-hook 'gofmt-before-save))))
 #+end_src
+
 ** Debugging
 
 Setup DAP-mode
@@ -1553,7 +1558,6 @@ Some settings to speed things up
   ;;               tramp-file-name-regexp))
   (setq vc-handled-backends '(Git))
   (setq tramp-verbose 1)
-  (setq tramp-default-method "sshx")
 #+end_src
 
 #+begin_src emacs-lisp

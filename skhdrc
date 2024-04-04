@@ -3,6 +3,7 @@ ctrl - e : /Users/lawqup/config/scripts/emacsclient
 ctrl - f : /Applications/Firefox.app/Contents/MacOS/firefox
 ctrl - return : /Applications/iTerm.app/Contents/MacOS/iTerm2
 ctrl - q : /opt/homebrew/bin/qalculate-gtk
+ctrl - u : opt/homebrew/Caskroom/flameshot/12.1.0/flameshot.app/Contents/MacOS/flameshot gui
 
 # moves focus between windows in the current focused display
 ctrl - k : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "next" else "stack.next" end') || yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "first" else "stack.first" end')
