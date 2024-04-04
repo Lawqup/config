@@ -70,7 +70,7 @@ $character"""
 
 [character]
 success_symbol = '[╰](bold green)[─](bold green)[Σ](bold green)'
-error_symbol = '[╰](bold yellow)[─](bold yellow)[Σ](bold red)'
+error_symbol = '[╰](bold red)[─](bold red)[Σ](bold red)'
 
 [directory]
 format = " [$path]($style) "

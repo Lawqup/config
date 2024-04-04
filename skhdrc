@@ -1,5 +1,5 @@
 # -*- conf -*-
-ctrl - e : /Users/lawqup/config/scripts/emacsclient
+ctrl - e : /Users/lawqup/config/scripts/macos-run-emacsclient
 ctrl - f : /Applications/Firefox.app/Contents/MacOS/firefox
 ctrl - return : /Applications/iTerm.app/Contents/MacOS/iTerm2
 ctrl - q : /opt/homebrew/bin/qalculate-gtk
