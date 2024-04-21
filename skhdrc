@@ -1,0 +1,119 @@
+# -*- conf -*-
+ctrl - e : /Users/lawqup/config/scripts/macos-run-emacsclient
+ctrl - f : /Applications/Firefox.app/Contents/MacOS/firefox
+ctrl - return : /Applications/iTerm.app/Contents/MacOS/iTerm2
+ctrl - q : /opt/homebrew/bin/qalculate-gtk
+ctrl - u : opt/homebrew/Caskroom/flameshot/12.1.0/flameshot.app/Contents/MacOS/flameshot gui
+
+# moves focus between windows in the current focused display
+ctrl - k : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "next" else "stack.next" end') || yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "first" else "stack.first" end')
+
+ctrl - j : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "prev" else "stack.prev" end') || yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "prev" else "stack.last" end')
+
+ctrl + cmd - j  :  yabai -m window --focus south || yabai -m display --focus south
+ctrl + cmd - k  :  yabai -m window --focus north || yabai -m display --focus north
+
+# moves focus between spaces 
+# ctrl - 1 : yabai -m space --focus 1
+# ctrl - 2 : yabai -m space --focus 2
+# ctrl - 3 : yabai -m space --focus 3
+# ctrl - 4 : yabai -m space --focus 4
+# ctrl - 5 : yabai -m space --focus 5
+# ctrl - 6 : yabai -m space --focus 6
+# ctrl - 7 : yabai -m space --focus 7
+# ctrl - 8 : yabai -m space --focus 8
+# ctrl - 9 : yabai -m space --focus 9
+# ctrl - 0  : yabai -m space --focus 10
+
+# toggle window split type
+# ctrl - e : yabai -m window --toggle split
+
+# close window
+ctrl - c : yabai -m window --close
+
+# minimize window
+ctrl - m : yabai -m window --minimize
+
+# rotate tree
+ctrl - r : yabai -m space --rotate 90
+
+# mirror tree y-axis
+# ctrl - y : yabai -m space --mirror y-axis
+
+# toggle desktop offset
+ctrl - b : yabai -m space --toggle padding; yabai -m space --toggle gap
+
+# toggle window parent zoom
+# ctrl - d : yabai -m window --focus mouse && \
+#           yabai -m window --toggle zoom-parent
+
+# float / unfloat window and center on screen
+ctrl - t : yabai -m window --toggle float;\
+          yabai -m window --grid 4:4:1:1:2:2
+
+# toggle stack layout
+ctrl - y : yabai -m window --focus mouse && \
+     yabai -m space --layout $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "stack" else "bsp" end')
+
+# toggle window native fullscreen
+shift + ctrl - y : yabai -m window --toggle native-fullscreen
+
+# increase gap in focused space
+# ctrl - g : yabai -m space --gap rel:10
+
+# decrease gap in focused space
+# shift + ctrl - g : yabai -m space --gap rel:-10
+
+# create a new space and follow focus
+ctrl - n : yabai -m space --create && \
+                  index="$(yabai -m query --displays --display | jq '.spaces[-1]')" && \
+                  yabai -m space --focus "${index}"
+
+# create a new space, move window and follow focus
+shift + ctrl - n : yabai -m space --create && \
+                  index="$(yabai -m query --displays --display | jq '.spaces[-1]')" && \
+                  yabai -m window --space "${index}" && \
+                  yabai -m space --focus "${index}"
+
+# balance size of windows
+shift + ctrl - 0 : yabai -m space --balance
+
+# swap window
+shift + ctrl - j : yabai -m window --swap prev
+shift + ctrl - k : yabai -m window --swap next
+
+# move window
+# shift + cmd - h : yabai -m window --warp west
+# shift + cmd - j : yabai -m window --warp south
+# shift + cmd - k : yabai -m window --warp north
+# shift + cmd - l : yabai -m window --warp east
+
+# send window to a space 
+shift + ctrl - 1 : yabai -m window --space 1
+shift + ctrl - 2 : yabai -m window --space 2
+shift + ctrl - 3 : yabai -m window --space 3
+shift + ctrl - 4 : yabai -m window --space 4
+shift + ctrl - 5 : yabai -m window --space 5
+shift + ctrl - 6 : yabai -m window --space 6
+shift + ctrl - 7 : yabai -m window --space 7
+shift + ctrl - 8 : yabai -m window --space 8
+shift + ctrl - 9 : yabai -m window --space 9
+shift + ctrl - 0 : yabai -m window --space 10
+
+# change layout of desktop
+# ctrl + ctrl - a : yabai -m space --layout bsp
+# ctrl + ctrl - d : yabai -m space --layout float
+
+# increase window size
+# ctrl - h : yabai -m window --resize left:-40:0
+# ctrl - l : yabai -m window --resize right:40:0
+
+# # decrease window size
+# shift + ctrl - h : yabai -m window --resize left:40:0
+# shift + ctrl - l : yabai -m window --resize right:-40:0
+
+ctrl - h : yabai -m window --resize right:-20:0 || yabai -m window --resize left:-20:0
+ctrl - l : yabai -m window --resize right:20:0 || yabai -m window --resize left:20:0
+
+# restart yabai
+ctrl + shift - r : yabai --restart-service

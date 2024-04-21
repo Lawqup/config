@@ -1,4 +1,4 @@
-# -*- mode: zsh;-*-
+# -*- mode: sh;-*-
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/.ghcup/bin:$HOME/.local/bin:$HOME/config/scripts:$HOME/.cargo/bin:$HOME/go/bin:/opt/homebrew/bin:$PATH
 
@@ -58,7 +58,7 @@ ZSH_THEME="robbyrussell"
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
+# ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # You can also set it to another string to have that shown instead of the default red dots.
@@ -89,8 +89,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Add wisely, as too many plugins slow down shell startup.
 # https://dev.to/kumareth/a-beginner-s-guide-for-setting-up-autocomplete-on-ohmyzsh-hyper-with-plugins-themes-47f2
 
-plugins=(fast-syntax-highlighting
-         zsh-autosuggestions
+plugins=(zsh-autosuggestions
          git
          colorize
          colored-man-pages
@@ -98,8 +97,7 @@ plugins=(fast-syntax-highlighting
          dirhistory
          web-search
          dotenv
-         eza
-         fzf)
+         eza)
 
 source $ZSH/oh-my-zsh.sh
 
