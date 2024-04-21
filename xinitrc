@@ -41,7 +41,7 @@ xdg-mime default firefox.desktop scheme-handler/https
 xdg-mime default firefox.desktop text/html
 xdg-mime default firefox.desktop text/xml
 
-setxkbmap -option ctrl:swapcaps
+# setxkbmap -option ctrl:swapcaps
 
 xrdb -merge ~/.Xresources
 

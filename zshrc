@@ -98,7 +98,8 @@ plugins=(fast-syntax-highlighting
          dirhistory
          web-search
          dotenv
-         eza-omz-plugin)
+         eza
+         fzf)
 
 source $ZSH/oh-my-zsh.sh
 
