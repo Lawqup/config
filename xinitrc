@@ -41,13 +41,14 @@ xdg-mime default firefox.desktop scheme-handler/https
 xdg-mime default firefox.desktop text/html
 xdg-mime default firefox.desktop text/xml
 
-# setxkbmap -option ctrl:swapcaps
 
 xrdb -merge ~/.Xresources
 
 # Guestures
 xinput set-prop "10" "libinput Click Method Enabled" 0 1
 
-systemcl --user import-environment XAUTHORITY DISPLAY
+systemctl --user import-environment XAUTHORITY DISPLAY
+
+/home/lawrence/config/scripts/remap_kb.sh
 
 exec xmonad
