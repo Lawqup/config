@@ -123,10 +123,6 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
       ((modm .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf),
       -- Move focus to the next window
       ((modm, xK_Tab), windows W.focusDown),
-      -- Move focus to the next window
-      ((modm, xK_j), windows W.focusDown),
-      -- Move focus to the previous window
-      ((modm, xK_k), windows W.focusUp),
       -- Move focus to the master window
       ((modm, xK_m), windows W.focusMaster),
       -- Swap the focused window and the master window
@@ -315,8 +311,6 @@ myLogHook = return ()
 myStartupHook = do
   spawnOnce "picom --config /home/lawrence/config/picom.conf"
   spawn "emacs --daemon"
-  spawn "setxkbmap -option ctrl:swapcaps"
-  spawn "setxkbmap us"
   spawnOnce "nitrogen --restore &"
   spawnOnce "dunst &"
   spawnOnce "easyeffects --gapplication-service &"
@@ -435,5 +429,10 @@ conf =
                         ("M-s", namedScratchpadAction myScratchPads "terminal"),
                         ("M-q", namedScratchpadAction myScratchPads "calculator"),
                         ("M-y", sendMessage (MT.Toggle NBFULL)),
-                        ("M-;", spawn "slock")
+                        ("M-;", spawn "slock"),
+
+                        ("M-j", windows W.focusDown),
+                        ("M-k", windows W.focusUp),
+                        ("M-<Down>", windows W.focusDown),
+                        ("M-<Up>", windows W.focusUp)
                       ]
