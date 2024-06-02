@@ -221,6 +221,7 @@ Use Evil for Vim keybindings (based)
     (setq evil-want-C-i-jump nil)
     (setq evil-want-fine-undo t)
     (setq evil-search-module 'evil-search)
+    (setq evil-respect-visual-line-mode t)
     :config
     (evil-mode 1)
     (define-key evil-insert-state-map (kbd "C-SPC")
@@ -233,13 +234,20 @@ Use Evil for Vim keybindings (based)
     (define-key evil-motion-state-map (kbd "g d") 'evil-goto-definition)
     (global-unset-key (kbd "C-r"))
 
-    ;; Use visual line motions even outside of visual-line-mode buffers
-    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-    (evil-global-set-key 'motion "<down>" 'evil-next-visual-line)
-    (evil-global-set-key 'motion "<up>" 'evil-previous-visual-line)
-
     (setq-default evil-cross-lines t)
+    (defun evil-next-line--check-visual-line-mode (orig-fun &rest args)
+      (if visual-line-mode
+          (apply 'evil-next-visual-line args)
+        (apply orig-fun args)))
+
+    (advice-add 'evil-next-line :around 'evil-next-line--check-visual-line-mode)
+
+    (defun evil-previous-line--check-visual-line-mode (orig-fun &rest args)
+      (if visual-line-mode
+          (apply 'evil-previous-visual-line args)
+        (apply orig-fun args)))
+
+    (advice-add 'evil-previous-line :around 'evil-previous-line--check-visual-line-mode)
 
     (keymap-unset evil-visual-state-map (kbd "u"))
 
