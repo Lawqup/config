@@ -8,10 +8,20 @@ ctrl - u : opt/homebrew/Caskroom/flameshot/12.1.0/flameshot.app/Contents/MacOS/f
 # moves focus between windows in the current focused display
 ctrl - k : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "next" else "stack.next" end') || yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "first" else "stack.first" end')
 
-ctrl - j : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "prev" else "stack.prev" end') || yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "prev" else "stack.last" end')
+ctrl - up : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "next" else "stack.next" end') || yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "first" else "stack.first" end')
+
+
+ctrl - j : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "prev" else "stack.prev" end') || yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "last" else "stack.last" end')
+
+ctrl - down : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "prev" else "stack.prev" end') || yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "last" else "stack.last" end')
+
+
+
+ctrl + cmd - k  :  yabai -m window --focus north || yabai -m display --focus north
+ctrl + cmd - up:  yabai -m window --focus north || yabai -m display --focus north
 
 ctrl + cmd - j  :  yabai -m window --focus south || yabai -m display --focus south
-ctrl + cmd - k  :  yabai -m window --focus north || yabai -m display --focus north
+ctrl + cmd - down :  yabai -m window --focus south || yabai -m display --focus south
 
 # moves focus between spaces 
 # ctrl - 1 : yabai -m space --focus 1
@@ -79,8 +89,11 @@ shift + ctrl - n : yabai -m space --create && \
 shift + ctrl - 0 : yabai -m space --balance
 
 # swap window
-shift + ctrl - j : yabai -m window --swap prev
 shift + ctrl - k : yabai -m window --swap next
+shift + ctrl - up : yabai -m window --swap next
+
+shift + ctrl - j : yabai -m window --swap prev
+shift + ctrl - down : yabai -m window --swap prev
 
 # move window
 # shift + cmd - h : yabai -m window --warp west

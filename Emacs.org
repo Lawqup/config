@@ -230,11 +230,16 @@ Use Evil for Vim keybindings (based)
     (define-key evil-motion-state-map (kbd "H")
       'evil-first-non-blank-of-visual-line)
     (define-key evil-motion-state-map (kbd "L") 'evil-end-of-visual-line)
+    (define-key evil-motion-state-map (kbd "g d") 'evil-goto-definition)
     (global-unset-key (kbd "C-r"))
 
     ;; Use visual line motions even outside of visual-line-mode buffers
     (evil-global-set-key 'motion "j" 'evil-next-visual-line)
     (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+    (evil-global-set-key 'motion "<down>" 'evil-next-visual-line)
+    (evil-global-set-key 'motion "<up>" 'evil-previous-visual-line)
+
+    (setq-default evil-cross-lines t)
 
     (keymap-unset evil-visual-state-map (kbd "u"))
 
