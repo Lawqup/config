@@ -391,6 +391,9 @@ barSpawner 0 = statusBarProp "xmobar -x 0" (pure myXmobarPP)
 barSpawner 1 = statusBarProp "xmobar -x 1" (pure myXmobarPP)
 barSpawner _ = mempty
 
+myRandrChangeHook :: X ()
+myRandrChangeHook = spawn "autorandr --change"
+
 main :: IO ()
 main =
   xmonad
@@ -399,6 +402,7 @@ main =
     . ewmh
     . docks
     . xmobarProp
+    . addRandrChangeHook myRandrChangeHook
     $ conf
 
 conf =
