@@ -47,6 +47,7 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
 import XMonad.Util.SpawnOnce
 import XMonad.Util.ClickableWorkspaces
+import XMonad.Hooks.Rescreen (RescreenConfig (..), rescreenHook)
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -385,12 +386,15 @@ myScratchPads =
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the hooks we set up.
-mySB = statusBarProp "xmobar" (pure myXmobarPP)
+barSpawner :: ScreenId -> StatusBarConfig
+barSpawner 0 = statusBarProp "xmobar -x 0" (pure myXmobarPP)
+barSpawner 1 = statusBarProp "xmobar -x 1" (pure myXmobarPP)
+barSpawner _ = mempty
 
 main :: IO ()
 main =
   xmonad
-    . withSB mySB
+    . dynamicSBs (pure . barSpawner)
     . ewmhFullscreen
     . ewmh
     . docks
