@@ -391,16 +391,6 @@ Escape Magit popups with =<escape>=.
      "<escape>" 'transient-quit-one)
 #+end_src
 
-** Forge
-
-Forge allows you to see and edit issues, pull requests, etc and use Github, Gitlab, and other systems all from your Magit-Status
-
-In order to use remote version control systems, however, you need to login via an auth token. A guide is shown [[https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started][here]].
-
-#+begin_src emacs-lisp
-  (use-package forge)
-#+end_src
-
 * Autocompletion
 
 Here goes everything related to autocompletion, including Emacs as a whole and specific programming languages.
@@ -561,12 +551,6 @@ Use Auctex for many emacs latex features.
 #+begin_src emacs-lisp
   (use-package pdf-tools)
   (pdf-tools-install)  ; Standard activation command
-#+end_src
-
-** Grammarly
-
-#+begin_src emacs-lisp
-  (use-package lsp-grammarly)
 #+end_src
 
 ** Misc tools
