@@ -1,14 +1,15 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 # Gets wifi strength
+INTERFACE=wlp1s0
 
-iwconfig wlan0 2>&1 | grep -q no\ wireless\ extensions\. && {
+iwconfig $INTERFACE 2>&1 | grep -q no\ wireless\ extensions\. && {
   echo wired
   exit 0
 }
 
-essid=$(iwconfig wlan0 | awk -F '"' '/ESSID/ {print $2}')
-stngth=$(iwconfig wlan0 | awk -F '=' '/Quality/ {print $2}' | cut -d ' ' -f 1)
+essid=$(iwconfig $INTERFACE | awk -F '"' '/ESSID/ {print $2}')
+stngth=$(iwconfig $INTERFACE | awk -F '=' '/Quality/ {print $2}' | cut -d ' ' -f 1)
 [[ -z $stngth ]] && stngth='-1/1'
 numer=$(($(echo $stngth | cut -d '/' -f 1) * 4))
 denom=$(echo $stngth | cut -d '/' -f 2)

@@ -42,7 +42,7 @@ render_timer = false
 TERM = "xterm-256color"
 
 [font]
-size = 14
+size = 9
 
 [font.bold]
 family = "JetBrainsMono"
@@ -687,7 +687,7 @@ semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 
 [shell]
 args = ["--login"]
-program = "/usr/bin/zsh"
+program = "zsh"
 
 [window]
 decorations = "Full"

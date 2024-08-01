@@ -54,7 +54,7 @@ Install straight.el for advanced package management.
 Variables to be used across the entire config
 
 #+begin_src emacs-lisp
-  (defvar vars/default-font-size 120)
+  (defvar vars/default-font-size 70)
   (setq user-mail-address "lawrencequp@gmail.com")
   (setenv "LSP_USE_PLISTS" "true")
 #+end_src
@@ -110,7 +110,7 @@ Make Mac usuable
 ** Server
 
 #+begin_src emacs-lisp
-  (server-start)
+ ; (server-start)
 #+end_src
 * Basic UI Configuration
 
@@ -155,10 +155,10 @@ Set up relative line numbers, and set which types of files should have them.
                         :height vars/default-font-size)
 
     (set-face-attribute 'fixed-pitch nil
-                        :font "JetBrains Mono" :height 150)
+                        :font "JetBrains Mono" :height 80)
 
     (set-face-attribute 'variable-pitch nil
-                        :font "DejaVu Sans" :height 180 :weight 'regular)
+                        :font "DejaVu Sans" :height 100 :weight 'regular)
     )
 #+end_src
 
@@ -1253,6 +1253,15 @@ Run leptosfmt on save
     )
 #+end_src
 
+*** Nix
+
+#+begin_src emacs-lisp
+  (use-package nix-mode)
+  (use-package nixfmt)
+
+  (add-hook 'nix-mode-hook 'nixfmt-on-save-mode)
+#+end_src
+
 
 *** Java
 
@@ -1457,7 +1466,7 @@ Dired is a mode made for file management.
       "h" 'dired-up-directory
       "l" 'dired-find-file))
 
-  (setq insert-directory-program "gls" dired-use-ls-dired t)
+  (setq insert-directory-program "ls" dired-use-ls-dired t)
   (setq dired-listing-switches "-al --group-directories-first")
 #+end_src
 

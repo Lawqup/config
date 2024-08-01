@@ -402,7 +402,6 @@ main =
     . ewmh
     . docks
     . xmobarProp
-    . addRandrChangeHook myRandrChangeHook
     $ conf
 
 conf =
@@ -426,9 +425,9 @@ conf =
       logHook = myLogHook,
       startupHook = myStartupHook
     }
-    `additionalKeys` [ ((0, 0x1008FF11), spawn "pamixer -d 5"),
-                       ((0, 0x1008FF13), spawn "pamixer -i 5"),
-                       ((0, 0x1008FF12), spawn "pamixer -t")
+    `additionalKeys` [ ((0, 0x1008FF11), spawn "amixer -q sset Master unmute 3%-"),
+                       ((0, 0x1008FF13), spawn "amixer -q sset Master unmute 3%+"),
+                       ((0, 0x1008FF12), spawn "amixer -q sset Master toggle")
                      ]
     `additionalKeysP` [ ("M-f", spawn "firefox"),
                         ("M-e", spawn "emacsclient -cn"),
