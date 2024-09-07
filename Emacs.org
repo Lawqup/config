@@ -100,9 +100,9 @@ Also, make sure environement variables carry over to emacs from the shell.
 Make Mac usuable
 
 #+begin_src emacs-lisp
-  (setq mac-command-modifier 'control)
+  (setq mac-command-modifier 'hyper)
   (setq mac-option-modifier 'meta)
-  (setq mac-control-modifier 'hyper)
+  (setq mac-control-modifier 'control)
 
   (menu-bar-mode t)
 #+end_src
@@ -1314,6 +1314,11 @@ Run leptosfmt on save
    '(flycheck-googlelint-filter "-whitespace,+whitespace/braces")
    '(flycheck-googlelint-root "project/src")
    '(flycheck-googlelint-linelength "120"))
+
+  (setq c-default-style "linux")
+  (add-hook 'c-mode-common-hook (lambda ()
+                                  (setq indent-tabs-mode t)
+                                  (smart-tab-mode)))
 #+end_src
 
 *** Solidity
@@ -1464,7 +1469,9 @@ Dired is a mode made for file management.
     (setq dired-kill-when-opening-new-dired-buffer t) ; only have 1 dired buffer
     (evil-collection-define-key 'normal 'dired-mode-map
       "h" 'dired-up-directory
-      "l" 'dired-find-file))
+      "l" 'dired-find-file
+      "<left>" 'dired-up-directory
+      "<right>" 'dired-find-file))
 
   (setq insert-directory-program "ls" dired-use-ls-dired t)
   (setq dired-listing-switches "-al --group-directories-first")
