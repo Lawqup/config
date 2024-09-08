@@ -15,6 +15,7 @@ in
 {
   imports = [
     # Include the results of the hardware scan.
+    <nixos-hardware/framework/13-inch/7040-amd>
     ./hardware-configuration.nix
     (import "${home-manager}/nixos")
   ];
@@ -31,6 +32,7 @@ in
       home.file.".config/alacritty/alacritty.toml".source = /home/lawrence/config/alacritty.toml;
       home.file.".xmobarrc".source = /home/lawrence/config/xmobarrc;
       home.file.".config/rofi/config.rasi".source = "/home/lawrence/config/rofi.rasi";
+      home.file.".config/starship.toml".source = "/home/lawrence/config/starship.toml";
 
       home.activation = {
         tangleEmacsConfig = lib.hm.dag.entryAfter [ "installPackages" ] ''
@@ -38,65 +40,23 @@ in
 
           run touch ~/.emacs.d/custom.el
         '';
+
+        setupKB = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          run /home/lawrence/config/scripts/remap_kb.sh
+        '';
       };
 
-      home.packages = with pkgs; [
-        (catppuccin-kvantum.override {
-          accent = "Blue";
-          variant = "Macchiato";
-        })
-        libsForQt5.qtstyleplugin-kvantum
-        libsForQt5.qt5ct
-        papirus-folders
-      ];
-
-      gtk = {
+      programs.fzf = {
         enable = true;
-        theme = {
-          name = "Catppuccin-Macchiato-Standard-Blue-Dark";
-          package = pkgs.catppuccin-gtk.override {
-            accents = [ "blue" ];
-            size = "standard";
-            variant = "macchiato";
-          };
-        };
-        iconTheme = {
-          name = "Papirus-Dark";
-          package = pkgs.catppuccin-papirus-folders.override {
-            flavor = "macchiato";
-            accent = "blue";
-          };
-        };
-        cursorTheme = {
-          name = "Catppuccin-Macchiato-Dark-Cursors";
-          package = pkgs.catppuccin-cursors.macchiatoDark;
-        };
-        gtk3 = {
-          extraConfig.gtk-application-prefer-dark-theme = true;
-        };
+        enableZshIntegration = true;
       };
 
-      home.pointerCursor = {
-        gtk.enable = true;
-        name = "Catppuccin-Macchiato-Dark-Cursors";
-        package = pkgs.catppuccin-cursors.macchiatoDark;
-        size = 16;
+      programs.starship.enable = true;
+
+      services.dunst = {
+        enable = true;
+        configFile = "/home/lawrence/config/dunstrc";
       };
-
-      dconf.settings = {
-        "org/gnome/desktop/interface" = {
-          gtk-theme = "Catppuccin-Macchiato-Standard-Blue-Dark";
-          color-scheme = "prefer-dark";
-        };
-
-        # For Gnome shell
-        "org/gnome/shell/extensions/user-theme" = {
-          name = "Catppuccin-Macchiato-Standard-Blue-Dark";
-        };
-      };
-
-      # Wayland, X, etc. support for session vars
-      systemd.user.sessionVariables = config.home-manager.users.lawrence.home.sessionVariables;
     };
 
   # Use the systemd-boot EFI boot loader.
@@ -104,13 +64,8 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Networking
+  networking.networkmanager.enable = true;
   networking.hostName = "nixos"; # Define your hostname.
-
-  networking.wireless = {
-    enable = true;
-    userControlled.enable = true;
-    networks."QUP-13646-5G".pskRaw = "10527c4dbfc785564688c91507c452a61eff5407b297616238332802cb414e2a";
-  };
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
@@ -120,7 +75,7 @@ in
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+  # i18n.defaultLocale = "en_US.UTF-8";
   console = {
     font = "Lat2-Terminus16";
     # keyMap = "us";
@@ -132,7 +87,6 @@ in
 
   # Configure keymap in X11
   services.xserver.xkb.layout = "us";
-  services.xserver.xkb.options = "ctrl:swapcaps";
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -148,8 +102,18 @@ in
     pulse.enable = true;
   };
 
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  services.blueman.enable = true;
+
+  hardware.brillo.enable = true;
+
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
+  services.libinput.touchpad = {
+    tapping = true;
+    tappingButtonMap = "lrm";
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.lawrence = {
@@ -162,17 +126,15 @@ in
     ];
   };
 
+  services.physlock.enable = true;
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     git
     wget
-    emacs
     alacritty
     firefox
-    zsh
-    oh-my-zsh
     xmobar
     killall
     rofi
@@ -181,32 +143,58 @@ in
     wirelesstools
     pwvucontrol
     fprintd
+    libfprint
     usbutils
     nixfmt-rfc-style
     libsForQt5.dolphin
     dconf
-    slock
-    starship
+    arandr
+    autorandr
+    acpi
+    inetutils
+    eza
+    libnotify
+    dunst
+    fd
+    jdk8
+    discord
     # gcc14
     # gnumake
     # cmake
     # libtool
   ];
+
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="amdgpu_bl1", MODE="0666", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
+  '';
+
   services.fprintd.enable = true;
 
-  services.xserver = {
+  programs.zsh = {
+    enable = true;
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
+    ohMyZsh = {
+      enable = true;
+      plugins = [
+        "eza"
+        "fzf"
+      ];
+    };
+  };
 
+  services.xserver = {
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
       config = builtins.readFile /home/lawrence/config/xmonad.hs;
     };
-
+    dpi = 144;
     displayManager.sessionCommands = ''
       ${pkgs.xorg.xrdb}/bin/xrdb -merge <<EOF
          Xft.dpi: 192
          Xcursor.theme: Adwaita
-         Xcursor.size: 64
+         Xcursor.size: 20
       EOF
     '';
 
@@ -217,6 +205,11 @@ in
     #   ${pkgs.lightlocker}/bin/light-locker --idle-hint &
     # '';
   };
+  environment.variables = {
+    GDK_SCALE = "1.5";
+    GDK_DPI_SCALE = "0.7";
+    _JAVA_OPTIONS = "-Dsun.java2d.uiScale=1.5";
+  };
 
   systemd.targets.hybrid-sleep.enable = true;
   services.logind.extraConfig = ''
@@ -224,10 +217,9 @@ in
     IdleActionSec=20s
   '';
 
-  services.emacs.enable = true;
-
-  programs.zsh = {
+  services.emacs = {
     enable = true;
+    package = pkgs.emacs;
   };
 
   fonts = {
@@ -256,22 +248,15 @@ in
     };
   };
 
-  services.xserver.dpi = 144;
-  environment.variables = {
-    GDK_SCALE = "1.5";
-    GDK_DPI_SCALE = "0.7";
-    _JAVA_OPTIONS = "-Dsun.java2d.uiScale=1.5";
-  };
-
   programs.steam.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  programs.mtr.enable = true;
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
+  # programs.mtr.enable = true;
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  # };
 
   # List services that you want to enable:
 
@@ -283,6 +268,8 @@ in
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
+
+  services.fwupd.enable = true;
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you

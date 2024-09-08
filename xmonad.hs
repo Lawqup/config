@@ -437,6 +437,7 @@ conf =
                         ("M-q", namedScratchpadAction myScratchPads "calculator"),
                         ("M-y", sendMessage (MT.Toggle NBFULL)),
                         ("M-;", spawn "slock"),
+                        ("<f9>", spawn "systemctl suspend"),
 
                         ("M-j", windows W.focusDown),
                         ("M-k", windows W.focusUp),

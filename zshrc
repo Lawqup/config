@@ -10,7 +10,7 @@ if [[ "$TERM" == "dumb" ]]; then
 fi
 
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+# export ZSH="$ZSH"
 
 export EMAIL="lawrencequp@gmail.com"
 
@@ -89,14 +89,11 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Add wisely, as too many plugins slow down shell startup.
 # https://dev.to/kumareth/a-beginner-s-guide-for-setting-up-autocomplete-on-ohmyzsh-hyper-with-plugins-themes-47f2
 
-plugins=(zsh-autosuggestions
-         git
+plugins=(git
          colorize
          colored-man-pages
          sudo
          dirhistory
-         web-search
-         dotenv
          eza)
 
 source $ZSH/oh-my-zsh.sh
@@ -136,6 +133,8 @@ export FZF_DEFAULT_COMMAND="fd . $HOME --exclude={.git,Music,Videos,'VirtualBox 
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export FZF_ALT_C_COMMAND="fd . $HOME --exclude={.git,Music,Videos,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo} --type d -H"
+
+eval "$(fzf --zsh)"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -231,8 +230,6 @@ precmd() {
 bindkey -M emacs '^S' sudo-command-line 
 bindkey -M vicmd '^S' sudo-command-line 
 bindkey -M viins '^S' sudo-command-line 
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=245'

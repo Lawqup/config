@@ -957,14 +957,14 @@ Specify the timer end sound for org timer.
 
   (use-package lsp-mode
     :commands (lsp lsp-deferred)
+    :bind-keymap
+    ("C-c C-l" . lsp-command-map)
     :hook (lsp-mode . lq/lsp-mode-setup)
     :config
     (lsp-enable-which-key-integration t)
     (setq gc-cons-threshold 100000000)
     ;; 1 MB
     (setq read-process-output-max (* 1024 1024)))
-
-  (bind-key* "C-c C-l" lsp-command-map)
 #+end_src
 
 *** LSP mode extras
@@ -1370,8 +1370,8 @@ Setup DAP-mode
 Use "M-/" to comment highlighted lines.
 
 #+begin_src emacs-lisp
-(use-package evil-nerd-commenter
-  :bind ("M-/" . evilnc-comment-or-uncomment-lines))
+  (use-package evil-nerd-commenter
+    :bind ("M-/" . evilnc-comment-or-uncomment-lines))
 #+end_src
 
 Highlight hex color codes with the actual color.
