@@ -92,6 +92,7 @@ plugins=(git
          colored-man-pages
          sudo
          dirhistory
+	 zsh-autosuggestions
          eza)
 
 source $ZSH/oh-my-zsh.sh
