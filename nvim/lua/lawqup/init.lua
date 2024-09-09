@@ -1,3 +1,4 @@
+-- Maps leader, should be before Lazy
 require("lawqup.remap")
-require("lawqup.ui")
 require("lawqup.lazy")
+require("lawqup.ui")
