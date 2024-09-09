@@ -103,7 +103,6 @@ Make Mac usuable
   (setq mac-command-modifier 'hyper)
   (setq mac-option-modifier 'meta)
   (setq mac-control-modifier 'control)
-
   (menu-bar-mode t)
 #+end_src
 

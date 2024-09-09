@@ -14,6 +14,8 @@ return {
 		keymaps = {
 			["h"] = "actions.parent",
 			["l"] = "actions.select",
+			["<left>"] = "actions.parent",
+			["<right>"] = "actions.select",
 			["<C-i>"] = { "actions.select", opts = { vertical = true }, desc = "Open the entry in a vertical split" },
 			["<C-o>"] = { "actions.select", opts = { horizontal = true }, desc = "Open the entry in a horizontal split" },
 			["g?"] = "actions.show_help",

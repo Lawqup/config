@@ -1,6 +1,6 @@
 # -*- mode: sh;-*-
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/.ghcup/bin:$HOME/.local/bin:$HOME/config/scripts:$HOME/.cargo/bin:$HOME/go/bin:/opt/homebrew/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/.ghcup/bin:$HOME/.local/bin:$HOME/config/scripts:$HOME/.cargo/bin:$HOME/go/bin:$HOME/.toolbox/bin:$PATH
 
 if [[ "$TERM" == "dumb" ]]; then
     unset zle_bracketed_paste
@@ -11,8 +11,6 @@ fi
 
 # Path to your oh-my-zsh installation.
 # export ZSH="$ZSH"
-
-export EMAIL="lawrencequp@gmail.com"
 
 export FLYCTL_INSTALL="/home/lawrence/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
@@ -126,15 +124,23 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# ctrl-z on the prompt will resume last
+# This means, from vim I can ctrl-z to the shell, and ctrl-z back again.
+foreground-last() {
+  fg %
+}
+zle -N foreground-last
+bindkey '^z' foreground-last
+
+alias neofetch='neofetch --source ~/.config/neofetch/pictures/gigachad-ascii.txt'
+
 # FZF
 
-export FZF_DEFAULT_COMMAND="fd . $HOME --exclude={.git,Music,Videos,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo} --type f -H"
+# export FZF_DEFAULT_COMMAND="fd . $HOME --exclude={.git,Music,Videos,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo} --type f -H"
 
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-export FZF_ALT_C_COMMAND="fd . $HOME --exclude={.git,Music,Videos,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo} --type d -H"
-
-eval "$(fzf --zsh)"
+# export FZF_ALT_C_COMMAND="fd . $HOME --exclude={.git,Music,Videos,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo,.unison} --type d -H"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -144,7 +150,7 @@ export NVM_NODEJS_ORG_MIRROR=http://nodejs.org/dist/
 
 NPM_PACKAGES="${HOME}/.npm-packages"
 
-#alias vim='nvim'
+alias vim='nvim'
 alias e='emacsclient --tty'
 alias p='sudo pacman'
 
@@ -229,13 +235,34 @@ precmd() {
 
 bindkey -M emacs '^S' sudo-command-line 
 bindkey -M vicmd '^S' sudo-command-line 
-bindkey -M viins '^S' sudo-command-line 
+bindkey -M viins '^S' sudo-command-line
 
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=245'
 
 eval "$(starship init zsh)"
 
-export LS_COLORS="di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
+export FPATH="$HOME/program_repos/eza/completions/zsh:$FPATH"
 
-export EZA_COLORS="di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
+_urlencode() {
+	local length="${#1}"
+	for (( i = 0; i < length; i++ )); do
+		local c="${1:$i:1}"
+		case $c in
+			%) printf '%%%02X' "'$c" ;;
+			*) printf "%s" "$c" ;;
+		esac
+	done
+}
+
+osc7_cwd() {
+	printf '\033]7;file://%s%s\e\\' "$HOSTNAME" "$(_urlencode "$PWD")"
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook -Uz chpwd osc7_cwd
+
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+[ -f ~/config/work_specific_zsh.zsh ] && source ~/config/work_specific_zsh.zsh
