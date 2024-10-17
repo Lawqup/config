@@ -26,7 +26,11 @@ return {
 		},
 	},
 
-	'numtostr/comment.nvim',
+	{
+		'numToStr/Comment.nvim',
+		config = true
+	},
+
 	'sunaku/tmux-navigate',
 	{
 		"kylechui/nvim-surround",
@@ -38,5 +42,10 @@ return {
 	{
 		'echasnovski/mini.misc',
 		config = true
-	}
+	},
+	{
+		'windwp/nvim-autopairs',
+		event = "InsertEnter",
+		config = true
+	},
 }

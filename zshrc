@@ -10,7 +10,7 @@ if [[ "$TERM" == "dumb" ]]; then
 fi
 
 # Path to your oh-my-zsh installation.
-# export ZSH="$ZSH"
+export ZSH="$HOME/.oh-my-zsh"
 
 export FLYCTL_INSTALL="/home/lawrence/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
@@ -108,9 +108,9 @@ export LOCALE_ARCHIVE="/usr/lib/locale/locale-archive"
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-	export EDITOR='emacsclient -cn'
+	export EDITOR='nvim'
 else
-	export EDITOR='emacsclient -cn'
+	export EDITOR='nvim'
 fi
 
 # Compilation flags
@@ -132,8 +132,6 @@ foreground-last() {
 }
 zle -N foreground-last
 bindkey '^z' foreground-last
-
-alias neofetch='neofetch --source ~/.config/neofetch/pictures/gigachad-ascii.txt'
 
 # FZF
 
@@ -267,3 +265,8 @@ add-zsh-hook -Uz chpwd osc7_cwd
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 [ -f ~/config/work_specific_zsh.zsh ] && source ~/config/work_specific_zsh.zsh
+
+# if you wish to use IMDS set AWS_EC2_METADATA_DISABLED=false
+
+export AWS_EC2_METADATA_DISABLED=true
+

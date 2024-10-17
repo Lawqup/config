@@ -27,6 +27,7 @@ navigate_back=" $navigate l 'tmux select-pane -l || tmux select-pane -t1'\
                             'tmux send-keys C-w p'                       \
                             'pane_is_zoomed'                             "
 
+echo "here"
 for suffix in "" "-secondary"; do
 	for direction in left down up right back; do
 		option="@navigate-$direction$suffix"
