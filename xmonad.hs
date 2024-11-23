@@ -117,7 +117,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
       -- launch gmrun
       ((modm .|. shiftMask, xK_p), spawn "gmrun"),
       -- close focused window
-      ((modm, xK_c), kill),
+      ((modm, xK_x), kill),
       -- Rotate through the available layout algorithms
       ((modm, xK_space), sendMessage NextLayout),
       --  Reset the layouts on the current workspace to default
@@ -129,9 +129,9 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
       -- Swap the focused window and the master window
       ((modm .|. shiftMask, xK_Return), windows W.swapMaster),
       -- Swap the focused window with the next window
-      ((modm .|. shiftMask, xK_j), windows W.swapDown),
+      ((modm .|. shiftMask, xK_l), windows W.swapDown),
       -- Swap the focused window with the previous window
-      ((modm .|. shiftMask, xK_k), windows W.swapUp),
+      ((modm .|. shiftMask, xK_h), windows W.swapUp),
       -- Shrink the master area
       ((modm, xK_h), sendMessage Shrink),
       -- Expand the master area
@@ -439,8 +439,8 @@ conf =
                         ("M-;", spawn "slock"),
                         ("<f9>", spawn "systemctl suspend"),
 
-                        ("M-j", windows W.focusDown),
-                        ("M-k", windows W.focusUp),
-                        ("M-<Down>", windows W.focusDown),
-                        ("M-<Up>", windows W.focusUp)
+                        ("M-h", windows W.focusUp),
+                        ("M-l", windows W.focusDown),
+                        ("M-<Left>", windows W.focusUp),
+                        ("M-<Right>", windows W.focusDown)
                       ]

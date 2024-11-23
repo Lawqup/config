@@ -225,8 +225,6 @@ Use Evil for Vim keybindings (based)
     (evil-mode 1)
     (define-key evil-insert-state-map (kbd "C-SPC")
       'evil-delete-backward-char-and-join)
-    (define-key evil-motion-state-map (kbd ":") 'evil-repeat-find-char)
-    (define-key evil-motion-state-map (kbd ";") 'evil-ex)
     (define-key evil-motion-state-map (kbd "H")
       'evil-first-non-blank-of-visual-line)
     (define-key evil-motion-state-map (kbd "L") 'evil-end-of-visual-line)
@@ -1261,7 +1259,6 @@ Run leptosfmt on save
   (add-hook 'nix-mode-hook 'nixfmt-on-save-mode)
 #+end_src
 
-
 *** Java
 
 #+begin_src emacs-lisp
@@ -1343,6 +1340,16 @@ Run leptosfmt on save
                  (add-hook 'before-save-hook 'gofmt-before-save))))
 #+end_src
 
+*** GDScript
+
+#+begin_src emacs-lisp
+  (use-package gdscript-mode
+      :hook (gdscript-mode . lsp-deferred)
+      :straight (gdscript-mode
+                 :type git
+                 :host github
+                 :repo "godotengine/emacs-gdscript-mode"))
+#+end_src
 ** Debugging
 
 Setup DAP-mode

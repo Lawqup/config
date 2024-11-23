@@ -21,7 +21,6 @@ in
   ];
 
   nixpkgs.config.allowUnfree = true;
-
   home-manager.users.lawrence =
     { lib, ... }:
     {
@@ -33,6 +32,12 @@ in
       home.file.".xmobarrc".source = /home/lawrence/config/xmobarrc;
       home.file.".config/rofi/config.rasi".source = "/home/lawrence/config/rofi.rasi";
       home.file.".config/starship.toml".source = "/home/lawrence/config/starship.toml";
+      home.file.".config/nvim" = {
+        source = "/home/lawrence/config/nvim";
+        recursive = true;
+      };
+      home.file.".tmux.conf".source = "/home/lawrence/config/tmux.conf";
+      home.file.".config/wezterm/wezterm.lua".source = "/home/lawrence/config/wezterm.lua";
 
       home.activation = {
         tangleEmacsConfig = lib.hm.dag.entryAfter [ "installPackages" ] ''
@@ -126,6 +131,8 @@ in
     ];
   };
 
+  users.defaultUserShell = pkgs.zsh;
+
   services.physlock.enable = true;
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -133,7 +140,6 @@ in
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     git
     wget
-    alacritty
     firefox
     xmobar
     killall
@@ -158,9 +164,12 @@ in
     fd
     jdk8
     discord
-    # gcc14
+    godot_4
+    wezterm
+    tmux
+    gcc14
+    cmake
     # gnumake
-    # cmake
     # libtool
   ];
 
@@ -179,6 +188,7 @@ in
       plugins = [
         "eza"
         "fzf"
+        "zsh-autosuggestions"
       ];
     };
   };
