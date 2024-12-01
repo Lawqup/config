@@ -2,7 +2,6 @@
 cmd - e : /Users/lawqup/config/scripts/macos-run-emacsclient
 cmd + shift - return : /Applications/Firefox.app/Contents/MacOS/firefox
 cmd - return : /Applications/WezTerm.app/Contents/MacOS/wezterm-gui
-cmd - q : /opt/homebrew/bin/qalculate-gtk
 cmd - u : opt/homebrew/Caskroom/flameshot/12.1.0/flameshot.app/Contents/MacOS/flameshot gui
 
 # Navigation
@@ -44,7 +43,7 @@ shift + cmd - right : yabai -m window --warp east
 # cmd - e : yabai -m window --toggle split
 
 # close window
-cmd - x : yabai -m window --close
+cmd - q : yabai -m window --close
 
 # minimize window
 cmd - m : yabai -m window --minimize
