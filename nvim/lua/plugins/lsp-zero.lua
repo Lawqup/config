@@ -1,29 +1,29 @@
 local cmp_kinds = {
-  Text = "",
-  Method = "",
-  Function = "",
-  Constructor = "",
-  Field = "",
-  Variable = "",
-  Class = "",
-  Interface = "",
-  Module = "",
-  Property = "",
-  Unit = "",
-  Value = "",
-  Enum = "",
-  Keyword = "",
-  Snippet = "",
-  Color = "",
-  File = "",
-  Reference = "",
-  Folder = "",
-  EnumMember = "",
-  Constant = "",
-  Struct = "",
-  Event = "",
-  Operator = "",
-  TypeParameter = "",
+	Text = "",
+	Method = "",
+	Function = "",
+	Constructor = "",
+	Field = "",
+	Variable = "",
+	Class = "",
+	Interface = "",
+	Module = "",
+	Property = "",
+	Unit = "",
+	Value = "",
+	Enum = "",
+	Keyword = "",
+	Snippet = "",
+	Color = "",
+	File = "",
+	Reference = "",
+	Folder = "",
+	EnumMember = "",
+	Constant = "",
+	Struct = "",
+	Event = "",
+	Operator = "",
+	TypeParameter = "",
 }
 
 return {
@@ -77,12 +77,12 @@ return {
 				},
 				window = {
 					completion = {
-						border = "rounded", -- single|rounded|none
+						border = "rounded",       -- single|rounded|none
 						-- custom colors
 						winhighlight = "Normal:Normal,FloatBorder:FloatBorder,Search:None", -- BorderBG|FloatBorder
 					},
 					documentation = {
-						border = "rounded", -- single|rounded|none
+						border = "rounded",       -- single|rounded|none
 						-- custom colors
 						winhighlight = "Normal:Normal,FloatBorder:FloatBorder,Search:None", -- BorderBG|FloatBorder
 					},
@@ -105,7 +105,8 @@ return {
 						-- strings[2] -> kind
 
 						-- set different icon styles
-						fmt.kind = " " .. (cmp_kinds[strings[2]] or "") -- concatenate icon based on kind
+						fmt.kind = " " ..
+						    (cmp_kinds[strings[2]] or "") -- concatenate icon based on kind
 
 						-- append customized kind text
 						fmt.kind = fmt.kind .. " " -- just an extra space at the end
@@ -117,15 +118,19 @@ return {
 		end
 
 	},
+	{
+		'aznhe21/actions-preview.nvim',
+		config = true
+	},
 	-- LSP
 	{
 		'neovim/nvim-lspconfig',
-		cmd = {'LspInfo', 'LspInstall', 'LspStart'},
-		event = {'BufReadPre', 'BufNewFile'},
+		cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
+		event = { 'BufReadPre', 'BufNewFile' },
 		dependencies = {
-			{'hrsh7th/cmp-nvim-lsp'},
-			{'williamboman/mason.nvim'},
-			{'williamboman/mason-lspconfig.nvim'},
+			{ 'hrsh7th/cmp-nvim-lsp' },
+			{ 'williamboman/mason.nvim' },
+			{ 'williamboman/mason-lspconfig.nvim' },
 		},
 		config = function()
 			local lsp_zero = require('lsp-zero')
@@ -133,18 +138,26 @@ return {
 			-- lsp_attach is where you enable features that only work
 			-- if there is a language server active in the file
 			local lsp_attach = function(client, bufnr)
-				local opts = {buffer = bufnr}
+				local opts = { buffer = bufnr }
 
 				vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-				vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-				vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
-				vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
-				vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
-				vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
+				vim.keymap.set('n', 'gd', function() require('telescope.builtin').lsp_definitions() end,
+					opts)
+				vim.keymap.set('n', 'gD', function() require('telescope.builtin').lsp_declarations() end,
+					opts)
+				vim.keymap.set('n', 'gi',
+					function() require('telescope.builtin').lsp_implementations() end, opts)
+				vim.keymap.set('n', 'go',
+					function() require('telescope.builtin').lsp_type_definitions() end, opts)
+				vim.keymap.set('n', 'gr', function() require('telescope.builtin').lsp_references() end,
+					opts)
 				vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
-				vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-				vim.keymap.set({'n', 'x'}, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
-				vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+				vim.keymap.set('n', 'gR', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+				vim.keymap.set({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>',
+					opts)
+				vim.keymap.set('n', 'ge', '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>',
+					opts)
+				vim.keymap.set({ 'v', 'n' }, 'gA', require("actions-preview").code_actions, opts)
 			end
 
 			lsp_zero.extend_lspconfig({
@@ -154,13 +167,13 @@ return {
 			})
 
 			require('mason-lspconfig').setup({
-				ensure_installed = {'pylsp', 'lua_ls', 'rust_analyzer'},
+				ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer@2022-08-15' },
 				handlers = {
 					function(server_name)
 						require('lspconfig')[server_name].setup({})
 					end,
 
-					pylsp = function ()
+					pylsp = function()
 						require('lspconfig').pylsp.setup({
 							settings = {
 								pylsp = {

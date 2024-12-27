@@ -1,14 +1,24 @@
 return {
-	'NeogitOrg/neogit',
-	dependencies = {
-		'nvim-lua/plenary.nvim',         -- required
-		'sindrets/diffview.nvim',        -- optional - Diff integration
+	{
+		"FabijanZulj/blame.nvim",
+		lazy = false,
+		config = function()
+			require('blame').setup {}
+		end,
 
-		-- Only one of these is needed, not both.
-		'nvim-telescope/telescope.nvim', -- optional
 	},
-	keys = {
-		{ '<C-x>g', '<cmd>Neogit<cr>'},
-	},
-	config = true
+	{
+		'NeogitOrg/neogit',
+		dependencies = {
+			'nvim-lua/plenary.nvim', -- required
+			'sindrets/diffview.nvim', -- optional - Diff integration
+
+			-- Only one of these is needed, not both.
+			'nvim-telescope/telescope.nvim', -- optional
+		},
+		keys = {
+			{ '<C-x>g', '<cmd>Neogit<cr>' },
+		},
+		config = true
+	}
 }
