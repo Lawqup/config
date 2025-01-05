@@ -52,7 +52,7 @@ import XMonad.Hooks.Rescreen (RescreenConfig (..), rescreenHook)
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal = "alacritty"
+myTerminal = "wezterm"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -116,8 +116,6 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
       ((modm, xK_p), spawn "rofi -show drun"),
       -- launch gmrun
       ((modm .|. shiftMask, xK_p), spawn "gmrun"),
-      -- close focused window
-      ((modm, xK_x), kill),
       -- Rotate through the available layout algorithms
       ((modm, xK_space), sendMessage NextLayout),
       --  Reset the layouts on the current workspace to default
@@ -126,8 +124,6 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
       ((modm, xK_Tab), windows W.focusDown),
       -- Move focus to the master window
       ((modm, xK_m), windows W.focusMaster),
-      -- Swap the focused window and the master window
-      ((modm .|. shiftMask, xK_Return), windows W.swapMaster),
       -- Swap the focused window with the next window
       ((modm .|. shiftMask, xK_l), windows W.swapDown),
       -- Swap the focused window with the previous window
@@ -311,7 +307,6 @@ myLogHook = return ()
 
 myStartupHook = do
   spawnOnce "picom --config /home/lawrence/config/picom.conf"
-  spawn "emacs --daemon"
   spawnOnce "nitrogen --restore &"
   spawnOnce "dunst &"
   spawnOnce "easyeffects --gapplication-service &"
@@ -429,14 +424,14 @@ conf =
                        ((0, 0x1008FF13), spawn "amixer -q sset Master unmute 3%+"),
                        ((0, 0x1008FF12), spawn "amixer -q sset Master toggle")
                      ]
-    `additionalKeysP` [ ("M-f", spawn "firefox"),
-                        ("M-e", spawn "emacsclient -cn"),
+    `additionalKeysP` [ ("M-S-<Return>", spawn "firefox"),
+                        -- ("M-e", spawn "emacsclient -cn"),
                         ("M-r", spawn "xmonad --recompile; xmonad --restart"),
                         ("M-S-<Space>", spawn "cyclekb us 'us(intl)'"),
                         ("M-s", namedScratchpadAction myScratchPads "terminal"),
-                        ("M-q", namedScratchpadAction myScratchPads "calculator"),
+                        ("M-q", kill),
                         ("M-y", sendMessage (MT.Toggle NBFULL)),
-                        ("M-;", spawn "slock"),
+                        ("M-C-q", spawn "sudo physlock"),
                         ("<f9>", spawn "systemctl suspend"),
 
                         ("M-h", windows W.focusUp),

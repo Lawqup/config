@@ -10,7 +10,7 @@
 }:
 
 let
-  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-24.05.tar.gz";
+  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz";
 in
 {
   imports = [
@@ -36,15 +36,16 @@ in
         source = "/home/lawrence/config/nvim";
         recursive = true;
       };
+
       home.file.".tmux.conf".source = "/home/lawrence/config/tmux.conf";
       home.file.".config/wezterm/wezterm.lua".source = "/home/lawrence/config/wezterm.lua";
 
       home.activation = {
-        tangleEmacsConfig = lib.hm.dag.entryAfter [ "installPackages" ] ''
-          run emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "~/config/Emacs.org")'
-
-          run touch ~/.emacs.d/custom.el
-        '';
+        # tangleEmacsConfig = lib.hm.dag.entryAfter [ "installPackages" ] ''
+        #   run emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "~/config/Emacs.org")'
+        #
+        #   run touch ~/.emacs.d/custom.el
+        # '';
 
         setupKB = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           run /home/lawrence/config/scripts/remap_kb.sh
@@ -137,7 +138,7 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    neovim
     git
     wget
     firefox
@@ -169,15 +170,23 @@ in
     tmux
     gcc14
     cmake
-    # gnumake
+    gnumake
+    direnv
+    cargo
+    rust-analyzer
+    htop
     # libtool
   ];
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="amdgpu_bl1", MODE="0666", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
   '';
 
   services.fprintd.enable = true;
+
+  programs.gamemode.enable = true;
 
   programs.zsh = {
     enable = true;
@@ -227,15 +236,15 @@ in
     IdleActionSec=20s
   '';
 
-  services.emacs = {
-    enable = true;
-    package = pkgs.emacs;
-  };
+  # services.emacs = {
+  #   enable = true;
+  #   package = pkgs.emacs;
+  # };
 
   fonts = {
     packages = with pkgs; [
       noto-fonts
-      noto-fonts-cjk
+      noto-fonts-cjk-sans
       noto-fonts-emoji
       liberation_ttf
       fira-code
