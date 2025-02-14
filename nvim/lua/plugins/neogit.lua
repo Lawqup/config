@@ -17,7 +17,7 @@ return {
 			'nvim-telescope/telescope.nvim', -- optional
 		},
 		keys = {
-			{ '<C-x>g', '<cmd>Neogit<cr>' },
+			{ '<C-x>g', '<cmd>Neogit cwd=%:p:h<cr>' },
 		},
 		config = true
 	}

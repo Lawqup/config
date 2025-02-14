@@ -26,17 +26,14 @@ return {
 			-- choose your fav picker
 			picker = "telescope", -- "quickfix", "telescope", "fzf-lua" or "mini-pick"
 			-- "true" does not open picker for single result, just JUMP
-			skip_picker_for_single_result = false, -- "false" or "true"
 			-- these args are directly passed to "cscope -f <db_file> <args>"
-			db_build_cmd_args = { "-bqkv" },
+			db_build_cmd = { script = "default", args = { "-bqkv" } },
 			-- try to locate db_file in parent dir(s)
 			project_rooter = {
 				enable = true, -- "true" or "false"
 				-- change cwd to where db_file is located
-				change_cwd = false, -- "true" or "false"
+				change_cwd = true, -- "true" or "false"
 			},
 		}
 	},
-
-	config = true
 }
