@@ -5,6 +5,7 @@ return {
 		"nvim-telescope/telescope.nvim", -- optional [for picker="telescope"]
 		"nvim-tree/nvim-web-devicons", -- optional [for devicons in telescope, fzf or mini.pick]
 	},
+
 	opts = {
 		-- maps related defaults
 		disable_maps = false, -- "true" disables default keymaps

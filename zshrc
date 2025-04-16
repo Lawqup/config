@@ -1,3 +1,5 @@
+# Amazon Q pre block. Keep at the top of this file.
+[[ -f "${HOME}/.local/share/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/.local/share/amazon-q/shell/zshrc.pre.zsh"
 # -*- mode: sh;-*-
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/share/gem/ruby/3.0.0/bin:$HOME/.ghcup/bin:$HOME/.local/bin:$HOME/config/scripts:$HOME/.cargo/bin:$HOME/go/bin:$HOME/.toolbox/bin:$PATH
@@ -270,3 +272,10 @@ add-zsh-hook -Uz chpwd osc7_cwd
 
 export AWS_EC2_METADATA_DISABLED=true
 
+if [[ -z $TMUX ]] && [[ -n $SSH_TTY ]]; then
+    exec tmux new-session -A -s DevDsk0 
+    /home/lawqup/config/tmux-navigate.sh
+fi
+
+# Amazon Q post block. Keep at the bottom of this file.
+[[ -f "${HOME}/.local/share/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/.local/share/amazon-q/shell/zshrc.post.zsh"
