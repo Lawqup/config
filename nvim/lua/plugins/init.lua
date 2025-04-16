@@ -48,4 +48,37 @@ return {
 		event = "InsertEnter",
 		config = true
 	},
+	{
+		'jedrzejboczar/possession.nvim',
+		keys = {
+			{ "<leader>S", mode = { "n", "x", "o", "v" }, "<cmd> Telescope possession list<cr>", desc = "Sessions" },
+		},
+		config = function ()
+			require('possession').setup({
+				autosave = {
+					current = true,  -- or fun(name): boolean
+					cwd = false, -- or fun(): boolean
+					tmp = false,  -- or fun(): boolean
+					tmp_name = 'tmp', -- or fun(): string
+					on_load = true,
+					on_quit = true,
+				},
+				autoload = 'last', -- or 'last' or 'auto_cwd' or 'last_cwd' or fun(): string
+			})
+			require('telescope').load_extension('possession')
+		end,
+	},
+	{
+		'nvim-lualine/lualine.nvim',
+		dependencies = { 'nvim-tree/nvim-web-devicons', 'jedrzejboczar/possession.nvim' },
+		config = function ()
+			local function my_session_name()
+				return require('possession.session').get_session_name() or ''
+			end
+
+			require('lualine').setup({
+				sections = { lualine_a = { my_session_name } }
+			})
+		end,
+	}
 }

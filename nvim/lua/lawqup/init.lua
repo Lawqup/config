@@ -5,7 +5,7 @@ require("lawqup.ui")
 
 vim.api.nvim_set_option("clipboard", "unnamed")
 
--- require("mini.misc").setup_auto_root()
+require("mini.misc").setup_auto_root()
 
 -- vim.api.nvim_create_autocmd("BufWritePre", {
 -- 	callback = function()
@@ -27,3 +27,4 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.shiftwidth = 4 -- Number of spaces inserted when indenting
 	end
 })
+

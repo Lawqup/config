@@ -158,6 +158,9 @@ return {
 				vim.keymap.set('n', 'ge', '<cmd>lua vim.diagnostic.open_float(0, {scope="line"})<CR>',
 					opts)
 				vim.keymap.set({ 'v', 'n' }, 'gA', require("actions-preview").code_actions, opts)
+
+				vim.keymap.set('n', 'gh', '<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(), { bufnr })<CR>', opts, "Toggle Inlay Hints")
+
 			end
 
 			lsp_zero.extend_lspconfig({
@@ -167,7 +170,7 @@ return {
 			})
 
 			require('mason-lspconfig').setup({
-				ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer@2022-08-15' },
+				ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer@2022-08-15', 'clangd' },
 				handlers = {
 					function(server_name)
 						require('lspconfig')[server_name].setup({})
@@ -185,7 +188,7 @@ return {
 								}
 							}
 						})
-					end
+					end,
 				}
 			})
 		end
