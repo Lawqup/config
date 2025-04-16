@@ -167,12 +167,27 @@ function FilterMacrosByPrefix(macros, prefix, max_results)
 	return matches
 end
 
+function CwordOrArgs(args)
+	if args and args ~= "" then
+		-- Use the provided argument
+		return args
+	end
+
+	local cword = vim.fn.expand('<cword>')
+	if cword and cword ~= "" then
+		-- Use the word under cursor
+		return cword
+	end
+
+	error("No word under cursor and no arg provided")
+end
+
 
 -- Create the command
 vim.api.nvim_create_user_command("CMacroAdd",
-	function(opts) AddMacroToClangd(opts.args) end,
+	function(opts) AddMacroToClangd(CwordOrArgs(opts.args)) end,
 	{
-		nargs = 1,
+		nargs = '?',
 		desc = "Add a macro definition to .clangd file",
 		complete = function(ArgLead, CmdLine, CursorPos)
 			local macros = GetDefinedMacros()
@@ -263,10 +278,10 @@ end
 -- Create the command
 vim.api.nvim_create_user_command("CMacroDel",
 	function(opts)
-		DeleteMacroFromClangd(opts.args)
+		DeleteMacroFromClangd(CwordOrArgs(opts.args))
 	end,
 	{
-		nargs = 1,
+		nargs = '?',
 		desc = "Delete a macro definition from .clangd file",
 		complete = function(ArgLead, CmdLine, CursorPos)
 			local macros = GetAddedMacros()
