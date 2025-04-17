@@ -64,9 +64,10 @@ $buf\
 $nix_shell\
 $conda\
 $sudo\
-$cmd_duration\
 $line_break\
 $character"""
+
+right_format = """$cmd_duration $time"""
 
 [character]
 success_symbol = '[╰](bold green)[─](bold green)[Σ](bold green)'
@@ -79,8 +80,15 @@ truncation_symbol = ""
 
 [cmd_duration]
 min_time = 1_000
-format = "took [$duration]($style)"
+format = "took [$duration]($style) |"
+style = "dimmed"
 show_milliseconds = true
+
+[time]
+format = "[$time]($style)"
+disabled = false
+style = "dimmed"
+time_format = "%F %T"
 
 # Disable the package module, hiding it from the prompt completely
 [package]
