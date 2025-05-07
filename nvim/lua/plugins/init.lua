@@ -80,5 +80,9 @@ return {
 				sections = { lualine_a = { my_session_name } }
 			})
 		end,
+	},
+	{
+		"SunnyTamang/select-undo.nvim",
+		opts = {},
 	}
 }

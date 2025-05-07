@@ -76,7 +76,20 @@ function AddMacroToClangd(macro)
 	print("Added macro " .. clean_macro .. " to .clangd")
 
 	-- Optionally restart clangd
-	vim.cmd("LspRestart clangd")
+	vim.cmd("LspRestart")
+end
+
+function FindCscopeDir()
+	local cscope_dir = "./"
+	for _ = 1, 10, 1 do
+		if vim.fn.filereadable(cscope_dir .. "cscope.out") == 1 then
+			break
+		end
+
+		cscope_dir = cscope_dir .. "../"
+	end
+
+	return cscope_dir
 end
 
 
@@ -86,14 +99,7 @@ function GetDefinedMacros()
 	end
 
 	-- Find cscope database
-	local cscope_dir = "./"
-	for _ = 1, 10, 1 do
-		if vim.fn.filereadable(cscope_dir .. "cscope.out") == 1 then
-			break
-		end
-
-		cscope_dir = cscope_dir .. "../"
-	end
+	local cscope_dir = FindCscopeDir()
 
 	-- Use cscope to find #define statements
 	local cmd = "cd " .. cscope_dir .. "&& cscope -R -L -0 '.*' 2> /dev/null |  grep -E '#ifdef|#ifndef'  | awk -F ' ' '{print $5}' | sort | uniq";
@@ -250,7 +256,7 @@ function DeleteMacroFromClangd(macro)
 	print("Removed macro " .. clean_macro .. " from .clangd")
 
 	-- Optionally restart clangd
-	vim.cmd("LspRestart clangd")
+	vim.cmd("LspRestart")
 end
 
 function GetAddedMacros()
@@ -302,8 +308,9 @@ vim.api.nvim_create_user_command("CMacroDel",
 
 vim.keymap.set({ "n", "v" }, "<C-c><C-b>",
 function()
-	vim.cmd("Cscope db build")
+	vim.cmd("cd " .. FindCscopeDir() .. " | Cscope db build")
 	DefinedMacros = nil
 	print("Invalidated DefinedMacros")
 end
 )
+
