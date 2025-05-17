@@ -178,6 +178,10 @@ in
     # libtool
   ];
 
+  (pkgs.discord.override {
+   withVencord = true;
+   });
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   services.udev.extraRules = ''

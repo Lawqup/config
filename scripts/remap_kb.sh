@@ -8,14 +8,23 @@ internal_id=$(
     xinput list |
     sed -n 's/.*AT Translated.*id=\([0-9]*\).*keyboard.*/\1/p' | head -n 1
 )
-[ "$internal_id" ] || exit 0
+if [ "$internal_id" ]; then
+	setxkbmap -device $internal_id -option ctrl:swapcaps
+fi
 
-setxkbmap -device $internal_id -option ctrl:swapcaps
-
-external_id=$(
+glove80_id=$(
     xinput list |
     sed -n 's/.*Glove80.*id=\([0-9]*\).*keyboard.*/\1/p' | head -n 1
 )
-[ "$external_id" ] || exit 0
+if [ "$glove80_id" ]; then
+	setxkbmap -device $glove80_id -option
+fi
 
-setxkbmap -device $external_id -option
+
+wave75_id=$(
+    xinput list |
+    sed -n 's/.*WAVE 75 RGB Keyboard.*id=\([0-9]*\).*keyboard.*/\1/p' | head -n 1
+)
+if [ "$wave75_id" ]; then
+	setxkbmap -device $wave75_id -option ctrl:swapcaps
+fi
