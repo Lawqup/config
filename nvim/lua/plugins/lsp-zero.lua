@@ -36,7 +36,11 @@ return {
 	{
 		'williamboman/mason.nvim',
 		lazy = false,
-		config = true,
+		config = function ()
+			require('mason').setup({
+				PATH = "append"
+			})
+		end
 	},
 
 	-- Autocompletion
@@ -195,10 +199,27 @@ return {
 			})
 
 			require('mason-lspconfig').setup({
-				ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer@2022-08-15', 'clangd' },
+				ensure_installed = { 'pylsp', 'lua_ls', 'clangd' },
 				handlers = {
 					function(server_name)
 						require('lspconfig')[server_name].setup({})
+					end,
+
+					clangd = function()
+						require("lspconfig").clangd.setup({
+							cmd = {
+								vim.fn.stdpath("data") .. "/lspinstall/cpp/clangd/bin/clangd",
+								"--background-index", "--header-insertion=never"
+							},
+						})
+					end,
+
+					rust_analyzer = function()
+						require("lspconfig").rust_analyzer.setup({
+							cmd = {
+								"/local/home/lawqup/.toolbox/tools/rust-analyzer",
+							},
+						})
 					end,
 
 					pylsp = function()

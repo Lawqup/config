@@ -314,3 +314,10 @@ function()
 end
 )
 
+for _, cmd in pairs({"c", "g", "s", "d", "f", "i", "a"}) do
+	vim.keymap.set({ "n", "v" }, string.format("<C-c><%s>", cmd),
+	function()
+		vim.cmd("cd " .. FindCscopeDir() .. " | Cscope find " .. cmd)
+	end
+)
+end

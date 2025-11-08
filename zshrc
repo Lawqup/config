@@ -14,10 +14,10 @@ fi
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-export FLYCTL_INSTALL="/home/lawrence/.fly"
-export PATH="$FLYCTL_INSTALL/bin:$PATH"
+# export FLYCTL_INSTALL="/home/lawrence/.fly"
+# export PATH="$FLYCTL_INSTALL/bin:$PATH"
 
-NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
+# NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 
 
 # Set name of the theme to load --- if set to "random", it will
@@ -143,9 +143,9 @@ bindkey '^z' foreground-last
 
 # export FZF_ALT_C_COMMAND="fd . $HOME --exclude={.git,Music,Videos,'VirtualBox VMs',Templates,.npm,.local,.tmux,.cache,.rustup,.ssh,.cargo,.unison} --type d -H"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export NVM_NODEJS_ORG_MIRROR=http://nodejs.org/dist/
 
@@ -172,8 +172,8 @@ export MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
 [ -s "/home/lawrence/.bun/_bun" ] && source "/home/lawrence/.bun/_bun"
 
 # bun
-export BUN_INSTALL="/home/lawrence/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+# export BUN_INSTALL="/home/lawrence/.bun"
+# export PATH="$BUN_INSTALL/bin:$PATH"
 
 function clear-scrollback-buffer {
   # Behavior of clear: 
