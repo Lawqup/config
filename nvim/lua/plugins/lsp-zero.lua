@@ -198,6 +198,30 @@ return {
 				capabilities = require('cmp_nvim_lsp').default_capabilities()
 			})
 
+			vim.lsp.config('rust_analyzer', {
+				settings = {
+					["rust-analyzer"] = {
+						cargo = {
+							allFeatures = true,
+							buildScripts = {
+								enable = true,
+								rebuildOnSave = true,
+							},
+						},
+
+						-- Optional: Also enable all features for `cargo check` on save
+						checkOnSave = {
+							allFeatures = true,
+							command = "clippy", -- Using clippy is often recommended for more checks
+						},
+
+						procMacro = {
+							enable = true,
+						},
+					},
+				}
+			})
+
 			require('mason-lspconfig').setup({
 				ensure_installed = { 'pylsp', 'lua_ls', 'clangd' },
 				handlers = {
@@ -216,6 +240,18 @@ return {
 
 					rust_analyzer = function()
 						require("lspconfig").rust_analyzer.setup({
+							settings = {
+								["rust-analyzer"] = {
+									cargo = {
+										allFeatures = true,
+									},
+									-- Optional: Also enable all features for `cargo check` on save
+									checkOnSave = {
+										allFeatures = true,
+										command = "clippy", -- Using clippy is often recommended for more checks
+									},
+								},
+							},
 							cmd = {
 								"/local/home/lawqup/.toolbox/tools/rust-analyzer",
 							},

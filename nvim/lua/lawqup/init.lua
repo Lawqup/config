@@ -5,7 +5,7 @@ require("lawqup.ui")
 
 vim.api.nvim_set_option("clipboard", "unnamed")
 
-require("mini.misc").setup_auto_root()
+-- require("mini.misc").setup_auto_root()
 
 -- vim.api.nvim_create_autocmd("BufWritePre", {
 -- 	callback = function()
@@ -321,3 +321,22 @@ for _, cmd in pairs({"c", "g", "s", "d", "f", "i", "a"}) do
 	end
 )
 end
+
+vim.api.nvim_create_user_command("CodeLink", function()
+	local file = vim.fn.expand("%:p")
+	local git_root = vim.fn.systemlist("git -C " .. vim.fn.shellescape(vim.fn.fnamemodify(file, ":h")) .. " rev-parse --show-toplevel")[1]
+	if vim.v.shell_error ~= 0 then print("Not in a git repo") return end
+
+	local pkg = vim.fn.fnamemodify(git_root, ":t")
+	local gd = "git -C " .. vim.fn.shellescape(git_root)
+	local commit = vim.fn.systemlist(gd .. " merge-base HEAD origin/HEAD")[1]
+	if vim.v.shell_error ~= 0 then commit = vim.fn.systemlist(gd .. " rev-parse HEAD")[1] end
+	local rel_path = file:sub(#git_root + 2)
+
+	local line1 = vim.fn.line("'<")
+	local line2 = vim.fn.line("'>")
+	local anchor = (line1 > 0 and line1 ~= line2) and ("#L" .. line1 .. "-L" .. line2) or ("#L" .. vim.fn.line("."))
+	local url = "https://code.amazon.com/packages/" .. pkg .. "/blobs/" .. commit .. "/--/" .. rel_path .. anchor
+	vim.fn.setreg("+", url)
+	print(url)
+end, { range = true, desc = "Copy code.amazon.com link for current line(s)" })
